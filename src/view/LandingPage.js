@@ -1,16 +1,25 @@
-import React from "react";
-// import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./../App.css";
 import LogoImage from "./../assets/images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey } from "@fortawesome/free-solid-svg-icons";
 
-function Home() {
+function LandingPage() {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="container">
       <div className="form">
         <div className="form__logo-container">
-          <img src={LogoImage} alt="logo" className="form__logo-image" />
+          <Link to="/">
+            <img src={LogoImage} alt="logo" className="form__logo-image" />
+          </Link>
         </div>
         <div className="form__box">
           <h2 className="form__header-one">Student Login</h2>
@@ -29,12 +38,21 @@ function Home() {
             <div className="form__input-box">
               <FontAwesomeIcon icon={faKey} className="form__input-icon" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="form__input"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            <button
+              type="button"
+              className="toggle-password-visibility"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
             <div className="form__checkbox-link-box">
               <div className="form__checkbox-box">
                 <input
@@ -47,9 +65,9 @@ function Home() {
                 </label>
               </div>
               <div>
-                <a href="/" className="form__link">
+                <Link to="/forget-password" className="form__link">
                   Forget password?
-                </a>
+                </Link>
               </div>
             </div>
             <div>
@@ -64,4 +82,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default LandingPage;
