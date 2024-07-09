@@ -1,9 +1,9 @@
 import "./App.css";
-import Login from "./view/Login";
+import Home from "./view/Login";
 import React from "react";
 
 function App() {
-  return <Login />;
+  return <Home />;
 }
 
 export default App;

@@ -5,7 +5,7 @@ import LogoImage from "./../assets/images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey } from "@fortawesome/free-solid-svg-icons";
 
-function Login() {
+function Home() {
   return (
     <div className="container">
       <div className="form">
@@ -47,7 +47,9 @@ function Login() {
                 </label>
               </div>
               <div>
-                <a href="/">Forget password?</a>
+                <a href="/" className="form__link">
+                  Forget password?
+                </a>
               </div>
             </div>
             <div>
@@ -62,4 +64,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Home;

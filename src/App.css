@@ -1,19 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 * {
-  padding: 0;
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   width: 100%;
+  height: 100%;
+  font-family: 'Roboto','Arial', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  
+}
+
+/* Default styles for common elements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #222;
+}
+
+/* Links */
+a {
+  color: #292929;
+  text-decoration: none;
+}
+
+
+.container {
   background-image: url('./assets/images/background-login.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-.container {
-    padding:60px 10px 60px 10px;
+  padding:60px 10px 60px 10px;
     }
 
 
@@ -126,6 +145,12 @@ body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
 }
 
+.form__link{
+  font-weight: 500;
+  font-size:14px;
+  color:rgb(75, 75, 75);
+
+}
 
 @media only screen and (min-width: 425px) {
 }
