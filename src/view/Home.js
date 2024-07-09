@@ -36,7 +36,7 @@ function Home() {
               />
             </div>
             <div className="form__checkbox-link-box">
-              <div id="form__checkbox-box">
+              <div className="form__checkbox-box">
                 <input
                   type="checkbox"
                   className="form__input--checkbox"

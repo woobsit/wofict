@@ -111,11 +111,12 @@ a {
   display:flex;
   justify-content: space-between;
   align-items: center;
+  margin-top:15px;
 }
 
-#form__checkbox-box{
-  margin-top:10px;
-  margin-bottom:15px;
+.form__checkbox-box{
+  display: flex;
+  align-items: center;
 }
 
 .form__input--checkbox{

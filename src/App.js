@@ -1,5 +1,5 @@
 import "./App.css";
-import Home from "./view/Login";
+import Home from "./view/Home";
 import React from "react";
 
 function App() {
