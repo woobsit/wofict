@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./../App.css";
 import LogoImage from "./../assets/images/logo.png";
+
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
-//Validor
+
+//Validator
 import validator from "validator";
+
+//Spinner
+import Loader from "./../components/atom/loader";
 
 function LandingPage() {
   const [inputFields, setInputFields] = useState({
@@ -46,94 +51,102 @@ function LandingPage() {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && submitting) {
-      //finishSubmit();
-      console.log("submitted");
+      makeRequest();
     }
   }, [errors]);
 
+  const makeRequest = () => {
+    setLoading(true);
+    console.log("submitted");
+  };
+
   //Show and hide password
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <div className="container">
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="form__logo-container">
-          <Link to="/">
-            <img src={LogoImage} alt="logo" className="form__logo-image" />
-          </Link>
-        </div>
-        <div className="form__box">
-          <h2 className="form__header-one">Student Login</h2>
-          <h6 className="form__header-two">Enter your details to login</h6>
+    <>
+      {loading && <Loader />}
 
-          <div className="form__inputs-box">
-            <div className="form__input-box">
-              <FontAwesomeIcon icon={faUser} className="form__input-icon" />
-              <input
-                type="email"
-                placeholder="Enter your email/username"
-                className="form__input"
-                required
-                value={inputFields.email}
-                onChange={handleChange}
-                name="email"
-              />
-            </div>
-            <p className="text-tertiary" id="error-message">
-              <span>{errors.email}</span>
-            </p>
-            <div className="form__input-box">
-              <FontAwesomeIcon icon={faKey} className="form__input-icon" />
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                className="form__input"
-                required
-                value={password}
-                name="password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <FontAwesomeIcon
-                icon={faEye}
-                className="form__input-icon--eye"
-                onClick={togglePasswordVisibility}
-              />
-            </div>
-            <p className="text-tertiary" id="error-message">
-              <span>{errors.password}</span>
-            </p>
-            <div className="form__checkbox-link-box">
-              <div className="form__checkbox-box">
-                <input
-                  type="checkbox"
-                  className="form__input--checkbox"
-                  id="remember"
-                  value={inputFields.remember_token}
-                  onChange={handleChange}
-                  name="remember_token"
-                />
-                <label htmlFor="remember" className="form__checkbox-label">
-                  Remember me?
-                </label>
-              </div>
-              <div>
-                <Link to="/forget-password" className="form__link">
-                  Forget password?
-                </Link>
-              </div>
-            </div>
-
-            <button className="form__button" disabled={loading}>
-              Login
-            </button>
+      <div className="container">
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="form__logo-container">
+            <Link to="/">
+              <img src={LogoImage} alt="logo" className="form__logo-image" />
+            </Link>
           </div>
-        </div>
-      </form>
-    </div>
+          <div className="form__box">
+            <h2 className="form__header-one">Student Login</h2>
+            <h6 className="form__header-two">Enter your details to login</h6>
+
+            <div className="form__inputs-box">
+              <div className="form__input-box">
+                <FontAwesomeIcon icon={faUser} className="form__input-icon" />
+                <input
+                  // type="email"
+                  type="text"
+                  placeholder="Enter your email"
+                  className="form__input"
+                  // required
+                  value={inputFields.email}
+                  onChange={handleChange}
+                  name="email"
+                />
+              </div>
+
+              <span className="form__span">{errors.email}</span>
+
+              <div className="form__input-box">
+                <FontAwesomeIcon icon={faKey} className="form__input-icon" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className="form__input"
+                  // required
+                  value={inputFields.password}
+                  onChange={handleChange}
+                  name="password"
+                />
+                <FontAwesomeIcon
+                  icon={faEye}
+                  className="form__input-icon--eye"
+                  onClick={togglePasswordVisibility}
+                />
+              </div>
+
+              <span className="form__span">{errors.password}</span>
+
+              <div className="form__checkbox-link-box">
+                <div className="form__checkbox-box">
+                  <input
+                    type="checkbox"
+                    className="form__input--checkbox"
+                    id="remember"
+                    value={inputFields.remember_token}
+                    onChange={handleChange}
+                    name="remember_token"
+                  />
+                  <label htmlFor="remember" className="form__checkbox-label">
+                    Remember me?
+                  </label>
+                </div>
+                <div>
+                  <Link to="/forget-password" className="form__link">
+                    Forget password?
+                  </Link>
+                </div>
+              </div>
+
+              <button className="form__button" disabled={loading}>
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
 
