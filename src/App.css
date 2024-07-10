@@ -107,6 +107,13 @@ a {
   margin-right:5px;
 }
 
+.form__input-icon--eye{
+  color:rgb(100, 100, 100);
+  width:15px;
+  margin-right:10px;
+  cursor:pointer;
+}
+
 .form__checkbox-link-box{
   display:flex;
   justify-content: space-between;
