@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./../App.css";
 import LogoImage from "./../assets/images/logo.png";
-
+//Custom component
+import Button from "./../components/atom/button/Button";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
 
 //Validator
 import validator from "validator";
-
 //Spinner
 import Loader from "./../components/atom/loader";
 
@@ -70,7 +70,7 @@ function LandingPage() {
     <>
       {loading && <Loader />}
 
-      <div className="container">
+      <div className="form__container">
         <form className="form" onSubmit={handleSubmit}>
           <div className="form__logo-container">
             <Link to="/">
@@ -139,9 +139,9 @@ function LandingPage() {
                 </div>
               </div>
 
-              <button className="form__button" disabled={loading}>
+              <Button className="form__button" disabled={loading}>
                 Login
-              </button>
+              </Button>
             </div>
           </div>
         </form>

@@ -9,12 +9,8 @@ function App() {
 
   const getBackgroundClass = (pathname) => {
     switch (pathname) {
-      case "/dashboard":
-        return "dashboard-background";
-      case "/about":
-        return "about-background";
-      case "/contact":
-        return "contact-background";
+      case "/":
+        return "landing-page-background";
       default:
         return "home-background";
     }
@@ -23,7 +19,7 @@ function App() {
   const backgroundClass = getBackgroundClass(location.pathname);
 
   return (
-    <div className={`app ${backgroundClass}`}>
+    <div className={`${backgroundClass}`}>
       <Routes>
         <Route>
           <Route path="/" element={<LandingPage />} key="landing-page" />
