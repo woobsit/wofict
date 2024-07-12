@@ -5,7 +5,7 @@ import LogoImage from "./../assets/images/logo.png";
 
 //Custom component
 import Button from "./../components/atom/button/Button";
-// import Typography from "./../components/atom/typography/Typography";
+import Typography from "./../components/atom/typography/Typography";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -84,7 +84,7 @@ function LandingPage() {
             <h2 className="form__header-one">Student Login</h2>
             <h6 className="form__header-two">Enter your details to login</h6>
 
-            {/* <Typography variant="h1">dfdfd</Typography> */}
+            <Typography variant="span">dfdfd</Typography>
             <div className="form__inputs-box">
               <div className="form__input-box">
                 <FontAwesomeIcon icon={faUser} className="form__input-icon" />

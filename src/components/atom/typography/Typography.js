@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./typography.module.css";
+import styles from "./Typography.module.css";
 
 const Typography = ({ variant, children, className, ...props }) => {
   const Tag = variant;
