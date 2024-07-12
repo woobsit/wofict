@@ -81,10 +81,11 @@ function LandingPage() {
             </Link>
           </div>
           <div className="form__box">
-            <h2 className="form__header-one">Student Login</h2>
+            <Typography variant="h3" className="form__header-one">
+              Student Login
+            </Typography>
             <h6 className="form__header-two">Enter your details to login</h6>
 
-            <Typography variant="span">dfdfd</Typography>
             <div className="form__inputs-box">
               <div className="form__input-box">
                 <FontAwesomeIcon icon={faUser} className="form__input-icon" />

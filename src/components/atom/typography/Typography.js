@@ -15,7 +15,8 @@ const Typography = ({ variant, children, className, ...props }) => {
 };
 
 Typography.propTypes = {
-  variant: PropTypes.oneOf(["h1", "h2", "h3", "p", "span"]).isRequired,
+  variant: PropTypes.oneOf(["h1", "h2", "h3", "h4", "h5", "h6", "p", "span"])
+    .isRequired,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
 };
