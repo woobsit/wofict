@@ -73,78 +73,100 @@ function LandingPage() {
     <>
       {loading && <Loader />}
 
-      <div className="form__container">
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="form__logo-container">
+      <div className="landing-form__container">
+        <form className="landing-form" onSubmit={handleSubmit}>
+          <div className="landing-form__logo-container">
             <Link to="/">
-              <img src={LogoImage} alt="logo" className="form__logo-image" />
+              <img
+                src={LogoImage}
+                alt="logo"
+                className="landing-form__logo-image"
+              />
             </Link>
           </div>
-          <div className="form__box">
-            <Typography variant="h3" className="form__header-one">
+          <div className="landing-form__box">
+            <Typography variant="h3" className="landing-form__header-one">
               Student Login
             </Typography>
-            <h6 className="form__header-two">Enter your details to login</h6>
 
-            <div className="form__inputs-box">
-              <div className="form__input-box">
-                <FontAwesomeIcon icon={faUser} className="form__input-icon" />
-                <input
-                  // type="email"
-                  type="text"
-                  placeholder="Enter your email"
-                  className="form__input"
-                  // required
-                  value={inputFields.email}
-                  onChange={handleChange}
-                  name="email"
-                />
+            <Typography variant="p" className="landing-form__header-two">
+              Enter your details to login
+            </Typography>
+
+            <div className="landing-form__inputs-box">
+              <div className="landing-form__input-box-container">
+                <div className="landing-form__input-box">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="landing-form__input-icon"
+                  />
+                  <input
+                    // type="email"
+                    type="text"
+                    placeholder="Enter your email"
+                    className="landing-form__input"
+                    // required
+                    value={inputFields.email}
+                    onChange={handleChange}
+                    name="email"
+                  />
+                </div>
+
+                <Typography className="landing-form__span" variant="span">
+                  {errors.email}
+                </Typography>
               </div>
+              <div className="landing-form__input-box-container">
+                <div className="landing-form__input-box">
+                  <FontAwesomeIcon
+                    icon={faKey}
+                    className="landing-form__input-icon"
+                  />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="landing-form__input"
+                    // required
+                    value={inputFields.password}
+                    onChange={handleChange}
+                    name="password"
+                  />
+                  <FontAwesomeIcon
+                    icon={faEye}
+                    className="landing-form__input-icon--eye"
+                    onClick={togglePasswordVisibility}
+                  />
+                </div>
 
-              <span className="form__span">{errors.email}</span>
-
-              <div className="form__input-box">
-                <FontAwesomeIcon icon={faKey} className="form__input-icon" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  className="form__input"
-                  // required
-                  value={inputFields.password}
-                  onChange={handleChange}
-                  name="password"
-                />
-                <FontAwesomeIcon
-                  icon={faEye}
-                  className="form__input-icon--eye"
-                  onClick={togglePasswordVisibility}
-                />
+                <Typography className="landing-form__span" variant="span">
+                  {errors.password}
+                </Typography>
               </div>
-
-              <span className="form__span">{errors.password}</span>
-
-              <div className="form__checkbox-link-box">
-                <div className="form__checkbox-box">
+              <div className="landing-form__checkbox-link-box">
+                <div className="landing-form__checkbox-box">
                   <input
                     type="checkbox"
-                    className="form__input--checkbox"
+                    className="landing-form__input--checkbox"
                     id="remember"
                     value={inputFields.remember_token}
                     onChange={handleChange}
                     name="remember_token"
                   />
-                  <label htmlFor="remember" className="form__checkbox-label">
+                  <label
+                    htmlFor="remember"
+                    className="landing-form__checkbox-label"
+                  >
                     Remember me?
                   </label>
                 </div>
                 <div>
-                  <Link to="/forget-password" className="form__link">
+                  <Link to="/forget-password" className="landing-form__link">
                     Forget password?
                   </Link>
                 </div>
               </div>
 
-              <Button className="form__button" disabled={loading}>
+              <Button className="landing-form__button" disabled={loading}>
                 Login
               </Button>
             </div>
