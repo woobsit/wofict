@@ -11,10 +11,17 @@ import Typography from "./../components/atom/typography/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
 
-//Validator
+//Validator package
 import validator from "validator";
-//Spinner
+
+//Utility Spinner
 import Loader from "./../components/atom/loader";
+
+//js-cookies
+import Cookies from "js-cookie";
+
+//API service
+import authService from "./../api/authService";
 
 function LandingPage() {
   const [inputFields, setInputFields] = useState({
@@ -25,7 +32,11 @@ function LandingPage() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  //Show and hide password
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -63,10 +74,14 @@ function LandingPage() {
     console.log("submitted");
   };
 
-  //Show and hide password
-  const [showPassword, setShowPassword] = useState(false);
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await authService.userLogin(email, password);
+      // Handle successful login, e.g., store token, redirect, etc.
+    } catch (error) {
+      setError("Login failed. Please check your credentials and try again.");
+    }
   };
 
   return (

@@ -3,8 +3,13 @@ import LandingPage from "./view/LandingPage";
 import React from "react";
 //React Router package
 import { Routes, Route, useLocation } from "react-router-dom";
+import { setupInterceptors } from "./api/interceptors";
+
+//import store from './store';
 
 function App() {
+  setupInterceptors();
+
   const location = useLocation();
 
   const getBackgroundClass = (pathname) => {
