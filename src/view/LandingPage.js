@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+//React route dom
+import { Link, useNavigate } from "react-router-dom";
 import "./../App.css";
 import LogoImage from "./../assets/images/logo.png";
 
@@ -17,13 +18,18 @@ import validator from "validator";
 //Utility Spinner
 import Loader from "./../components/atom/loader";
 
-//js-cookies
-import Cookies from "js-cookie";
-
 //API service
 import authService from "./../api/authService";
 
+//js-cookies
+import Cookies from "js-cookie";
+
+//react toastify
+import { ToastContainer, toast } from "react-toastify";
+
 function LandingPage() {
+  const navigate = useNavigate();
+
   const [inputFields, setInputFields] = useState({
     email: "",
     password: "",
@@ -32,11 +38,13 @@ function LandingPage() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
+
   //Show and hide password
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -63,31 +71,52 @@ function LandingPage() {
     setSubmitting(true);
   };
 
+  //When form values are valid
   useEffect(() => {
     if (Object.keys(errors).length === 0 && submitting) {
       makeRequest();
     }
   }, [errors]);
 
-  const makeRequest = () => {
-    setLoading(true);
-    console.log("submitted");
-  };
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const makeRequest = async () => {
     try {
-      const response = await authService.userLogin(email, password);
-      // Handle successful login, e.g., store token, redirect, etc.
+      setLoading(true);
+      const response = await authService.userLogin(
+        inputFields.email,
+        inputFields.password
+      );
+
+      if (response.status === 200) {
+        const expirationTime = response.data.remember_me ? 30 : 1;
+        Cookies.set("auth_user_token", response.token, {
+          expires: expirationTime,
+          secure: true,
+          sameSite: "lax",
+        });
+        console.log(Cookies.get);
+        setLoading(false);
+        navigate("/home");
+
+        //window.location.href = "/home";
+      } else if (response.status === 422) {
+        setLoading(false);
+        toast.error("Login failed. Enter valid details and try again.");
+      } else if (response.status === 401) {
+        setLoading(false);
+        toast.error(
+          "Login failed. Please check your credentials and try again."
+        );
+      }
     } catch (error) {
-      setError("Login failed. Please check your credentials and try again.");
+      setLoading(false);
+      setErrors("Login failed. Please check your credentials and try again.");
     }
   };
 
   return (
     <>
       {loading && <Loader />}
-
+      <ToastContainer />
       <div className="landing-form__container">
         <form className="landing-form" onSubmit={handleSubmit}>
           <div className="landing-form__logo-container">

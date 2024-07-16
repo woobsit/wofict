@@ -1,5 +1,8 @@
 import "./App.css";
 import LandingPage from "./view/LandingPage";
+import Register from "./view/Register";
+import Home from "./view/Home";
+
 import React from "react";
 //React Router package
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -28,6 +31,8 @@ function App() {
       <Routes>
         <Route>
           <Route path="/" element={<LandingPage />} key="landing-page" />
+          <Route path="/register" element={<Register />} key="register" />
+          <Route path="/home" element={<Home />} key="home" />
         </Route>
       </Routes>
     </div>

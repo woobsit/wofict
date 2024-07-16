@@ -5,13 +5,14 @@ import Cookies from "js-cookie";
 
 const authService = {
   userLogin: async (email, password) => {
+    // eslint-disable-next-line no-useless-catch
     try {
       const response = await axiosInstance.post("/user-login", {
         email,
         password,
       });
       if (response.data.token) {
-        Cookies.set("auth_user_token", response.data.token); // Store token in local storage
+        Cookies.set("auth_user_token", response.data.token); // Store token in cookies
       }
       return response.data;
     } catch (error) {
@@ -19,6 +20,7 @@ const authService = {
     }
   },
   register: async (userData) => {
+    // eslint-disable-next-line no-useless-catch
     try {
       const response = await axiosInstance.post("/register", userData);
       return response.data;
