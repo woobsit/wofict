@@ -24,8 +24,8 @@ import authService from "./../api/authService";
 //js-cookies
 import Cookies from "js-cookie";
 
-//react toastify
-import { ToastContainer, toast } from "react-toastify";
+//sweet alert2
+import Swal from "sweetalert2";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -83,40 +83,48 @@ function LandingPage() {
       setLoading(true);
       const response = await authService.userLogin(
         inputFields.email,
-        inputFields.password
+        inputFields.password,
+        inputFields.remember_token
       );
 
       if (response.status === 200) {
-        const expirationTime = response.data.remember_me ? 30 : 1;
+        const expirationTime = response.remember_me ? 30 : 1;
         Cookies.set("auth_user_token", response.token, {
           expires: expirationTime,
           secure: true,
           sameSite: "lax",
         });
-        console.log(Cookies.get);
         setLoading(false);
         navigate("/home");
-
-        //window.location.href = "/home";
       } else if (response.status === 422) {
         setLoading(false);
-        toast.error("Login failed. Enter valid details and try again.");
+        Swal.fire({
+          icon: "error",
+          title: response.message,
+          text: "Please enter only valid characters.",
+        });
       } else if (response.status === 401) {
         setLoading(false);
-        toast.error(
-          "Login failed. Please check your credentials and try again."
-        );
+        Swal.fire({
+          icon: "error",
+          title: response.message,
+          text: "Invalid login details",
+        });
       }
     } catch (error) {
       setLoading(false);
-      setErrors("Login failed. Please check your credentials and try again.");
+      Swal.fire({
+        icon: "error",
+        title: "System Error",
+        text: "Error 500",
+      });
     }
   };
 
   return (
     <>
       {loading && <Loader />}
-      <ToastContainer />
+
       <div className="landing-form__container">
         <form className="landing-form" onSubmit={handleSubmit}>
           <div className="landing-form__logo-container">

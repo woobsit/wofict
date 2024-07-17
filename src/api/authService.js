@@ -4,12 +4,13 @@ import axiosInstance from "./axiosInstance";
 import Cookies from "js-cookie";
 
 const authService = {
-  userLogin: async (email, password) => {
+  userLogin: async (email, password, remember_token) => {
     // eslint-disable-next-line no-useless-catch
     try {
       const response = await axiosInstance.post("/user-login", {
         email,
         password,
+        remember_token,
       });
       if (response.data.token) {
         Cookies.set("auth_user_token", response.data.token); // Store token in cookies

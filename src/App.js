@@ -1,6 +1,7 @@
 import "./App.css";
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
+
 import Home from "./view/Home";
 
 import React from "react";

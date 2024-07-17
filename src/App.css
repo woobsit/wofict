@@ -150,6 +150,7 @@ a {
 .landing-form__checkbox-box {
   display: flex;
   align-items: center;
+  cursor:pointer;
 }
 
 .landing-form__input--checkbox {
