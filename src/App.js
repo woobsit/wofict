@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import LandingPage from "./view/LandingPage";
+import Register from "./view/Register";
+
+import Home from "./view/Home";
+
+import React from "react";
+//React Router package
+import { Routes, Route, useLocation } from "react-router-dom";
+import { setupInterceptors } from "./api/interceptors";
+
+//import store from './store';
 
 function App() {
+  setupInterceptors();
+
+  const location = useLocation();
+
+  const getBackgroundClass = (pathname) => {
+    switch (pathname) {
+      case "/":
+        return "landing-page-background";
+      default:
+        return "home-background";
+    }
+  };
+
+  const backgroundClass = getBackgroundClass(location.pathname);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`${backgroundClass}`}>
+      <Routes>
+        <Route>
+          <Route path="/" element={<LandingPage />} key="landing-page" />
+          <Route path="/register" element={<Register />} key="register" />
+          <Route path="/home" element={<Home />} key="home" />
+        </Route>
+      </Routes>
     </div>
   );
 }
