@@ -12,9 +12,24 @@ const authService = {
         password,
         remember_token,
       });
-      if (response.data.token) {
-        Cookies.set("auth_user_token", response.data.token); // Store token in cookies
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  userLogout: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const token = Cookies.get("auth_user_token");
+      if (!token) {
+        throw new Error();
       }
+      const response = await axiosInstance.post("/user-logout", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       return response.data;
     } catch (error) {
       throw error;

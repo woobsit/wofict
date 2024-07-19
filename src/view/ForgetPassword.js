@@ -10,7 +10,7 @@ import Typography from "./../components/atom/typography/Typography";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
 //Validator package
 import validator from "validator";
@@ -27,29 +27,20 @@ import Cookies from "js-cookie";
 //sweet alert2
 import Swal from "sweetalert2";
 
-function LandingPage() {
+function ForgetPassword() {
   const navigate = useNavigate();
 
   const [inputFields, setInputFields] = useState({
     email: "",
-    password: "",
-    remember_token: null,
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //Show and hide password
-  const [showPassword, setShowPassword] = useState(false);
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   //Set value of inputs
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-    setInputFields({ ...inputFields, [name]: newValue });
+    const { name, value } = e.target;
+    setInputFields({ ...inputFields, [name]: value });
   };
 
   //Validate inputs
@@ -57,9 +48,6 @@ function LandingPage() {
     let errors = {};
     if (!validator.isEmail(inputValues.email)) {
       errors.email = "Enter a valid email address";
-    }
-    if (inputValues.password.length < 6) {
-      errors.password = "Password should not be less than 6 characters";
     }
     return errors;
   };
@@ -81,14 +69,9 @@ function LandingPage() {
   const makeRequest = async () => {
     try {
       setLoading(true);
-      const response = await authService.userLogin(
-        inputFields.email,
-        inputFields.password,
-        inputFields.remember_token
-      );
+      const response = await authService.userLogin(inputFields.email);
 
       if (response.status === 200) {
-        //Here I used the remember me value in the checkbox as the condition of the lenght of the token. With this I do not have to create a remember me cookie which would be different from the token cookie.
         const expirationTime = response.remember_me ? 30 : 1;
         Cookies.set("auth_user_token", response.token, {
           expires: expirationTime,
@@ -153,11 +136,11 @@ function LandingPage() {
           </div>
           <div className="landing-form__box">
             <Typography variant="h3" className="landing-form__header-one">
-              Student Login
+              Forget Password Form
             </Typography>
 
             <Typography variant="p" className="landing-form__header-two">
-              Enter your details to login
+              Enter your email address
             </Typography>
 
             <div className="landing-form__inputs-box">
@@ -183,58 +166,9 @@ function LandingPage() {
                   {errors.email}
                 </Typography>
               </div>
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faKey}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.password}
-                    onChange={handleChange}
-                    name="password"
-                  />
-                  <FontAwesomeIcon
-                    icon={faEye}
-                    className="landing-form__input-icon--eye"
-                    onClick={togglePasswordVisibility}
-                  />
-                </div>
-
-                <Typography className="landing-form__span" variant="span">
-                  {errors.password}
-                </Typography>
-              </div>
-              <div className="landing-form__checkbox-link-box">
-                <div className="landing-form__checkbox-box">
-                  <input
-                    type="checkbox"
-                    className="landing-form__input--checkbox"
-                    id="remember"
-                    value={inputFields.remember_token}
-                    onChange={handleChange}
-                    name="remember_token"
-                  />
-                  <label
-                    htmlFor="remember"
-                    className="landing-form__checkbox-label"
-                  >
-                    Remember me?
-                  </label>
-                </div>
-                <div>
-                  <Link to="/forget-password" className="landing-form__link">
-                    Forget password?
-                  </Link>
-                </div>
-              </div>
 
               <Button className="landing-form__button" disabled={loading}>
-                Login
+                Submit
               </Button>
             </div>
           </div>
@@ -244,4 +178,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default ForgetPassword;

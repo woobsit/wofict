@@ -9,6 +9,8 @@ import { setupInterceptors } from "./api/interceptors";
 //pages
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
+import ForgetPassword from "./view/ForgetPassword";
+
 import AdminLogin from "./view/AdminLogin";
 
 //css style
@@ -43,6 +45,11 @@ function App() {
             path="/admin-login"
             element={<AdminLogin />}
             key="admin-login"
+          />
+          <Route
+            path="/forget-password"
+            element={<ForgetPassword />}
+            key="forget-password"
           />
         </Route>
       </Routes>
