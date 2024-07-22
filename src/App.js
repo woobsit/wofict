@@ -10,6 +10,7 @@ import { setupInterceptors } from "./api/interceptors";
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
 import ForgetPassword from "./view/ForgetPassword";
+import EnterNewPassword from "./view/EnterNewPassword";
 
 import AdminLogin from "./view/AdminLogin";
 
@@ -52,6 +53,11 @@ function App() {
             key="forget-password"
           />
         </Route>
+        <Route
+          path="/enter-new-password/:id"
+          element={<EnterNewPassword />}
+          key="enter-new-password"
+        />
       </Routes>
     </div>
   );

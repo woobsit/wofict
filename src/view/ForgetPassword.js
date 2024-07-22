@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./../App.css";
 import LogoImage from "./../assets/images/logo.png";
 
@@ -21,15 +21,10 @@ import Loader from "./../components/atom/loader";
 //API service
 import authService from "./../api/authService";
 
-//js-cookies
-import Cookies from "js-cookie";
-
 //sweet alert2
 import Swal from "sweetalert2";
 
 function ForgetPassword() {
-  const navigate = useNavigate();
-
   const [inputFields, setInputFields] = useState({
     email: "",
   });
@@ -69,17 +64,15 @@ function ForgetPassword() {
   const makeRequest = async () => {
     try {
       setLoading(true);
-      const response = await authService.userLogin(inputFields.email);
+      const response = await authService.userForgetPassword(inputFields.email);
 
       if (response.status === 200) {
-        const expirationTime = response.remember_me ? 30 : 1;
-        Cookies.set("auth_user_token", response.token, {
-          expires: expirationTime,
-          secure: true,
-          sameSite: "lax",
+        Swal.fire({
+          icon: "success",
+          title: "Password Link Sent!!!",
+          text: response.message,
         });
         setLoading(false);
-        navigate("/home");
       } else if (response.status === 422) {
         setLoading(false);
         Swal.fire({
@@ -92,7 +85,7 @@ function ForgetPassword() {
         Swal.fire({
           icon: "error",
           title: response.message,
-          text: "Invalid login details",
+          text: "Invalid user",
         });
       } else if (response.status === 500) {
         setLoading(false);
