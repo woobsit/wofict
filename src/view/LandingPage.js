@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
+//app.css style
 import "./../App.css";
+
+//images
 import LogoImage from "./../assets/images/logo.png";
 
 //Custom component
@@ -12,7 +15,7 @@ import Typography from "./../components/atom/typography/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
 
-//Validator package
+//Validator
 import validator from "validator";
 
 //Spinner loader
@@ -24,8 +27,8 @@ import authService from "./../api/authService";
 //js-cookies
 import Cookies from "js-cookie";
 
-//sweet alert2
-import Swal from "sweetalert2";
+//utils
+import { notify } from "./../utils/Notification";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -99,40 +102,24 @@ function LandingPage() {
         navigate("/home");
       } else if (response.status === 422) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Please enter only valid characters.",
-        });
+        notify("error", "Input Validation", response.message);
       } else if (response.status === 401) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Invalid login details",
-        });
+        notify("error", "User Login", response.message);
       } else if (response.status === 500) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "System Error",
-          text: "System error occurred",
-        });
+        notify("error", "System Error", response.message);
       } else {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An unexpected error occurred",
-        });
+        notify("error", "Error", "An unexpected error occurred");
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An unexpected error occurred. Please try again.",
-      });
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
     }
   };
 

@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //API service
 import authService from "./../api/authService";
-//sweet alert2
-import Swal from "sweetalert2";
+//utils
+import { notify } from "./../utils/Notification";
 //Spinner loader
 import Loader from "./../components/atom/loader";
 //js-cookies
@@ -25,26 +25,18 @@ function Home() {
         navigate("/");
       } else if (response.status === 401) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Unauthorized user",
-        });
+        notify("error", "Unauthorized", response.message);
       } else if (response.status === 500) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "A system error has occurred",
-        });
+        notify("error", "System Error", response.message);
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An unexpected error occurred. Please try again.",
-      });
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
     }
   };
 

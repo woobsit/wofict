@@ -21,6 +21,9 @@ import Loader from "./../components/atom/loader";
 //API service
 import authService from "./../api/authService";
 
+//utils
+import { notify } from "./../utils/Notification";
+
 //sweet alert2
 import Swal from "sweetalert2";
 
@@ -32,8 +35,9 @@ function EnterNewPassword() {
     email: "",
     password: "",
     password_confirmation: "",
-    new_password_token: id,
+    forget_password: id,
   });
+
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -99,7 +103,14 @@ function EnterNewPassword() {
         setLoading(false);
         Swal.fire({
           icon: "error",
-          title: response.message,
+          title: "Invalid link",
+          text: response.message,
+          showConfirmButton: true, // Show the "OK" button
+          allowOutsideClick: false, // Prevent closing by clicking outside the dialog
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/");
+          }
         });
       } else if (response.status === 401) {
         setLoading(false);
@@ -107,21 +118,19 @@ function EnterNewPassword() {
           icon: "error",
           title: "Invalid",
           text: response.message,
+          showConfirmButton: true, // Show the "OK" button
+          allowOutsideClick: false, // Prevent closing by clicking outside the dialog
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/");
+          }
         });
       } else if (response.status === 500) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "System Error",
-          text: response.message,
-        });
+        notify("error", "System Error", response.message);
       } else {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An unexpected error occurred",
-        });
+        notify("error", "Error", response.message);
       }
     } catch (error) {
       setLoading(false);
@@ -136,21 +145,20 @@ function EnterNewPassword() {
   useEffect(() => {
     confirmForgetPasswordToken();
   }, []);
-
   const makeRequest = async () => {
     try {
       setLoading(true);
       const response = await authService.userEnterNewPassword(
         inputFields.email,
         inputFields.password,
-        inputFields.password_confirmation
+        inputFields.password_confirmation,
+        id
       );
-
       if (response.status === 200) {
         setLoading(false);
         Swal.fire({
           icon: "success",
-          title: "Password Reset!",
+          title: "Password Reset",
           text: response.message,
           showConfirmButton: true, // Show the "OK" button
           allowOutsideClick: false, // Prevent closing by clicking outside the dialog
@@ -161,40 +169,28 @@ function EnterNewPassword() {
         });
       } else if (response.status === 422) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Please enter only valid characters.",
-          text: response.message,
-        });
+        notify(
+          "error",
+          "Please enter only valid characters.",
+          response.message
+        );
       } else if (response.status === 401) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Invalid details",
-          text: response.message,
-        });
+        notify("error", "Invalid details", response.message);
       } else if (response.status === 500) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "System Error",
-          text: response.message,
-        });
+        notify("error", "System Error", response.message);
       } else {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An unexpected error occurred",
-        });
+        notify("error", "Error", response.message);
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An unexpected error occurred. Please try again.",
-      });
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
     }
   };
 

@@ -21,8 +21,8 @@ import Loader from "./../components/atom/loader";
 //API service
 import authService from "./../api/authService";
 
-//sweet alert2
-import Swal from "sweetalert2";
+//utils
+import { notify } from "./../utils/Notification";
 
 function ForgetPassword() {
   const [inputFields, setInputFields] = useState({
@@ -67,48 +67,29 @@ function ForgetPassword() {
       const response = await authService.userForgetPassword(inputFields.email);
 
       if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Password Link Sent!!!",
-          text: response.message,
-        });
+        notify("success", "Forget Password", response.message);
+
         setLoading(false);
       } else if (response.status === 422) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Please enter only valid characters.",
-        });
+        notify("error", "Invalid Characters", response.message);
       } else if (response.status === 401) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Invalid user",
-        });
+        notify("error", "Invalid user", response.message);
       } else if (response.status === 500) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "System Error",
-          text: "System error occurred",
-        });
+        notify("error", "System Error", response.message);
       } else {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An unexpected error occurred",
-        });
+        notify("error", "Error", response.message);
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An unexpected error occurred. Please try again.",
-      });
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
     }
   };
 

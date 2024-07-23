@@ -59,7 +59,7 @@ const authService = {
       const token = "";
       const response = await axiosInstance.post(
         "/user-confirm-forget-password-token",
-        { new_password_token: id },
+        { forget_password: id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -71,13 +71,18 @@ const authService = {
       throw error;
     }
   },
-  userEnterNewPassword: async (email, password, password_confirmation) => {
+  userEnterNewPassword: async (
+    email,
+    password,
+    password_confirmation,
+    forget_password
+  ) => {
     // eslint-disable-next-line no-useless-catch
     try {
       const token = "";
       const response = await axiosInstance.post(
         "/user-enter-new-password",
-        { email, password, password_confirmation },
+        { email, password, password_confirmation, forget_password },
         {
           headers: {
             Authorization: `Bearer ${token}`,
