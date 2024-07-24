@@ -12,7 +12,10 @@ import Register from "./view/Register";
 import ForgetPassword from "./view/ForgetPassword";
 import EnterNewPassword from "./view/EnterNewPassword";
 
-import AdminLogin from "./view/AdminLogin";
+import AdminLogin from "./view/admin/AdminLogin";
+import Dashboard from "./view/admin/Dashboard";
+import AdminForgetPassword from "./view/admin/AdminForgetPassword";
+import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 
 //css style
 import "./App.css";
@@ -43,11 +46,6 @@ function App() {
           <Route path="/register" element={<Register />} key="register" />
           <Route path="/home" element={<Home />} key="home" />
           <Route
-            path="/admin-login"
-            element={<AdminLogin />}
-            key="admin-login"
-          />
-          <Route
             path="/forget-password"
             element={<ForgetPassword />}
             key="forget-password"
@@ -57,6 +55,18 @@ function App() {
           path="/enter-new-password/:id"
           element={<EnterNewPassword />}
           key="enter-new-password"
+        />
+        <Route path="/admin-login" element={<AdminLogin />} key="admin-login" />
+        <Route path="/dashboard" element={<Dashboard />} key="dashboard" />
+        <Route
+          path="/admin-forget-password"
+          element={<AdminForgetPassword />}
+          key="admin-forget-password"
+        />
+        <Route
+          path="/admin-enter-new-password/:id"
+          element={<AdminEnterNewPassword />}
+          key="admin-enter-new-password"
         />
       </Routes>
     </div>

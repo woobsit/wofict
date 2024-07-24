@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
-import "./../App.css";
-import LogoImage from "./../assets/images/logo.png";
+import "./../../App.css";
+import LogoImage from "./../../assets/images/logo.png";
 
 //Custom component
-import Button from "./../components/atom/button/Button";
-import Typography from "./../components/atom/typography/Typography";
+import Button from "../../components/atom/button/Button";
+import Typography from "../../components/atom/typography/Typography";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,16 +16,16 @@ import { faUser, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
 import validator from "validator";
 
 //Utility Spinner
-import Loader from "./../components/atom/loader";
+import Loader from "./../../components/atom/loader";
 
 //API service
-import authService from "./../api/authService";
+import authService from "./../../api/authService";
 
 //js-cookies
 import Cookies from "js-cookie";
 
-//sweet alert2
-import Swal from "sweetalert2";
+//utils
+import { notify } from "./../../utils/Notification";
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -81,43 +81,42 @@ function AdminLogin() {
   const makeRequest = async () => {
     try {
       setLoading(true);
-      const response = await authService.userLogin(
+      const response = await authService.adminLogin(
         inputFields.email,
         inputFields.password,
         inputFields.remember_token
       );
 
       if (response.status === 200) {
+        //Here I used the remember me value in the checkbox as the condition of the lenght of the token. With this I do not have to create a remember me cookie which would be different from the token cookie.
         const expirationTime = response.remember_me ? 30 : 1;
-        Cookies.set("auth_user_token", response.token, {
+        Cookies.set("auth_admin_token", response.token, {
           expires: expirationTime,
           secure: true,
           sameSite: "lax",
         });
         setLoading(false);
-        navigate("/admin-dashboard");
+        navigate("/dashboard");
       } else if (response.status === 422) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Please enter only valid characters.",
-        });
+        notify("error", "Input Validation", response.message);
       } else if (response.status === 401) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: response.message,
-          text: "Invalid login details",
-        });
+        notify("error", "User Login", response.message);
+      } else if (response.status === 500) {
+        setLoading(false);
+        notify("error", "System Error", response.message);
+      } else {
+        setLoading(false);
+        notify("error", "Error", "An unexpected error occurred");
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "System Error",
-        text: "Error 500",
-      });
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
     }
   };
 
@@ -212,7 +211,10 @@ function AdminLogin() {
                   </label>
                 </div>
                 <div>
-                  <Link to="/forget-password" className="landing-form__link">
+                  <Link
+                    to="/admin-forget-password"
+                    className="landing-form__link"
+                  >
                     Forget password?
                   </Link>
                 </div>

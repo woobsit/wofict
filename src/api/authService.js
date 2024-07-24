@@ -94,7 +94,7 @@ const authService = {
       throw error;
     }
   },
-  register: async (userData) => {
+  userRegister: async (userData) => {
     // eslint-disable-next-line no-useless-catch
     try {
       const response = await axiosInstance.post("/register", userData);
@@ -103,7 +103,96 @@ const authService = {
       throw error;
     }
   },
-  // Add more authentication-related methods as needed
+  adminLogin: async (email, password, remember_token) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.post("/admin-login", {
+        email,
+        password,
+        remember_token,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  adminLogout: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const token = Cookies.get("auth_admin_token");
+      if (!token) {
+        throw new Error();
+      }
+      const response = await axiosInstance.post("/admin-logout", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  adminForgetPassword: async (email) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const token = "";
+      const response = await axiosInstance.post(
+        "/admin-forget-password",
+        { email },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  adminConfirmForgetPasswordToken: async (id) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const token = "";
+      const response = await axiosInstance.post(
+        "/admin-confirm-forget-password-token",
+        { forget_password: id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  adminEnterNewPassword: async (
+    email,
+    password,
+    password_confirmation,
+    forget_password
+  ) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const token = "";
+      const response = await axiosInstance.post(
+        "/admin-enter-new-password",
+        { email, password, password_confirmation, forget_password },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;
