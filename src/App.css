@@ -173,6 +173,28 @@ a {
   color: rgb(75, 75, 75);
 }
 
+/*steps*/
+.steps{
+display:flex;
+align-items: center;
+justify-content: space-between;
+border:2px solid red;
+padding:10px 0;
+margin-bottom:20px;
+}
+
+.steps__content{
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  width:40px;
+  height:40px;
+  border-radius: 50%;
+  background:red;
+}
+
+
+
 @media only screen and (min-width: 425px) {
   .landing-form__container {
     width: 75%;
