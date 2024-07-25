@@ -159,9 +159,25 @@ function Register() {
             </Typography>
 
             <div className="steps">
-              <div className="steps__content">1</div>
-              <div className="steps__content">2</div>
-              <div className="steps__content">3</div>
+              <div className="steps__content-container">
+                <div className="steps__content-number">1</div>
+                <Typography variant="span" className="steps__content-text">
+                  Personal info
+                </Typography>
+                <span></span>
+              </div>
+              <div className="steps__content-container">
+                <div className="steps__content-number">2</div>
+                <Typography variant="span" className="steps__content-text">
+                  Educational background
+                </Typography>
+              </div>
+              <div className="steps__content-container">
+                <div className="steps__content-number">3</div>
+                <Typography variant="span" className="steps__content-text">
+                  Course of choice
+                </Typography>
+              </div>
             </div>
 
             <div className="landing-form__inputs-box">
@@ -337,7 +353,7 @@ function Register() {
                 </div>
               </div>
               <Button className="landing-form__button" disabled={loading}>
-                Login
+                Next
               </Button>
             </div>
           </div>

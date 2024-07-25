@@ -176,24 +176,37 @@ a {
 /*steps*/
 .steps{
 display:flex;
-align-items: center;
+align-items: flex-start;
 justify-content: space-between;
-border:2px solid red;
 padding:10px 0;
 margin-bottom:20px;
 }
 
-.steps__content{
+.steps__content-container{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  flex: 1;
+}
+
+.steps__content-number{
   display:flex;
   align-items:center;
   justify-content: center;
   width:40px;
   height:40px;
   border-radius: 50%;
-  background:red;
+  color:white;
+  background:rgb(184, 184, 184);
 }
 
-
+.steps__content-container .steps__content-text{
+  font-size: 12px;
+  color:rgb(158, 158, 158);
+  text-align: center;
+  margin-top:10px;
+}
 
 @media only screen and (min-width: 425px) {
   .landing-form__container {
