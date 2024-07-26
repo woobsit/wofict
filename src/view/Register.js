@@ -28,32 +28,48 @@ import authService from "./../api/authService";
 import Cookies from "js-cookie";
 
 //utils
-import { notify } from "./../utils/Notification";
+import { notify } from "./../utils/Notification ";
+import { phonePregMatch } from "./../utils/PregMatch ";
 
 function Register() {
   const navigate = useNavigate();
 
   const [inputFields, setInputFields] = useState({
-    firstname: "",
-    surname: "",
-    other_names: "",
-    email: "",
-    password: "",
-    gender: "",
-    date_of_birth: "",
-    phone_number: "",
-    contact_address: "",
-    state_of_origin: "",
+    personal_info: {
+      firstname: "",
+      surname: "",
+      other_names: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      gender: "",
+      date_of_birth: "",
+      phone_number: "",
+      contact_address: "",
+      state_of_origin: "",
+    },
+    educational_background: {
+      qualification_level: "",
+      english_fluency: "",
+      conversation_strength: "",
+    },
+    course_of_choice: {
+      course: "",
+      session: "",
+      computer_literacy: "",
+      ict_referral: "",
+    },
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //Show and hide password
-  const [showPassword, setShowPassword] = useState(false);
-  //   const [firstPage, setFirstPage] = useState(true);
+  const [firstPage, setFirstPage] = useState(true);
   //   const [secondPage, setSecondPage] = useState(false);
   //   const [thirdPage, setThirdPage] = useState(false);
+
+  //Show and hide password
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -62,20 +78,59 @@ function Register() {
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
+    const newValue = type === "checkbox" || type === "radio" ? checked : value;
+
     setInputFields({ ...inputFields, [name]: newValue });
   };
 
   //Validate inputs
   const validate = (inputValues) => {
+    setFirstPage(false);
     let errors = {};
+    if (inputValues.firstname.length < 3) {
+      errors.firstname = "Enter a valid firstname";
+    }
+    if (inputValues.surname.length < 3) {
+      errors.surname = "Enter a valid surname";
+    }
+    if (
+      inputValues.other_names.length < 3 ||
+      inputValues.other_names.length === 0
+    ) {
+      errors.other_names = "Enter valid other names";
+    }
     if (!validator.isEmail(inputValues.email)) {
       errors.email = "Enter a valid email address";
     }
     if (inputValues.password.length < 6) {
       errors.password = "Password should not be less than 6 characters";
+    } else if (inputValues.password !== inputValues.password_confirmation) {
+      errors.password_confirmation =
+        "Password and confirm password did not match";
+    }
+    if (inputValues.date_of_birth.value === "") {
+      errors.date_of_birth = "Enter valid date of birth";
+    }
+    if (!phonePregMatch.test(inputValues.phone_number)) {
+      errors.phone_number = "Enter a valid phone number";
+    }
+    if (inputValues.contact_address.length < 3) {
+      errors.contact_address = "Enter a valid contact address";
+    }
+    if (inputValues.state_of_origin.value === "Select state") {
+      errors.state_of_origin = "Please select your state";
+    }
+    if (inputValues.qualification_level.value === "") {
+      errors.qualification_level = " ";
     }
     return errors;
+  };
+
+  //Next button
+  const nextButton = (e) => {
+    e.preventDefault();
+    setErrors(validate(inputFields)); //object of errors
+    setSubmitting(true);
   };
 
   //Submit form
@@ -95,10 +150,25 @@ function Register() {
   const makeRequest = async () => {
     try {
       setLoading(true);
-      const response = await authService.userLogin(
+      const response = await authService.userRegister(
+        inputFields.firstname,
+        inputFields.surname,
+        inputFields.other_names,
         inputFields.email,
         inputFields.password,
-        inputFields.remember_token
+        inputFields.password_confirmation,
+        inputFields.gender,
+        inputFields.date_of_birth,
+        inputFields.phone_number,
+        inputFields.contact_address,
+        inputFields.state_of_origin,
+        inputFields.qualification_level,
+        inputFields.english_fluency,
+        inputFields.conversation_strength,
+        inputFields.course,
+        inputFields.session,
+        inputFields.computer_literacy,
+        inputFields.ict_referral
       );
 
       if (response.status === 200) {
@@ -180,182 +250,202 @@ function Register() {
               </div>
             </div>
 
-            <div className="landing-form__inputs-box">
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Enter your firstname"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.firstname}
-                    onChange={handleChange}
-                    name="firstname"
-                  />
-                </div>
+            {firstPage && (
+              <div className="landing-form__inputs-box">
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter your firstname"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.firstname}
+                      onChange={handleChange}
+                      name="firstname"
+                    />
+                  </div>
 
-                <Typography className="landing-form__span" variant="span">
-                  {errors.firstname}
-                </Typography>
-              </div>
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Enter your surname"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.surname}
-                    onChange={handleChange}
-                    name="surname"
-                  />
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.firstname}
+                  </Typography>
                 </div>
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter your surname"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.surname}
+                      onChange={handleChange}
+                      name="surname"
+                    />
+                  </div>
 
-                <Typography className="landing-form__span" variant="span">
-                  {errors.surname}
-                </Typography>
-              </div>
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Enter your email"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.other_names}
-                    onChange={handleChange}
-                    name="other_names"
-                  />
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.surname}
+                  </Typography>
                 </div>
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter your other names"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.other_names}
+                      onChange={handleChange}
+                      name="other_names"
+                    />
+                  </div>
 
-                <Typography className="landing-form__span" variant="span">
-                  {errors.other_names}
-                </Typography>
-              </div>
-              <div>
-                <input type="radio" name="gender" />
-                <input type="radio" name="gender" />
-              </div>
-              <div>
-                <input type="date" name="date_of_birth" />
-              </div>
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Enter your email"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.phone_number}
-                    onChange={handleChange}
-                    name="phone_number"
-                  />
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.other_names}
+                  </Typography>
                 </div>
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter your email"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.email}
+                      onChange={handleChange}
+                      name="email"
+                    />
+                  </div>
 
-                <Typography className="landing-form__span" variant="span">
-                  {errors.phone_number}
-                </Typography>
-              </div>
-              <textarea
-                name="contact_address"
-                placeholder="Enter your contact address"
-              ></textarea>
-              <select>
-                <option>Lagos</option>
-                <option>Abia</option>
-                <option>Osun</option>
-                <option>Kaduna</option>
-              </select>
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Enter your email"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.email}
-                    onChange={handleChange}
-                    name="email"
-                  />
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.email}
+                  </Typography>
                 </div>
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faKey}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.password}
+                      onChange={handleChange}
+                      name="password"
+                    />
+                    <FontAwesomeIcon
+                      icon={faEye}
+                      className="landing-form__input-icon--eye"
+                      onClick={togglePasswordVisibility}
+                    />
+                  </div>
 
-                <Typography className="landing-form__span" variant="span">
-                  {errors.email}
-                </Typography>
-              </div>
-              <div className="landing-form__input-box-container">
-                <div className="landing-form__input-box">
-                  <FontAwesomeIcon
-                    icon={faKey}
-                    className="landing-form__input-icon"
-                  />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="landing-form__input"
-                    // required
-                    value={inputFields.password}
-                    onChange={handleChange}
-                    name="password"
-                  />
-                  <FontAwesomeIcon
-                    icon={faEye}
-                    className="landing-form__input-icon--eye"
-                    onClick={togglePasswordVisibility}
-                  />
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.password}
+                  </Typography>
                 </div>
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faKey}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.password}
+                      onChange={handleChange}
+                      name="password"
+                    />
+                    <FontAwesomeIcon
+                      icon={faEye}
+                      className="landing-form__input-icon--eye"
+                      onClick={togglePasswordVisibility}
+                    />
+                  </div>
 
-                <Typography className="landing-form__span" variant="span">
-                  {errors.password}
-                </Typography>
-              </div>
-              <div className="landing-form__checkbox-link-box">
-                <div className="landing-form__checkbox-box">
-                  <input
-                    type="checkbox"
-                    className="landing-form__input--checkbox"
-                    id="remember"
-                    value={inputFields.remember_token}
-                    onChange={handleChange}
-                    name="remember_token"
-                  />
-                  <label
-                    htmlFor="remember"
-                    className="landing-form__checkbox-label"
-                  >
-                    Remember me?
-                  </label>
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.password}
+                  </Typography>
                 </div>
                 <div>
-                  <Link to="/forget-password" className="landing-form__link">
-                    Forget password?
-                  </Link>
+                  <input
+                    type="radio"
+                    name="gender"
+                    id="male"
+                    checked="checked"
+                  />
+                  <label htmlFor="male">Male</label>
+                  <input type="radio" name="gender" id="female" />
+                  <label htmlFor="female">Male</label>
                 </div>
+                <div>
+                  <input type="date" name="date_of_birth" />
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.date_of_birth}
+                  </Typography>
+                </div>
+                <div className="landing-form__input-box-container">
+                  <div className="landing-form__input-box">
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className="landing-form__input-icon"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter your phone number"
+                      className="landing-form__input"
+                      // required
+                      value={inputFields.phone_number}
+                      onChange={handleChange}
+                      name="phone_number"
+                    />
+                  </div>
+
+                  <Typography className="landing-form__span" variant="span">
+                    {errors.phone_number}
+                  </Typography>
+                </div>
+                <div>
+                  <textarea
+                    name="contact_address"
+                    placeholder="Enter your contact address"
+                  ></textarea>
+                </div>
+                <div>
+                  <select name="state">
+                    <option>Select state</option>
+                    <option>Lagos</option>
+                    <option>Abia</option>
+                    <option>Osun</option>
+                    <option>Kaduna</option>
+                  </select>
+                </div>
+                <Button className="landing-form__button" disabled={loading}>
+                  Next
+                </Button>
               </div>
-              <Button className="landing-form__button" disabled={loading}>
-                Next
-              </Button>
-            </div>
+            )}
           </div>
         </form>
       </div>

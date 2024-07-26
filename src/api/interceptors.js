@@ -6,15 +6,17 @@ import Cookies from "js-cookie";
 export const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
     (config) => {
-      // Add authorization token to headers if it exists
-      //const token = store.getState().auth.token;
-      //const token = store.getState().auth.token;
       var token = "";
-      token = Cookies.get("auth_user_token");
-
-      if (token) {
+      if (Cookies.get("auth_user_token")) {
+        token = Cookies.get("auth_user_token");
+        config.headers["Authorization"] = token ? `Bearer ${token}` : "";
+      } else if (Cookies.get("auth_admin_token")) {
+        token = Cookies.get("auth_admin_token");
+        config.headers["Authorization"] = token ? `Bearer ${token}` : "";
+      } else {
         config.headers["Authorization"] = `Bearer ${token}`;
       }
+
       return config;
     },
     (error) => {
