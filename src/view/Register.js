@@ -28,8 +28,8 @@ import authService from "./../api/authService";
 import Cookies from "js-cookie";
 
 //utils
-import { notify } from "./../utils/Notification ";
-import { phonePregMatch } from "./../utils/PregMatch ";
+import { notify } from "./../utils/Notification";
+import { phonePregMatch } from "./../utils/PregMatch";
 
 function Register() {
   const navigate = useNavigate();
@@ -65,8 +65,8 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const [firstPage, setFirstPage] = useState(true);
-  //   const [secondPage, setSecondPage] = useState(false);
-  //   const [thirdPage, setThirdPage] = useState(false);
+  const [secondPage, setSecondPage] = useState(false);
+  const [thirdPage, setThirdPage] = useState(false);
 
   //Show and hide password
   const [showPassword, setShowPassword] = useState(false);
@@ -86,6 +86,8 @@ function Register() {
   //Validate inputs
   const validate = (inputValues) => {
     setFirstPage(false);
+    setSecondPage(false);
+    setThirdPage(false);
     let errors = {};
     if (inputValues.firstname.length < 3) {
       errors.firstname = "Enter a valid firstname";
@@ -120,18 +122,35 @@ function Register() {
     if (inputValues.state_of_origin.value === "Select state") {
       errors.state_of_origin = "Please select your state";
     }
-    if (inputValues.qualification_level.value === "") {
-      errors.qualification_level = " ";
+    if (inputValues.course.value === "Select course") {
+      errors.course = "Please select an option";
     }
+    if (inputValues.session.value === "") {
+      errors.session = "Please choose the appropriate option";
+    }
+
+    if (inputValues.qualification_level.value === "") {
+      errors.qualification_level = "Please choose the appropriate option";
+    }
+    if (inputValues.english_fluency.value === "") {
+      errors.english_fluency = "Please choose the appropriate option";
+    }
+    if (inputValues.computer_literacy.value === "") {
+      errors.computer_literacy = "Please choose the appropriate option";
+    }
+    if (inputValues.ict_referral.value === "") {
+      errors.ict_referral = "Please choose the appropriate option";
+    }
+
     return errors;
   };
 
   //Next button
-  const nextButton = (e) => {
-    e.preventDefault();
-    setErrors(validate(inputFields)); //object of errors
-    setSubmitting(true);
-  };
+  // const nextButton = (e) => {
+  //   e.preventDefault();
+  //   setErrors(validate(inputFields)); //object of errors
+  //   setSubmitting(true);
+  // };
 
   //Submit form
   const handleSubmit = (e) => {
@@ -162,11 +181,11 @@ function Register() {
         inputFields.phone_number,
         inputFields.contact_address,
         inputFields.state_of_origin,
+        inputFields.course,
+        inputFields.session,
         inputFields.qualification_level,
         inputFields.english_fluency,
         inputFields.conversation_strength,
-        inputFields.course,
-        inputFields.session,
         inputFields.computer_literacy,
         inputFields.ict_referral
       );
@@ -249,203 +268,292 @@ function Register() {
                 </Typography>
               </div>
             </div>
+            <div className="landing-form__inputs-box">
+              {firstPage && (
+                <>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter your firstname"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.firstname}
+                        onChange={handleChange}
+                        name="firstname"
+                      />
+                    </div>
 
-            {firstPage && (
-              <div className="landing-form__inputs-box">
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faEnvelope}
-                      className="landing-form__input-icon"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Enter your firstname"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.firstname}
-                      onChange={handleChange}
-                      name="firstname"
-                    />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.firstname}
+                    </Typography>
                   </div>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter your surname"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.surname}
+                        onChange={handleChange}
+                        name="surname"
+                      />
+                    </div>
 
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.firstname}
-                  </Typography>
-                </div>
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faEnvelope}
-                      className="landing-form__input-icon"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Enter your surname"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.surname}
-                      onChange={handleChange}
-                      name="surname"
-                    />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.surname}
+                    </Typography>
                   </div>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter your other names"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.other_names}
+                        onChange={handleChange}
+                        name="other_names"
+                      />
+                    </div>
 
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.surname}
-                  </Typography>
-                </div>
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faEnvelope}
-                      className="landing-form__input-icon"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Enter your other names"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.other_names}
-                      onChange={handleChange}
-                      name="other_names"
-                    />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.other_names}
+                    </Typography>
                   </div>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter your email"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.email}
+                        onChange={handleChange}
+                        name="email"
+                      />
+                    </div>
 
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.other_names}
-                  </Typography>
-                </div>
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faEnvelope}
-                      className="landing-form__input-icon"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Enter your email"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.email}
-                      onChange={handleChange}
-                      name="email"
-                    />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.email}
+                    </Typography>
                   </div>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faKey}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.password}
+                        onChange={handleChange}
+                        name="password"
+                      />
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="landing-form__input-icon--eye"
+                        onClick={togglePasswordVisibility}
+                      />
+                    </div>
 
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.email}
-                  </Typography>
-                </div>
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faKey}
-                      className="landing-form__input-icon"
-                    />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.password}
-                      onChange={handleChange}
-                      name="password"
-                    />
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      className="landing-form__input-icon--eye"
-                      onClick={togglePasswordVisibility}
-                    />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.password}
+                    </Typography>
                   </div>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faKey}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.password}
+                        onChange={handleChange}
+                        name="password"
+                      />
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="landing-form__input-icon--eye"
+                        onClick={togglePasswordVisibility}
+                      />
+                    </div>
 
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.password}
-                  </Typography>
-                </div>
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faKey}
-                      className="landing-form__input-icon"
-                    />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.password}
-                      onChange={handleChange}
-                      name="password"
-                    />
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      className="landing-form__input-icon--eye"
-                      onClick={togglePasswordVisibility}
-                    />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.password}
+                    </Typography>
                   </div>
-
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.password}
-                  </Typography>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    name="gender"
-                    id="male"
-                    checked="checked"
-                  />
-                  <label htmlFor="male">Male</label>
-                  <input type="radio" name="gender" id="female" />
-                  <label htmlFor="female">Male</label>
-                </div>
-                <div>
-                  <input type="date" name="date_of_birth" />
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.date_of_birth}
-                  </Typography>
-                </div>
-                <div className="landing-form__input-box-container">
-                  <div className="landing-form__input-box">
-                    <FontAwesomeIcon
-                      icon={faEnvelope}
-                      className="landing-form__input-icon"
-                    />
+                  <div>
                     <input
-                      type="text"
-                      placeholder="Enter your phone number"
-                      className="landing-form__input"
-                      // required
-                      value={inputFields.phone_number}
-                      onChange={handleChange}
-                      name="phone_number"
+                      type="radio"
+                      name="gender"
+                      id="male"
+                      checked="checked"
                     />
+                    <label htmlFor="male">Male</label>
+                    <input type="radio" name="gender" id="female" />
+                    <label htmlFor="female">Female</label>
                   </div>
+                  <div>
+                    <input type="date" name="date_of_birth" />
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.date_of_birth}
+                    </Typography>
+                  </div>
+                  <div className="landing-form__input-box-container">
+                    <div className="landing-form__input-box">
+                      <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="landing-form__input-icon"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter your phone number"
+                        className="landing-form__input"
+                        // required
+                        value={inputFields.phone_number}
+                        onChange={handleChange}
+                        name="phone_number"
+                      />
+                    </div>
 
-                  <Typography className="landing-form__span" variant="span">
-                    {errors.phone_number}
-                  </Typography>
-                </div>
-                <div>
-                  <textarea
-                    name="contact_address"
-                    placeholder="Enter your contact address"
-                  ></textarea>
-                </div>
-                <div>
-                  <select name="state">
-                    <option>Select state</option>
-                    <option>Lagos</option>
-                    <option>Abia</option>
-                    <option>Osun</option>
-                    <option>Kaduna</option>
-                  </select>
-                </div>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.phone_number}
+                    </Typography>
+                  </div>
+                  <div>
+                    <textarea
+                      name="contact_address"
+                      placeholder="Enter your contact address"
+                    ></textarea>
+                  </div>
+                  <div>
+                    <select name="state">
+                      <option>Select state</option>
+                      <option>Lagos</option>
+                      <option>Abia</option>
+                      <option>Osun</option>
+                      <option>Kaduna</option>
+                    </select>
+                  </div>
+                </>
+              )}
+              {secondPage && (
+                <>
+                  <div>
+                    <select name="course">
+                      <option>Select course</option>
+                      <option>Graphics Design - UI/UX</option>
+                      <option>Web Design</option>
+                      <option>Digital Marketing/Content Creation</option>
+                      <option>Photography/Video Editing</option>
+                    </select>
+                  </div>
+                  <div>
+                    <input type="radio" name="session" id="morning" />
+                    <label htmlFor="morning">Morning (10am - 12pm)</label>
+                    <input type="radio" name="session" id="afternoon" />
+                    <label htmlFor="afternoon">Afternoon (3pm - 5pm)</label>
+                    <input type="radio" name="session" id="evening" />
+                    <label htmlFor="evening">
+                      Weekends only (11am - 2pm) (3pm - 5pm)
+                    </label>
+                  </div>
+                  <div>
+                    <select name="qualification_level">
+                      <option>Select course</option>
+                      <option>O Level/SSCE</option>
+                      <option>Undergraduate</option>
+                      <option>National Diploma (ND)</option>
+                      <option>National Certificate of Education (NCE)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <input type="radio" name="english_fluency" id="natural" />
+                    <label htmlFor="natural">
+                      It happens naturally without me noticing
+                    </label>
+                    <input type="radio" name="english_fluency" id="easy" />
+                    <label htmlFor="easy">
+                      It is a lot easier than when I started learning, but I
+                      still get confused sometimes
+                    </label>
+                  </div>
+                </>
+              )}
+              {thirdPage && (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="conversation_strength"
+                      id="natural"
+                    />
+                    <label htmlFor="natural">
+                      Yes - understanding English is as natural as my native
+                      language
+                    </label>
+                    <input
+                      type="radio"
+                      name="conversation_strength"
+                      id="lost"
+                    />
+                    <label htmlFor="lost">
+                      Most of the time, but sometimes I get lost if everyone is
+                      speaking fast
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="computer_literacy" id="1" />
+                    <label htmlFor="1">
+                      Yes, I can operate the computer system
+                    </label>
+                    <input type="radio" name="computer_literacy" id="2" />
+                    <label htmlFor="2">
+                      I have a personal computer and I use it effectively
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="ict_referral" id="1" />
+                    <label htmlFor="1">Flyers</label>
+                    <input type="radio" name="ict_referral" id="2" />
+                    <label htmlFor="2">Banner</label>
+                  </div>
+                </>
+              )}
+              <Button className="landing-form__button" disabled={loading}>
+                Next
+              </Button>
+              {secondPage && (
                 <Button className="landing-form__button" disabled={loading}>
-                  Next
+                  Back
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </form>
       </div>
