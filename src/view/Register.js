@@ -57,7 +57,11 @@ function Register() {
       ict_referral: "",
     },
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    personal_info: "",
+    educational_background: "",
+    other_info: "",
+  });
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -216,7 +220,7 @@ function Register() {
         break;
       }
       default: {
-        if (Object.keys(errors).other_info.length === 0 && submitting) {
+        if (Object.keys(errors.other_info).length === 0 && submitting) {
           makeRequest();
         }
       }
@@ -486,14 +490,14 @@ function Register() {
                         placeholder="Enter your phone number"
                         className="landing-form__input"
                         // required
-                        value={inputFields.phone_number}
+                        value={inputFields.personal_info.phone_number}
                         onChange={handleChange}
                         name="phone_number"
                       />
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.phone_number}
+                      {errors.personal_info.phone_number}
                     </Typography>
                   </div>
                   <div>
@@ -597,24 +601,52 @@ function Register() {
                 </>
               )}
 
-              {page == 2 ? (
-                <Button className="landing-form__button" disabled={loading}>
-                  Back
-                </Button>
-              ) : (
-                <Button className="landing-form__button" disabled={loading}>
-                  Back
-                </Button>
-              )}
-              {page == 1 || page == 2 ? (
-                <Button className="landing-form__button" disabled={loading}>
-                  Next
-                </Button>
-              ) : (
-                <Button className="landing-form__button" disabled={loading}>
-                  Submit
-                </Button>
-              )}
+              <div className="landing-form__range-box">
+                <div className="landing-form__range">
+                  <div className="landing-form__level-container">
+                    <div className="landing-form__level"></div>
+                  </div>
+                  <Typography variant="span">Page 2 of 3</Typography>
+                </div>
+                <div>
+                  <div className="landing-form__button-group">
+                    {page == 2 ? (
+                      <Button
+                        className="landing-form__button"
+                        disabled={loading}
+                      >
+                        Back
+                      </Button>
+                    ) : (
+                      <Button
+                        className="landing-form__button"
+                        disabled={loading}
+                      >
+                        Back
+                      </Button>
+                    )}
+                    {page == 1 || page == 2 ? (
+                      <Button
+                        className="landing-form__button"
+                        disabled={loading}
+                      >
+                        Next
+                      </Button>
+                    ) : (
+                      <Button
+                        className="landing-form__button"
+                        disabled={loading}
+                      >
+                        Submit
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="landing-form__clear-form-text">
+                    Clear form
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </form>

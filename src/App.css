@@ -163,6 +163,29 @@ a {
   font-weight: 500;
 }
 
+.landing-form__range-box{
+  margin-top:30px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.landing-form__range{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-form__level-container{
+  width:100%;
+  background-color: #cecece;
+  border-radius:5px;
+  height:15px
+}
+
+.landing-form__level{}
+
 .landing-form__button {
   margin: 20px 2px;
 }
@@ -207,6 +230,8 @@ margin-bottom:20px;
   text-align: center;
   margin-top:10px;
 }
+
+
 
 @media only screen and (min-width: 425px) {
   .landing-form__container {
