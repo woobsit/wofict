@@ -24,9 +24,6 @@ import Loader from "./../components/atom/loader";
 //API service
 import authService from "./../api/authService";
 
-//js-cookies
-import Cookies from "js-cookie";
-
 //utils
 import { notify } from "./../utils/Notification";
 import { phonePregMatch } from "./../utils/PregMatch";
@@ -49,13 +46,13 @@ function Register() {
       state_of_origin: "",
     },
     educational_background: {
-      qualification_level: "",
-      english_fluency: "",
-      conversation_strength: "",
-    },
-    course_of_choice: {
       course: "",
       session: "",
+      qualification_level: "",
+      english_fluency: "",
+    },
+    other_info: {
+      conversation_strength: "",
       computer_literacy: "",
       ict_referral: "",
     },
@@ -63,10 +60,7 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const [firstPage, setFirstPage] = useState(true);
-  const [secondPage, setSecondPage] = useState(false);
-  const [thirdPage, setThirdPage] = useState(false);
+  const [page, setPage] = useState(1);
 
   //Show and hide password
   const [showPassword, setShowPassword] = useState(false);
@@ -78,126 +72,183 @@ function Register() {
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" || type === "radio" ? checked : value;
-
-    setInputFields({ ...inputFields, [name]: newValue });
+    let newValue = "";
+    switch (page) {
+      case 1: {
+        newValue = type === "radio" ? checked : value;
+        setInputFields({ ...inputFields.personal_info, [name]: newValue });
+        break;
+      }
+      case 2: {
+        newValue = type === "radio" ? checked : value;
+        setInputFields({
+          ...inputFields.educational_background,
+          [name]: newValue,
+        });
+        break;
+      }
+      default: {
+        newValue = type === "radio" ? checked : value;
+        setInputFields({ ...inputFields.other_info, [name]: newValue });
+        break;
+      }
+    }
   };
 
   //Validate inputs
   const validate = (inputValues) => {
-    setFirstPage(false);
-    setSecondPage(false);
-    setThirdPage(false);
     let errors = {};
-    if (inputValues.firstname.length < 3) {
-      errors.firstname = "Enter a valid firstname";
-    }
-    if (inputValues.surname.length < 3) {
-      errors.surname = "Enter a valid surname";
-    }
-    if (
-      inputValues.other_names.length < 3 ||
-      inputValues.other_names.length === 0
-    ) {
-      errors.other_names = "Enter valid other names";
-    }
-    if (!validator.isEmail(inputValues.email)) {
-      errors.email = "Enter a valid email address";
-    }
-    if (inputValues.password.length < 6) {
-      errors.password = "Password should not be less than 6 characters";
-    } else if (inputValues.password !== inputValues.password_confirmation) {
-      errors.password_confirmation =
-        "Password and confirm password did not match";
-    }
-    if (inputValues.date_of_birth.value === "") {
-      errors.date_of_birth = "Enter valid date of birth";
-    }
-    if (!phonePregMatch.test(inputValues.phone_number)) {
-      errors.phone_number = "Enter a valid phone number";
-    }
-    if (inputValues.contact_address.length < 3) {
-      errors.contact_address = "Enter a valid contact address";
-    }
-    if (inputValues.state_of_origin.value === "Select state") {
-      errors.state_of_origin = "Please select your state";
-    }
-    if (inputValues.course.value === "Select course") {
-      errors.course = "Please select an option";
-    }
-    if (inputValues.session.value === "") {
-      errors.session = "Please choose the appropriate option";
-    }
+    switch (page) {
+      case 1: {
+        if (inputValues.personal_info.firstname.length < 3) {
+          errors.personal_info.firstname = "Enter a valid firstname";
+        }
+        if (inputValues.personal_info.surname.length < 3) {
+          errors.personal_info.surname = "Enter a valid surname";
+        }
+        if (
+          inputValues.personal_info.other_names.length < 3 ||
+          inputValues.personal_info.other_names.length === 0
+        ) {
+          errors.personal_info.other_names = "Enter valid other names";
+        }
+        if (!validator.isEmail(inputValues.personal_info.email)) {
+          errors.personal_info.email = "Enter a valid email address";
+        }
+        if (inputValues.personal_info.password.length < 6) {
+          errors.personal_info.password =
+            "Password should not be less than 6 characters";
+        } else if (
+          inputValues.personal_info.password !==
+          inputValues.personal_info.password_confirmation
+        ) {
+          errors.personal_info.password_confirmation =
+            "Password and confirm password did not match";
+        }
+        if (inputValues.personal_info.date_of_birth.value === "") {
+          errors.personal_info.date_of_birth = "Enter valid date of birth";
+        }
+        if (!phonePregMatch.test(inputValues.personal_info.phone_number)) {
+          errors.personal_info.phone_number = "Enter a valid phone number";
+        }
+        if (inputValues.personal_info.contact_address.length < 3) {
+          errors.personal_info.contact_address =
+            "Enter a valid contact address";
+        }
+        if (
+          inputValues.personal_info.state_of_origin.value === "Select state"
+        ) {
+          errors.personal_info.state_of_origin = "Please select your state";
+        }
+        return errors;
+      }
+      case 2: {
+        if (
+          inputValues.educational_background.course.value === "Select course"
+        ) {
+          errors.course = "Please select an option";
+        }
+        if (inputValues.educational_background.session.value === "") {
+          errors.session = "Please choose the appropriate option";
+        }
 
-    if (inputValues.qualification_level.value === "") {
-      errors.qualification_level = "Please choose the appropriate option";
+        if (
+          inputValues.educational_background.qualification_level.value ===
+          "Select qualification level"
+        ) {
+          errors.qualification_level = "Please select your qualification level";
+        }
+        if (inputValues.educational_background.english_fluency.value === "") {
+          errors.english_fluency = "Please choose the appropriate option";
+        }
+        return errors;
+      }
+      default: {
+        if (inputValues.other_info.computer_literacy.value === "") {
+          errors.other_info.computer_literacy =
+            "Please choose the appropriate option";
+        }
+        if (inputValues.other_info.ict_referral.value === "") {
+          errors.other_info.ict_referral =
+            "Please choose the appropriate option";
+        }
+        return errors;
+      }
     }
-    if (inputValues.english_fluency.value === "") {
-      errors.english_fluency = "Please choose the appropriate option";
-    }
-    if (inputValues.computer_literacy.value === "") {
-      errors.computer_literacy = "Please choose the appropriate option";
-    }
-    if (inputValues.ict_referral.value === "") {
-      errors.ict_referral = "Please choose the appropriate option";
-    }
-
-    return errors;
   };
-
-  //Next button
-  // const nextButton = (e) => {
-  //   e.preventDefault();
-  //   setErrors(validate(inputFields)); //object of errors
-  //   setSubmitting(true);
-  // };
 
   //Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validate(inputFields)); //object of errors
-    setSubmitting(true);
+    switch (page) {
+      case 1: {
+        setErrors(validate(inputFields.personal_info)); //object of errors
+        break;
+      }
+      case 2: {
+        setErrors(validate(inputFields.educational_background)); //object of errors
+        break;
+      }
+      default: {
+        setErrors(validate(inputFields.other_info)); //object of errors
+        setSubmitting(true);
+        break;
+      }
+    }
   };
 
   //When form values are valid
   useEffect(() => {
-    if (Object.keys(errors).length === 0 && submitting) {
-      makeRequest();
+    switch (page) {
+      case 1: {
+        if (Object.keys(errors.personal_info).length === 0 && submitting) {
+          setPage(2);
+        }
+        break;
+      }
+      case 2: {
+        if (
+          Object.keys(errors.educational_background).length === 0 &&
+          submitting
+        ) {
+          setPage(3);
+        }
+        break;
+      }
+      default: {
+        if (Object.keys(errors).other_info.length === 0 && submitting) {
+          makeRequest();
+        }
+      }
     }
-  }, [errors]);
+  }, [errors.personal_info, errors.educational_background, errors.other_info]);
 
   const makeRequest = async () => {
     try {
       setLoading(true);
       const response = await authService.userRegister(
-        inputFields.firstname,
-        inputFields.surname,
-        inputFields.other_names,
-        inputFields.email,
-        inputFields.password,
-        inputFields.password_confirmation,
-        inputFields.gender,
-        inputFields.date_of_birth,
-        inputFields.phone_number,
-        inputFields.contact_address,
-        inputFields.state_of_origin,
-        inputFields.course,
-        inputFields.session,
-        inputFields.qualification_level,
-        inputFields.english_fluency,
-        inputFields.conversation_strength,
-        inputFields.computer_literacy,
-        inputFields.ict_referral
+        inputFields.personal_info.firstname,
+        inputFields.personal_info.surname,
+        inputFields.personal_info.other_names,
+        inputFields.personal_info.email,
+        inputFields.personal_info.password,
+        inputFields.personal_info.password_confirmation,
+        inputFields.personal_info.gender,
+        inputFields.personal_info.date_of_birth,
+        inputFields.personal_info.phone_number,
+        inputFields.personal_info.contact_address,
+        inputFields.personal_info.state_of_origin,
+        inputFields.educational_background.qualification_level,
+        inputFields.educational_background.english_fluency,
+        inputFields.educational_background.course,
+        inputFields.educational_background.session,
+        inputFields.other_info.conversation_strength,
+        inputFields.other_info.computer_literacy,
+        inputFields.other_info.ict_referral
       );
 
       if (response.status === 200) {
-        //Here I used the remember me value in the checkbox as the condition of the lenght of the token. With this I do not have to create a remember me cookie which would be different from the token cookie.
-        const expirationTime = response.remember_me ? 30 : 1;
-        Cookies.set("auth_user_token", response.token, {
-          expires: expirationTime,
-          secure: true,
-          sameSite: "lax",
-        });
+        //Register was successfull
         setLoading(false);
         navigate("/home");
       } else if (response.status === 422) {
@@ -269,7 +320,7 @@ function Register() {
               </div>
             </div>
             <div className="landing-form__inputs-box">
-              {firstPage && (
+              {page === 1 && (
                 <>
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
@@ -282,14 +333,14 @@ function Register() {
                         placeholder="Enter your firstname"
                         className="landing-form__input"
                         // required
-                        value={inputFields.firstname}
+                        value={inputFields.personal_info.firstname}
                         onChange={handleChange}
                         name="firstname"
                       />
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.firstname}
+                      {errors.personal_info.firstname}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -303,14 +354,14 @@ function Register() {
                         placeholder="Enter your surname"
                         className="landing-form__input"
                         // required
-                        value={inputFields.surname}
+                        value={inputFields.personal_info.surname}
                         onChange={handleChange}
                         name="surname"
                       />
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.surname}
+                      {errors.personal_info.surname}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -324,14 +375,14 @@ function Register() {
                         placeholder="Enter your other names"
                         className="landing-form__input"
                         // required
-                        value={inputFields.other_names}
+                        value={inputFields.personal_info.other_names}
                         onChange={handleChange}
                         name="other_names"
                       />
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.other_names}
+                      {errors.personal_info.other_names}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -345,14 +396,14 @@ function Register() {
                         placeholder="Enter your email"
                         className="landing-form__input"
                         // required
-                        value={inputFields.email}
+                        value={inputFields.personal_info.email}
                         onChange={handleChange}
                         name="email"
                       />
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.email}
+                      {errors.personal_info.email}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -366,7 +417,7 @@ function Register() {
                         placeholder="Enter your password"
                         className="landing-form__input"
                         // required
-                        value={inputFields.password}
+                        value={inputFields.personal_info.password}
                         onChange={handleChange}
                         name="password"
                       />
@@ -378,7 +429,7 @@ function Register() {
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.password}
+                      {errors.personal_info.password}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -392,7 +443,7 @@ function Register() {
                         placeholder="Enter your password"
                         className="landing-form__input"
                         // required
-                        value={inputFields.password}
+                        value={inputFields.personal_info.password}
                         onChange={handleChange}
                         name="password"
                       />
@@ -404,7 +455,7 @@ function Register() {
                     </div>
 
                     <Typography className="landing-form__span" variant="span">
-                      {errors.password}
+                      {errors.personal_info.password}
                     </Typography>
                   </div>
                   <div>
@@ -421,7 +472,7 @@ function Register() {
                   <div>
                     <input type="date" name="date_of_birth" />
                     <Typography className="landing-form__span" variant="span">
-                      {errors.date_of_birth}
+                      {errors.personal_info.date_of_birth}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -462,7 +513,7 @@ function Register() {
                   </div>
                 </>
               )}
-              {secondPage && (
+              {page === 2 && (
                 <>
                   <div>
                     <select name="course">
@@ -485,7 +536,7 @@ function Register() {
                   </div>
                   <div>
                     <select name="qualification_level">
-                      <option>Select course</option>
+                      <option>Select qualification level</option>
                       <option>O Level/SSCE</option>
                       <option>Undergraduate</option>
                       <option>National Diploma (ND)</option>
@@ -505,7 +556,7 @@ function Register() {
                   </div>
                 </>
               )}
-              {thirdPage && (
+              {page === 3 && (
                 <>
                   <div>
                     <input
@@ -545,12 +596,23 @@ function Register() {
                   </div>
                 </>
               )}
-              <Button className="landing-form__button" disabled={loading}>
-                Next
-              </Button>
-              {secondPage && (
+
+              {page == 2 ? (
                 <Button className="landing-form__button" disabled={loading}>
                   Back
+                </Button>
+              ) : (
+                <Button className="landing-form__button" disabled={loading}>
+                  Back
+                </Button>
+              )}
+              {page == 1 || page == 2 ? (
+                <Button className="landing-form__button" disabled={loading}>
+                  Next
+                </Button>
+              ) : (
+                <Button className="landing-form__button" disabled={loading}>
+                  Submit
                 </Button>
               )}
             </div>
