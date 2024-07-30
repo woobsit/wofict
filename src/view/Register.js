@@ -13,7 +13,12 @@ import Typography from "./../components/atom/typography/Typography";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faKey, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faKey,
+  faEye,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 //Validator
 import validator from "validator";
@@ -98,10 +103,13 @@ function Register() {
       }
     }
   };
-
   //Validate inputs
   const validate = (inputValues) => {
-    let errors = {};
+    let errors = {
+      personal_info: {},
+      educational_background: {},
+      other_info: {},
+    };
     switch (page) {
       case 1: {
         if (inputValues.personal_info.firstname.length < 3) {
@@ -111,10 +119,10 @@ function Register() {
           errors.personal_info.surname = "Enter a valid surname";
         }
         if (
-          inputValues.personal_info.other_names.length < 3 ||
-          inputValues.personal_info.other_names.length === 0
+          inputValues.personal_info.other_names.length < 3 &&
+          inputValues.personal_info.other_names
         ) {
-          errors.personal_info.other_names = "Enter valid other names";
+          errors.personal_info.other_names = "Enter valid names";
         }
         if (!validator.isEmail(inputValues.personal_info.email)) {
           errors.personal_info.email = "Enter a valid email address";
@@ -150,20 +158,23 @@ function Register() {
         if (
           inputValues.educational_background.course.value === "Select course"
         ) {
-          errors.course = "Please select an option";
+          errors.educational_background.course = "Please select an option";
         }
         if (inputValues.educational_background.session.value === "") {
-          errors.session = "Please choose the appropriate option";
+          errors.educational_background.session =
+            "Please choose the appropriate option";
         }
 
         if (
           inputValues.educational_background.qualification_level.value ===
           "Select qualification level"
         ) {
-          errors.qualification_level = "Please select your qualification level";
+          errors.educational_background.qualification_level =
+            "Please select your qualification level";
         }
         if (inputValues.educational_background.english_fluency.value === "") {
-          errors.english_fluency = "Please choose the appropriate option";
+          errors.educational_background.english_fluency =
+            "Please choose the appropriate option";
         }
         return errors;
       }
@@ -186,15 +197,15 @@ function Register() {
     e.preventDefault();
     switch (page) {
       case 1: {
-        setErrors(validate(inputFields.personal_info)); //object of errors
+        setErrors(validate(inputFields)); //object of errors
         break;
       }
       case 2: {
-        setErrors(validate(inputFields.educational_background)); //object of errors
+        setErrors(validate(inputFields)); //object of errors
         break;
       }
       default: {
-        setErrors(validate(inputFields.other_info)); //object of errors
+        setErrors(validate(inputFields)); //object of errors
         setSubmitting(true);
         break;
       }
@@ -329,7 +340,7 @@ function Register() {
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
                       <FontAwesomeIcon
-                        icon={faEnvelope}
+                        icon={faUser}
                         className="landing-form__input-icon"
                       />
                       <input
@@ -350,7 +361,7 @@ function Register() {
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
                       <FontAwesomeIcon
-                        icon={faEnvelope}
+                        icon={faUser}
                         className="landing-form__input-icon"
                       />
                       <input
@@ -371,7 +382,7 @@ function Register() {
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
                       <FontAwesomeIcon
-                        icon={faEnvelope}
+                        icon={faUser}
                         className="landing-form__input-icon"
                       />
                       <input
@@ -601,50 +612,77 @@ function Register() {
                 </>
               )}
 
-              <div className="landing-form__range-box">
-                <div className="landing-form__range">
-                  <div className="landing-form__level-container">
-                    <div className="landing-form__level"></div>
+              <div className="landing-form__progress-bar-container">
+                <div className="landing-form__progress-bar">
+                  <div className="landing-form__progress-bar-box">
+                    <div
+                      className="landing-form__progress-bar-level"
+                      style={{ width: (page / 3) * 100 + "%" }}
+                    ></div>
                   </div>
-                  <Typography variant="span">Page 2 of 3</Typography>
+                  <Typography
+                    variant="span"
+                    className="landing-form__progress-bar-text"
+                  >
+                    Page {page} of 3
+                  </Typography>
                 </div>
-                <div>
-                  <div className="landing-form__button-group">
-                    {page == 2 ? (
+                <div className="landing-form__progress-bar-button-group">
+                  <div className="landing-form__progress-bar-buttons">
+                    {page === 1 ? (
                       <Button
-                        className="landing-form__button"
-                        disabled={loading}
-                      >
-                        Back
-                      </Button>
-                    ) : (
-                      <Button
-                        className="landing-form__button"
-                        disabled={loading}
-                      >
-                        Back
-                      </Button>
-                    )}
-                    {page == 1 || page == 2 ? (
-                      <Button
-                        className="landing-form__button"
+                        className="landing-form__progress-bar-button--back"
                         disabled={loading}
                       >
                         Next
                       </Button>
                     ) : (
-                      <Button
-                        className="landing-form__button"
-                        disabled={loading}
-                      >
-                        Submit
-                      </Button>
+                      ""
+                    )}
+                    {page === 2 ? (
+                      <>
+                        <Button
+                          className="landing-form__progress-bar-button--back"
+                          disabled={loading}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          className="landing-form__progress-bar-button--next"
+                          disabled={loading}
+                        >
+                          Next
+                        </Button>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    {page === 3 ? (
+                      <>
+                        <Button
+                          className="landing-form__progress-bar-button--back"
+                          disabled={loading}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          className="landing-form__progress-bar-button--submit"
+                          disabled={loading}
+                        >
+                          Submit
+                        </Button>
+                      </>
+                    ) : (
+                      ""
                     )}
                   </div>
 
-                  <div className="landing-form__clear-form-text">
+                  <Typography
+                    variant="span"
+                    className="landing-form__progress-bar-button-group-text"
+                  >
                     Clear form
-                  </div>
+                  </Typography>
                 </div>
               </div>
             </div>
