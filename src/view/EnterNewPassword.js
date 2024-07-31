@@ -261,6 +261,11 @@ function EnterNewPassword() {
                       className="landing-form__input-icon--eye"
                       onClick={togglePasswordVisibility}
                     />
+                    <FontAwesomeIcon
+                      icon={faEye}
+                      className="landing-form__input-icon--eye"
+                      onClick={toggleConfirmPasswordVisibility}
+                    />
                   </div>
 
                   <Typography className="landing-form__span" variant="span">
@@ -281,11 +286,6 @@ function EnterNewPassword() {
                       value={inputFields.password_confirmation}
                       onChange={handleChange}
                       name="password_confirmation"
-                    />
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      className="landing-form__input-icon--eye"
-                      onClick={toggleConfirmPasswordVisibility}
                     />
                   </div>
 

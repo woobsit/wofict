@@ -10,6 +10,7 @@ import LogoImage from "./../assets/images/logo.png";
 //Custom component
 import Button from "./../components/atom/button/Button";
 import Typography from "./../components/atom/typography/Typography";
+import Radio from "./../components/atom/radio/Radio";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +21,9 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
+//Date picker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 //Validator
 import validator from "validator";
 
@@ -45,7 +49,7 @@ function Register() {
       password: "",
       password_confirmation: "",
       gender: "",
-      date_of_birth: "",
+      date_of_birth: "Enter date of birth",
       phone_number: "",
       contact_address: "",
       state_of_origin: "",
@@ -73,35 +77,48 @@ function Register() {
 
   //Show and hide password
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    let newValue = "";
-    switch (page) {
-      case 1: {
-        newValue = type === "radio" ? checked : value;
-        setInputFields({ ...inputFields.personal_info, [name]: newValue });
-        break;
+    let newValue = type === "radio" ? checked : value;
+
+    setInputFields((prevState) => {
+      switch (page) {
+        case 1:
+          return {
+            ...prevState,
+            personal_info: {
+              ...prevState.personal_info,
+              [name]: newValue,
+            },
+          };
+        case 2:
+          return {
+            ...prevState,
+            educational_background: {
+              ...prevState.educational_background,
+              [name]: newValue,
+            },
+          };
+        default:
+          return {
+            ...prevState,
+            other_info: {
+              ...prevState.other_info,
+              [name]: newValue,
+            },
+          };
       }
-      case 2: {
-        newValue = type === "radio" ? checked : value;
-        setInputFields({
-          ...inputFields.educational_background,
-          [name]: newValue,
-        });
-        break;
-      }
-      default: {
-        newValue = type === "radio" ? checked : value;
-        setInputFields({ ...inputFields.other_info, [name]: newValue });
-        break;
-      }
-    }
+    });
   };
   //Validate inputs
   const validate = (inputValues) => {
@@ -345,7 +362,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your firstname"
+                        placeholder="Enter your firstname*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.firstname}
@@ -366,7 +383,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your surname"
+                        placeholder="Enter your surname*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.surname}
@@ -408,7 +425,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your email"
+                        placeholder="Enter your email*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.email}
@@ -429,7 +446,7 @@ function Register() {
                       />
                       <input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder="Enter your password*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.password}
@@ -442,9 +459,11 @@ function Register() {
                         onClick={togglePasswordVisibility}
                       />
                     </div>
-
                     <Typography className="landing-form__span" variant="span">
                       {errors.personal_info.password}
+                    </Typography>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.personal_info.password_confirmation}
                     </Typography>
                   </div>
                   <div className="landing-form__input-box-container">
@@ -454,38 +473,43 @@ function Register() {
                         className="landing-form__input-icon"
                       />
                       <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm new password*"
                         className="landing-form__input"
                         // required
-                        value={inputFields.personal_info.password}
+                        value={inputFields.personal_info.password_confirmation}
                         onChange={handleChange}
-                        name="password"
+                        name="password_confirmation"
                       />
                       <FontAwesomeIcon
                         icon={faEye}
                         className="landing-form__input-icon--eye"
-                        onClick={togglePasswordVisibility}
+                        onClick={toggleConfirmPasswordVisibility}
                       />
                     </div>
+                  </div>
 
-                    <Typography className="landing-form__span" variant="span">
-                      {errors.personal_info.password}
-                    </Typography>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
+                  <div className="landing-form__radio-container">
+                    <Radio
+                      id="gender1"
                       name="gender"
-                      id="male"
+                      label="Male"
                       checked="checked"
+                      className="landing-form__radio-button"
                     />
-                    <label htmlFor="male">Male</label>
-                    <input type="radio" name="gender" id="female" />
-                    <label htmlFor="female">Female</label>
+                    <Radio
+                      id="gender2"
+                      name="gender"
+                      label="Female"
+                      className="landing-form__radio-button"
+                    />
                   </div>
-                  <div>
-                    <input type="date" name="date_of_birth" />
+                  <div className="landing-form__calender-container">
+                    <DatePicker
+                      name="date_of_birth"
+                      showIcon
+                      placeholderText="Enter date of birth*"
+                    />
                     <Typography className="landing-form__span" variant="span">
                       {errors.personal_info.date_of_birth}
                     </Typography>
@@ -498,7 +522,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your phone number"
+                        placeholder="Enter your phone number*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.phone_number}

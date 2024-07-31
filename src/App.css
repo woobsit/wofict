@@ -171,6 +171,39 @@ a {
   background: linear-gradient(45deg, rgb(255, 0, 0), rgb(55, 0, 255));
 }
 
+.landing-form__radio-container{
+  display:flex;
+  align-items: center;
+  margin-bottom:20px;
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.landing-form__radio-container:hover,
+.landing-form__radio-container:focus-within {
+  border: 1px solid rgb(255, 158, 158);
+}
+
+.landing-form__radio-button{
+  margin-right:15px;
+}
+
+.landing-form__calender-container{
+  margin-bottom:20px;
+}
+
+.react-datepicker__view-calendar-icon input {
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 5px;
+}
+
+.react-datepicker__input-container{
+  display:flex !important;
+  align-items: center !important;
+ 
+}
+
 /******************************/
 /*        Register page       */
 /*****************************/
@@ -229,7 +262,7 @@ a {
   margin-top:30px;
   background-color: #cecece;
   border-radius:5px;
-  height:15px
+  height:5px
 }
 
 .landing-form__progress-bar-level{
