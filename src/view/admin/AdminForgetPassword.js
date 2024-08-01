@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link } from "react-router-dom";
-import "./../App.css";
-import LogoImage from "./../assets/images/logo.png";
+import "./../../App.css";
+import LogoImage from "./../../assets/images/logo.png";
 
 //Custom component
-import Button from "./../components/atom/button/Button";
-import Typography from "./../components/atom/typography/Typography";
+import Button from "./../../components/atom/button/Button";
+import Typography from "./../../components/atom/typography/Typography";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,15 +16,15 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import validator from "validator";
 
 //Spinner loader
-import Loader from "./../components/atom/loader";
+import Loader from "./../../components/atom/loader";
 
 //API service
-import authService from "./../api/authService";
+import authService from "./../../api/authService";
 
 //utils
-import { notify } from "./../utils/Notification";
+import { notify } from "./../../utils/Notification";
 
-function ForgetPassword() {
+function AdminForgetPassword() {
   const [inputFields, setInputFields] = useState({
     email: "",
   });
@@ -64,7 +64,7 @@ function ForgetPassword() {
   const makeRequest = async () => {
     try {
       setLoading(true);
-      const response = await authService.userForgetPassword(inputFields.email);
+      const response = await authService.adminForgetPassword(inputFields.email);
 
       if (response.status === 200) {
         notify("success", "Forget Password", response.message);
@@ -110,7 +110,7 @@ function ForgetPassword() {
           </div>
           <div className="landing-form__box">
             <Typography variant="h3" className="landing-form__header-one">
-              Forget Password Form
+              Admin Forget Password Form
             </Typography>
 
             <Typography variant="p" className="landing-form__header-two">
@@ -152,4 +152,4 @@ function ForgetPassword() {
   );
 }
 
-export default ForgetPassword;
+export default AdminForgetPassword;

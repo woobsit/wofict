@@ -2,27 +2,28 @@ import React, { useState } from "react";
 //React route dom
 import { useNavigate } from "react-router-dom";
 //API service
-import authService from "./../api/authService";
+import authService from "./../../api/authService";
 //utils
-import { notify } from "./../utils/Notification";
+import { notify } from "./../../utils/Notification";
 //Spinner loader
-import Loader from "./../components/atom/loader";
+import Loader from "./../../components/atom/loader";
 //js-cookies
 import Cookies from "js-cookie";
-function Home() {
+
+function Dashboard() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
-  const userLogout = async () => {
+  const adminLogout = async () => {
     try {
       setLoading(true);
-      const response = await authService.userLogout();
+      const response = await authService.adminLogout();
 
       if (response.status === 204) {
         setLoading(false);
-        Cookies.remove("auth_user_token"); // remove token in cookies
-        navigate("/");
+        Cookies.remove("auth_admin_token"); // remove token in cookies
+        navigate("/admin-login");
       } else if (response.status === 401) {
         setLoading(false);
         notify("error", "Unauthorized", response.message);
@@ -44,8 +45,8 @@ function Home() {
     <>
       {loading && <Loader />}
       <div>
-        Home
-        <button onClick={userLogout} disabled={loading}>
+        Dashboard
+        <button onClick={adminLogout} disabled={loading}>
           Logout
         </button>
       </div>
@@ -53,4 +54,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Dashboard;
