@@ -301,7 +301,7 @@ a {
 
 
 
-/*MEDIA STYLE*/
+/*MEDIA STYLE AUTHENTICATION*/
 
 @media only screen and (min-width: 425px) {
   .landing-form__container {
@@ -339,3 +339,46 @@ a {
     width: 800px;
   }
 }
+
+
+/******************************/
+/*        User dashboard       */
+/*****************************/
+
+.dashboard-container{
+width:100%;
+}
+
+.content-bar{
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  height:60px;
+  background: white;
+  padding:5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-bottom:1px solid rgb(221, 221, 221);
+}
+
+.nav{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+}
+
+.nav__logo{
+  height:35px;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
+

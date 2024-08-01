@@ -141,6 +141,15 @@ const authService = {
       throw error;
     }
   },
+  websiteSettings: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/website-settings");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

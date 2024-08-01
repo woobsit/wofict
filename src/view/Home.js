@@ -9,6 +9,9 @@ import { notify } from "./../utils/Notification";
 import Loader from "./../components/atom/loader";
 //js-cookies
 import Cookies from "js-cookie";
+//images
+import LogoImage from "./../assets/images/logo.png";
+
 function Home() {
   const navigate = useNavigate();
 
@@ -43,11 +46,30 @@ function Home() {
   return (
     <>
       {loading && <Loader />}
-      <div>
-        Home
-        <button onClick={userLogout} disabled={loading}>
-          Logout
-        </button>
+      <div className="dashboard-container">
+        <sidebar className="sidebar">
+          Sidebar
+          <button onClick={userLogout} disabled={loading}>
+            Logout
+          </button>
+        </sidebar>
+        <div className="content-bar">
+          <header className="header">
+            <nav className="nav">
+              <img
+                className="nav__logo"
+                src={LogoImage}
+                alt="logo"
+                title="logo"
+              />
+
+              <div>menu</div>
+            </nav>
+          </header>
+
+          <main>Main</main>
+          <footer>Footer</footer>
+        </div>
       </div>
     </>
   );
