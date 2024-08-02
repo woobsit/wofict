@@ -373,8 +373,28 @@ width:100%;
   height:35px;
 }
 
+.nav__menu-box{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  width:90px;
+}
 
+.nav__menu-image{
+  height:35px;
+  border-radius:50%;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 3px;
+  
+}
 
+.nav__menu-icon{
+  color:rgb(255, 202, 202);
+  cursor: pointer;
+}
+
+.nav__menu-icon--vertical{
+  color:rgb(252, 112, 112);
+}
 
 @media (max-width: 768px) {
   .sidebar {

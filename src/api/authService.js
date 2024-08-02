@@ -141,10 +141,19 @@ const authService = {
       throw error;
     }
   },
-  websiteSettings: async () => {
+  websiteInfo: async () => {
     // eslint-disable-next-line no-useless-catch
     try {
-      const response = await axiosInstance.get("/website-settings");
+      const response = await axiosInstance.get("/website-info");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getUser: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/get-user");
       return response.data;
     } catch (error) {
       throw error;
