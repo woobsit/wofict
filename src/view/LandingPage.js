@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
-//app.css style
-import "./../App.css";
 
 //images
 import LogoImage from "./../assets/images/logo.png";
@@ -29,6 +27,9 @@ import Cookies from "js-cookie";
 
 //utils
 import { notify } from "./../utils/Notification";
+
+//App scss
+import "./../App.scss";
 
 function LandingPage() {
   const navigate = useNavigate();

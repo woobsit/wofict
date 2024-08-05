@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
-//app.css style
-import "./../App.css";
 
 //images
 import LogoImage from "./../assets/images/logo.png";
@@ -36,6 +34,9 @@ import authService from "./../api/authService";
 //utils
 import { notify } from "./../utils/Notification";
 import { phonePregMatch } from "./../utils/PregMatch";
+
+//App scss
+import "./../App.scss";
 
 function Register() {
   const navigate = useNavigate();

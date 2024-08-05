@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link } from "react-router-dom";
-import "./../../App.css";
 import LogoImage from "./../../assets/images/logo.png";
 
 //Custom component
@@ -23,6 +22,8 @@ import authService from "./../../api/authService";
 
 //utils
 import { notify } from "./../../utils/Notification";
+//App scss
+import "./../../App.scss";
 
 function AdminForgetPassword() {
   const [inputFields, setInputFields] = useState({

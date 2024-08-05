@@ -18,7 +18,7 @@ import AdminForgetPassword from "./view/admin/AdminForgetPassword";
 import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 
 //css style
-import "./App.css";
+import "./App.scss";
 
 //import store from './store';
 

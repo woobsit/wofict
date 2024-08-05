@@ -7,6 +7,9 @@ import authService from "./../api/authService";
 import { notify } from "./../utils/Notification";
 //Spinner loader
 import Loader from "./../components/atom/loader";
+//Custom component
+import Card from "./../components/atom/card/Card";
+import Typography from "./../components/atom/typography/Typography";
 //js-cookies
 import Cookies from "js-cookie";
 //Fontawesome
@@ -15,6 +18,8 @@ import {
   faCog,
   faBell,
   faEllipsisVertical,
+  faHome,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
@@ -137,13 +142,51 @@ function Home() {
                 <FontAwesomeIcon icon={faBell} className="nav__menu-icon" />
                 <FontAwesomeIcon
                   icon={faEllipsisVertical}
-                  className="nav__menu-icon nav__menu-icon--vertical"
+                  className="nav__menu-icon"
                 />
               </div>
             </nav>
           </header>
 
-          <main>Main</main>
+          <main>
+            <div className="image-container">
+              <div>
+                <Typography variant="h3">Dashboard</Typography>
+                <Typography variant="span">Welcome back, ahmed </Typography>
+              </div>
+              <div>
+                <FontAwesomeIcon icon={faHome} className="nav__menu-icon" /> /
+                <Typography variant="span"> dashboard</Typography>
+              </div>
+            </div>
+            <div className="search-input-container">
+              <div className="landing-form__input-box">
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="landing-form__input-icon"
+                />
+                <input
+                  type="text"
+                  placeholder="search"
+                  className="landing-form__input"
+                  name="email"
+                />
+              </div>
+            </div>
+            <div>
+              <Card className="" />
+            </div>
+            <div className="cards-container">
+              <div className="cards-container__inner-box">
+                <Card className="card card__card--blue" />
+                <Card className="card card__card--red" />
+              </div>
+              <div className="cards-container__inner-box">
+                <Card className="card card__card--green" />
+                <Card className="card card__card--black" />
+              </div>
+            </div>
+          </main>
           <footer>Footer</footer>
         </div>
       </div>

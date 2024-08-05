@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useParams, useNavigate } from "react-router-dom";
-import "./../App.css";
 import LogoImage from "./../assets/images/logo.png";
 
 //Custom component
@@ -26,6 +25,9 @@ import { notify } from "./../utils/Notification";
 
 //sweet alert2
 import Swal from "sweetalert2";
+
+//App scss
+import "./../App.scss";
 
 function EnterNewPassword() {
   const { id } = useParams();
