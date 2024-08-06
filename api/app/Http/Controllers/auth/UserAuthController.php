@@ -94,7 +94,6 @@ class UserAuthController extends Controller
     public function forgetPassword(Request $request)
     {
         try {
-
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|string',
             ]);

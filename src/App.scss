@@ -181,7 +181,7 @@
 /*****************************/
 
 
-/*steps*/
+/*progress bar*/
 .steps{
   display:flex;
   align-items: flex-start;
@@ -215,8 +215,6 @@
     text-align: center;
     margin-top:10px;
   }
-
-/*progress bar*/
 
 .landing-form__progress-bar-container{
   width:100%;
@@ -317,7 +315,8 @@
 width:100%;
 }
 
-.content-bar{
+.content{
+  width:100%;
 }
 
 .header{
@@ -376,6 +375,10 @@ width:100%;
   padding:5px 10px
 }
 
+.card-student-info-container{
+  width:100%;
+  padding:9px;
+}
 
 .cards-container{
   display:flex;
@@ -394,34 +397,78 @@ width:100%;
   margin:0;
 }
 
+.card-student-info{
+  height:80px;
+  background-color: #030244;
+}
+
 .card{
   flex: 1; 
   height: 100px;
-  border-radius:15px;
 }
 
 .card__card--blue{
-  background-color: #6178fa;
+  background-color: #a7b4ff;
   margin-right:10px;
 }
 
 .card__card--red{
-  background-color: #fa6161;
+  background-color: #ffaeae;
 }
 
 .card__card--green{
-  background-color: #61fab3;
+  background-color: #9dffd1;
   margin-right:10px;
 }
 
 .card__card--black{
-  background-color: #191a19;
+  background-color: #525252;
 }
 
+
+@media only screen and (min-width: 425px) {
+
+}
 
 @media (max-width: 768px) {
   .sidebar {
     display: none;
   }
 }
+
+@media only screen and (min-width: 1024px) {
+  .content{
+    width:100%;
+    display:flex;
+  }
+  
+  .sidebar{
+    flex:1;
+    background-color: rgb(228, 228, 228);
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    
+  }
+
+  .sidebar__logo-image{
+    height:70px;
+  }
+
+  .content__content-bar{
+    flex:4;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .sidebar{
+    flex:1;
+  }
+  .content__content-bar{
+    flex:5;
+  }
+}
+
+
 

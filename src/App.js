@@ -6,12 +6,11 @@ import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { setupInterceptors } from "./api/interceptors";
 
-//pages
+//views
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
 import ForgetPassword from "./view/ForgetPassword";
 import EnterNewPassword from "./view/EnterNewPassword";
-
 import AdminLogin from "./view/admin/AdminLogin";
 import Dashboard from "./view/admin/Dashboard";
 import AdminForgetPassword from "./view/admin/AdminForgetPassword";
