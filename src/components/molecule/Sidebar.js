@@ -5,7 +5,6 @@ import authService from "./../../api/authService";
 import { notify } from "./../../utils/Notification";
 
 function Sidebar() {
-  const [fetchStatus, setFetchStatus] = useState(false);
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
 
   useEffect(() => {
@@ -13,7 +12,6 @@ function Sidebar() {
       try {
         const response = await authService.websiteInfo();
         if (response.status === 201) {
-          setFetchStatus(true);
           setFetchWebsiteInfo(response.result);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
@@ -33,11 +31,9 @@ function Sidebar() {
     <sidebar className="sidebar">
       <img
         className="sidebar__logo-image"
-        src={
-          fetchStatus && fetchWebsiteInfo[2].value + fetchWebsiteInfo[3].value
-        }
-        alt={fetchStatus && fetchWebsiteInfo[0].value}
-        title={fetchStatus && fetchWebsiteInfo[0].value}
+        src={fetchWebsiteInfo[2]?.value + fetchWebsiteInfo[3]?.value}
+        alt={fetchWebsiteInfo[0]?.value}
+        title={fetchWebsiteInfo[0]?.value}
       />
       <div>links</div>
     </sidebar>

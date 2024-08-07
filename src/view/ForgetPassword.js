@@ -23,9 +23,6 @@ import authService from "./../api/authService";
 //utils
 import { notify } from "./../utils/Notification";
 
-//App scss
-import "./../App.scss";
-
 function ForgetPassword() {
   const [inputFields, setInputFields] = useState({
     email: "",

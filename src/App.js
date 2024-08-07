@@ -1,12 +1,9 @@
-import Home from "./view/Home";
-
 import React from "react";
-
 //React Router package
 import { Routes, Route, useLocation } from "react-router-dom";
 import { setupInterceptors } from "./api/interceptors";
-
 //views
+import Home from "./view/Home";
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
 import ForgetPassword from "./view/ForgetPassword";
@@ -15,9 +12,10 @@ import AdminLogin from "./view/admin/AdminLogin";
 import Dashboard from "./view/admin/Dashboard";
 import AdminForgetPassword from "./view/admin/AdminForgetPassword";
 import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
-
-//css style
+//scss style
 import "./App.scss";
+//React Bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
 
 //import store from './store';
 

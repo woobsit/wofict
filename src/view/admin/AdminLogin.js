@@ -26,9 +26,6 @@ import Cookies from "js-cookie";
 //utils
 import { notify } from "./../../utils/Notification";
 
-//App scss
-import "./../../App.scss";
-
 function AdminLogin() {
   const navigate = useNavigate();
 

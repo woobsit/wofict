@@ -35,9 +35,6 @@ import authService from "./../api/authService";
 import { notify } from "./../utils/Notification";
 import { phonePregMatch } from "./../utils/PregMatch";
 
-//App scss
-import "./../App.scss";
-
 function Register() {
   const navigate = useNavigate();
 

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 //images
 import LogoImage from "./../assets/images/logo.png";
 
-//Custom component
+//Atom component
 import Button from "./../components/atom/button/Button";
 import Typography from "./../components/atom/typography/Typography";
 
@@ -27,9 +27,6 @@ import Cookies from "js-cookie";
 
 //utils
 import { notify } from "./../utils/Notification";
-
-//App scss
-import "./../App.scss";
 
 function LandingPage() {
   const navigate = useNavigate();

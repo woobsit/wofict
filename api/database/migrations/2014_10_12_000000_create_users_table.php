@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('photo')->default('storage/assets/images/users/default.jpg');
             $table->string('qualification_level');
             $table->string('class_sessions');
+            $table->enum('admission_status', ['Pending documentation', 'Processing', 'Admitted'])->default('Pending documentation');;
             $table->string('forget_password')->nullable();
             $table->string('expiry_timestamp')->nullable();
             $table->timestamp('email_verified_at')->nullable();

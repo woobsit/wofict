@@ -22,8 +22,6 @@ import authService from "./../../api/authService";
 
 //utils
 import { notify } from "./../../utils/Notification";
-//App scss
-import "./../../App.scss";
 
 function AdminForgetPassword() {
   const [inputFields, setInputFields] = useState({
