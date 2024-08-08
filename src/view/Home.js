@@ -18,7 +18,6 @@ import Modal from "react-bootstrap/Modal";
 function Home() {
   const [fetchUserData, setFetchUserData] = useState({});
   const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
-  const [adminStatus, setAdminStatus] = useState(false);
 
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
@@ -54,7 +53,6 @@ function Home() {
           {fetchUserDataStatus &&
           fetchUserData.credentials_status === 0 &&
           fetchUserData.guarantor_status === 0 &&
-          fetchUserDataStatus &&
           fetchUserData.admission_status !== "Admitted" ? (
             <>
               <Modal
@@ -73,8 +71,11 @@ function Home() {
                     Pending Documentation
                   </span>
                   . To proceed with the evaluation of your application, please
-                  upload the following required documents:. We appreciate your
-                  prompt attention to this matter.
+                  upload the following required documents:
+                  <ul>
+                    <li>Acknowledge letter</li>
+                  </ul>
+                  . We appreciate your prompt attention to this matter.
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
@@ -84,10 +85,14 @@ function Home() {
               </Modal>
             </>
           ) : fetchUserDataStatus &&
-            fetchUserData.admission_status === "Processing" ? (
+            fetchUserData.admission_status === "Processing" &&
+            fetchUserData.admission_status !== "Admitted" ? (
             "Processing"
+          ) : fetchUserDataStatus &&
+            fetchUserData.admission_status === "Admitted" ? (
+            <Main />
           ) : (
-            adminStatus && <Main />
+            ""
           )}
           <Footer />
         </div>
