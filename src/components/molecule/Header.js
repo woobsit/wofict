@@ -23,6 +23,8 @@ function Header() {
   const [loading, setLoading] = useState(false);
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
   const [fetchUserData, setFetchUserData] = useState({});
+  const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
+  const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
 
   const userLogout = async () => {
     try {
@@ -56,6 +58,7 @@ function Header() {
         const response = await authService.websiteInfo();
         if (response.status === 201) {
           setFetchWebsiteInfo(response.result);
+          setFetchWebsiteDataStatus(true);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -77,6 +80,7 @@ function Header() {
 
         if (response.status === 201) {
           setFetchUserData(response.result);
+          setFetchUserDataStatus(true);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -99,17 +103,32 @@ function Header() {
           <Link to="/home">
             <img
               className="nav__logo"
-              src={`${fetchWebsiteInfo[2]?.value ?? ""}${fetchWebsiteInfo[3]?.value ?? ""}`}
-              alt={fetchWebsiteInfo[0]?.value ?? ""}
-              title={fetchWebsiteInfo[0]?.value ?? ""}
+              src={
+                fetchWebsiteDataStatus &&
+                fetchWebsiteInfo[2].value + "" + fetchWebsiteInfo[3].value
+              }
+              alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
+              title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
             />
           </Link>
           <div className="nav__menu-box">
             <img
               className="nav__menu-image"
-              src={`${fetchWebsiteInfo[2]?.value ?? ""}${fetchUserData.photo ?? ""}`}
-              alt={`${fetchUserData.firstname ?? ""} ${fetchUserData.surname ?? ""}`}
-              title={`${fetchUserData.firstname ?? ""} ${fetchUserData.surname ?? ""}`}
+              src={
+                fetchWebsiteDataStatus &&
+                fetchUserDataStatus &&
+                fetchWebsiteInfo[2].value + "" + fetchUserData.photo
+              }
+              alt={
+                fetchWebsiteDataStatus &&
+                fetchUserDataStatus &&
+                fetchUserData.firstname + " " + fetchUserData.surname
+              }
+              title={
+                fetchWebsiteDataStatus &&
+                fetchUserDataStatus &&
+                fetchUserData.firstname + " " + fetchUserData.surname
+              }
             />
             <FontAwesomeIcon icon={faCog} className="nav__menu-icon" />
             <FontAwesomeIcon icon={faBell} className="nav__menu-icon" />

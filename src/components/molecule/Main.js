@@ -13,6 +13,8 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 function Main() {
   const [fetchUserData, setFetchUserData] = useState({});
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
+  const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
+  const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
 
   useEffect(() => {
     async function displayWebsiteInfo() {
@@ -20,6 +22,7 @@ function Main() {
         const response = await authService.websiteInfo();
         if (response.status === 201) {
           setFetchWebsiteInfo(response.result);
+          setFetchWebsiteDataStatus(true);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -41,6 +44,7 @@ function Main() {
 
         if (response.status === 201) {
           setFetchUserData(response.result);
+          setFetchUserDataStatus(true);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -86,11 +90,24 @@ function Main() {
           <div>
             <img
               className="nav__menu-image"
-              src={fetchWebsiteInfo[2]?.value + fetchUserData?.photo ?? ""}
-              alt={fetchUserData?.firstname + fetchUserData?.surname ?? ""}
-              title={fetchUserData?.firstname + fetchUserData?.surname ?? ""}
+              src={
+                fetchWebsiteDataStatus &&
+                fetchUserDataStatus &&
+                fetchWebsiteInfo[2].value + fetchUserData.photo
+              }
+              alt={
+                fetchUserDataStatus &&
+                fetchUserData.firstname + " " + fetchUserData.surname
+              }
+              title={
+                fetchUserDataStatus &&
+                fetchUserData.firstname + " " + fetchUserData.surname
+              }
             />
-            <Typography variant="h3">Olusesi Ahmed</Typography>
+            <Typography variant="h3">
+              {fetchUserDataStatus &&
+                fetchUserData.firstname + " " + fetchUserData.surname}
+            </Typography>
           </div>
           <div></div>
           <div></div>

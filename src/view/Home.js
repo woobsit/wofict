@@ -17,10 +17,11 @@ import Modal from "react-bootstrap/Modal";
 
 function Home() {
   const [fetchUserData, setFetchUserData] = useState({});
+  const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
+  const [adminStatus, setAdminStatus] = useState(false);
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -29,6 +30,7 @@ function Home() {
 
         if (response.status === 201) {
           setFetchUserData(response.result);
+          setFetchUserDataStatus(true);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -49,12 +51,12 @@ function Home() {
         <Sidebar />
         <div className="content__content-bar">
           <Header />
-          {fetchUserData?.admission_status === "Pending documentation" ? (
+          {fetchUserDataStatus &&
+          fetchUserData.credentials_status === 0 &&
+          fetchUserData.guarantor_status === 0 &&
+          fetchUserDataStatus &&
+          fetchUserData.admission_status !== "Admitted" ? (
             <>
-              <Button variant="primary" onClick={handleShow}>
-                Launch static backdrop modal
-              </Button>
-
               <Modal
                 show={show}
                 onHide={handleClose}
@@ -66,10 +68,13 @@ function Home() {
                 </Modal.Header>
                 <Modal.Body>
                   Dear Ahmed, Thank you for applying. Your admission status is
-                  currently <b>Pending Documentation</b>. To proceed with the
-                  evaluation of your application, please upload the following
-                  required documents:. We appreciate your prompt attention to
-                  this matter.
+                  currently{" "}
+                  <span className="modal-body__span-text">
+                    Pending Documentation
+                  </span>
+                  . To proceed with the evaluation of your application, please
+                  upload the following required documents:. We appreciate your
+                  prompt attention to this matter.
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
@@ -78,10 +83,11 @@ function Home() {
                 </Modal.Footer>
               </Modal>
             </>
-          ) : fetchUserData?.admission_status === "Processing" ? (
+          ) : fetchUserDataStatus &&
+            fetchUserData.admission_status === "Processing" ? (
             "Processing"
           ) : (
-            <Main />
+            adminStatus && <Main />
           )}
           <Footer />
         </div>
