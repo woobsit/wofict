@@ -318,6 +318,13 @@ width:100%;
 .content{
   width:100%;
 }
+.sidebar{
+  display:none;
+}
+
+.content__content-bar{
+  width:100%
+}
 
 .header{
   display:flex;
@@ -377,7 +384,7 @@ width:100%;
 
 .card-student-info-container{
   width:100%;
-  padding:9px;
+  padding:$card-padding;
 }
 
 .cards-container{
@@ -445,23 +452,63 @@ width:100%;
   font-weight:bold;
 }
 
+.bootstrap-cards-container{
+  margin-top:20px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  padding:$card-padding;
+}
+
+.bootstrap-cards-inner-box{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bootstrap-card{
+  margin-bottom:10px;
+  width:100%;
+}
+
 @media only screen and (min-width: 425px) {
 
 }
 
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-}
+ @media  only screen and (min-width: 768px) {
 
-@media only screen and (min-width: 1024px) {
-  .content{
-    width:100%;
+  .bootstrap-cards-container{
     display:flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: space-around;
+  }
+
+   .bootstrap-cards-inner-box{
+    display:flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+   }
+
+   .bootstrap-card{
+    margin:10px;
+   }
+
+ }
+
+ @media only screen and (min-width: 1024px) {
+
+  .content{
+    display:flex;
+       
+  }
+
+  .content__content-bar{
+    flex:4;
   }
   
-  .sidebar{
+   .sidebar {
     flex:1;
     background-color: rgb(228, 228, 228);
     height: 100vh;
@@ -470,28 +517,28 @@ width:100%;
     align-items: center;
   }
 
-  .nav__logo{
-  display:none;
-  }
+   .nav__logo{
+   display:none;
+   }
 
-  .sidebar__logo-image{
-    height:40px;
-    margin-top:20px;
-  }
+   .sidebar__logo-image{
+     height:40px;
+     margin-top:20px;
+   }
 
-  .content__content-bar{
-    flex:4;
-  }
-}
+   .content__content-bar{
+     flex:4;
+   }
+ }
 
-@media only screen and (min-width: 1440px) {
-  .sidebar{
-    flex:1;
-  }
-  .content__content-bar{
-    flex:5;
-  }
-}
+ @media only screen and (min-width: 1440px) {
+   .sidebar{
+     flex:1;
+   }
+   .content__content-bar{
+     flex:5;
+   }
+ }
 
 
 

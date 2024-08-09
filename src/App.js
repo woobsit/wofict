@@ -12,10 +12,10 @@ import AdminLogin from "./view/admin/AdminLogin";
 import Dashboard from "./view/admin/Dashboard";
 import AdminForgetPassword from "./view/admin/AdminForgetPassword";
 import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
-//scss style
-import "./App.scss";
 //React Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
+//scss style
+import "./App.scss";
 
 //import store from './store';
 

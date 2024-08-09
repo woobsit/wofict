@@ -13,10 +13,11 @@ import Footer from "./../components/molecule/Footer";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 
 //images
-// import EmptyImage from "./../assets/images/logo.png";
+import AcknowledgementImage from "./../assets/images/acknowledgement.jpg";
+import GuarantorImage from "./../assets/images/guarantor.jpg";
+// import Divider from "../components/atom/divider/Divider";
 
 function Home() {
   const [fetchUserData, setFetchUserData] = useState({});
@@ -154,25 +155,55 @@ function Home() {
                 (fetchUserData.admission_status === "Admitted" && <Main />)}
             </>
           )}
-          <Card style={{ width: "18rem" }}>
-            <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-            <Card.Body>
-              <Card.Title>Card Title</Card.Title>
-              <Card.Text>
-                Some quick example text to build on the card title and make up
-                the bulk of the cards content.
-              </Card.Text>
-            </Card.Body>
-            <ListGroup className="list-group-flush">
-              <ListGroup.Item>Cras justo odio</ListGroup.Item>
-              <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-              <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-            </ListGroup>
-            <Card.Body>
-              <Card.Link href="#">Card Link</Card.Link>
-              <Card.Link href="#">Another Link</Card.Link>
-            </Card.Body>
-          </Card>
+          <div className="bootstrap-cards-container">
+            <div className="bootstrap-cards-inner-box">
+              <Card className="bootstrap-card">
+                <Card.Img variant="top" src={AcknowledgementImage} />
+                <Card.Body>
+                  <Card.Title>Acknowledgement letter</Card.Title>
+                  <Card.Text>
+                    Kindly download and print your acknowledgement letter
+                  </Card.Text>
+                  <Button variant="info">Download</Button>
+                </Card.Body>
+              </Card>
+              <Card className="bootstrap-card">
+                <Card.Img variant="top" src={GuarantorImage} />
+                <Card.Body>
+                  <Card.Title>Guarantor form</Card.Title>
+                  <Card.Text>
+                    Kindly download, print and fill up the guarantor form and
+                    then upload it. This will also be needed in the registration
+                  </Card.Text>
+                  <Button variant="info">Download</Button>
+                </Card.Body>
+              </Card>
+            </div>
+            <div className="bootstrap-cards-inner-box">
+              <Card className="bootstrap-card">
+                <Card.Img variant="top" src={AcknowledgementImage} />
+                <Card.Body>
+                  <Card.Title>Upload credentials</Card.Title>
+                  <Card.Text>
+                    Kindly download and print your acknowledgement letter
+                  </Card.Text>
+                  <Button variant="primary">Upload credentials</Button>
+                </Card.Body>
+              </Card>
+              <Card className="bootstrap-card">
+                <Card.Img variant="top" src={GuarantorImage} />
+                <Card.Body>
+                  <Card.Title>Guarantor form (filled)</Card.Title>
+                  <Card.Text>
+                    Kindly download, print and fill up the guarantor form and
+                    then upload it. This will also be needed in the registration
+                  </Card.Text>
+                  <Button variant="primary">Upload guarantor form</Button>
+                </Card.Body>
+              </Card>
+            </div>
+          </div>
+
           <Footer />
         </div>
       </div>
