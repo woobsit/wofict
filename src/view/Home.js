@@ -8,22 +8,38 @@ import Header from "./../components/molecule/Header";
 import Sidebar from "./../components/molecule/Sidebar";
 import Main from "./../components/molecule/Main";
 import Footer from "./../components/molecule/Footer";
-// import PendingDocumentation from "./../components/molecule/PendingDocumentation";
+//Atom component
+import Typography from "./../components/atom/typography/Typography";
 //React bootstrap
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
-
+import Form from "react-bootstrap/Form";
 //images
-import AcknowledgementImage from "./../assets/images/acknowledgement.jpg";
+import UploadImage from "./../assets/images/upload.jpg";
 import GuarantorImage from "./../assets/images/guarantor.jpg";
-// import Divider from "../components/atom/divider/Divider";
+import LetterImage from "./../assets/images/letter.jpg";
+//Fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
   const [fetchUserData, setFetchUserData] = useState({});
   const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
-
   const [show, setShow] = useState(true);
+  const [showCredentialForm, setShowCredentialForm] = useState(false);
+  // Form state for upload credentials
+  const [inputFields, setInputFields] = useState({
+    qualification: "",
+    upload_credentials: null,
+  });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleCloseCredentialForm = () => setShowCredentialForm(false);
+  const handleShowCredentialForm = () => setShowCredentialForm(true);
+
   const handleClose = () => setShow(false);
 
   useEffect(() => {
@@ -47,6 +63,92 @@ function Home() {
     }
     fetchData();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    const newValue = type === "file" ? files[0] : value;
+    setInputFields({ ...inputFields, [name]: newValue });
+  };
+
+  const validate = (inputValues) => {
+    let errors = {};
+    if (!inputValues.qualification) {
+      errors.qualification = "Qualification is required";
+    }
+    if (!inputValues.upload_credentials) {
+      errors.upload_credentials = "Please upload your credentials";
+    }
+    return errors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors(validate(inputFields));
+    setSubmitting(true);
+  };
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && submitting) {
+      uploadCredentials();
+    }
+  }, [errors]);
+
+  async function fetchAcknowledgement() {
+    try {
+      const response = await authService.downloadAcknowledgement();
+      if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+
+  async function fetchGuarantor() {
+    try {
+      const response = await authService.downloadGuarantor();
+      if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+
+  async function uploadCredentials() {
+    try {
+      setLoading(true);
+      const response = await authService.uploadCredentials(
+        inputFields.qualification,
+        inputFields.upload_credentials
+      );
+      setLoading(false);
+      if (response.status === 200) {
+        notify("success", "Success", "Credentials uploaded successfully.");
+        handleCloseCredentialForm();
+      } else if (response.status === 422) {
+        notify("error", "Input Validation", response.message);
+      } else if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      } else {
+        notify("error", "Error", "An unexpected error occurred");
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
 
   return (
     <div className="dashboard-container">
@@ -155,54 +257,128 @@ function Home() {
                 (fetchUserData.admission_status === "Admitted" && <Main />)}
             </>
           )}
-          <div className="bootstrap-cards-container">
-            <div className="bootstrap-cards-inner-box">
-              <Card className="bootstrap-card">
-                <Card.Img variant="top" src={AcknowledgementImage} />
-                <Card.Body>
-                  <Card.Title>Acknowledgement letter</Card.Title>
-                  <Card.Text>
-                    Kindly download and print your acknowledgement letter
-                  </Card.Text>
-                  <Button variant="info">Download</Button>
-                </Card.Body>
-              </Card>
-              <Card className="bootstrap-card">
-                <Card.Img variant="top" src={GuarantorImage} />
-                <Card.Body>
-                  <Card.Title>Guarantor form</Card.Title>
-                  <Card.Text>
-                    Kindly download, print and fill up the guarantor form and
-                    then upload it. This will also be needed in the registration
-                  </Card.Text>
-                  <Button variant="info">Download</Button>
-                </Card.Body>
-              </Card>
+
+          <div>
+            <div className="admission-container">
+              <FontAwesomeIcon icon={faDoorOpen} className="icon-door-open" />
+              <Typography variant="h2" className="admission-text">
+                Admission Stage
+              </Typography>
             </div>
-            <div className="bootstrap-cards-inner-box">
-              <Card className="bootstrap-card">
-                <Card.Img variant="top" src={AcknowledgementImage} />
-                <Card.Body>
-                  <Card.Title>Upload credentials</Card.Title>
-                  <Card.Text>
-                    Kindly download and print your acknowledgement letter
-                  </Card.Text>
-                  <Button variant="primary">Upload credentials</Button>
-                </Card.Body>
-              </Card>
-              <Card className="bootstrap-card">
-                <Card.Img variant="top" src={GuarantorImage} />
-                <Card.Body>
-                  <Card.Title>Guarantor form (filled)</Card.Title>
-                  <Card.Text>
-                    Kindly download, print and fill up the guarantor form and
-                    then upload it. This will also be needed in the registration
-                  </Card.Text>
-                  <Button variant="primary">Upload guarantor form</Button>
-                </Card.Body>
-              </Card>
+            <div className="bootstrap-cards-container">
+              <div className="bootstrap-cards-inner-box">
+                <Card className="bootstrap-card">
+                  <Card.Img variant="top" src={LetterImage} />
+                  <Card.Body>
+                    <Card.Title>Acknowledgement letter</Card.Title>
+                    <Card.Text>
+                      Kindly download and print your acknowledgement letter
+                    </Card.Text>
+                    <Button variant="info" onClick={fetchAcknowledgement}>
+                      Download
+                    </Button>
+                  </Card.Body>
+                </Card>
+                <Card className="bootstrap-card">
+                  <Card.Img variant="top" src={GuarantorImage} />
+                  <Card.Body>
+                    <Card.Title>Guarantor form</Card.Title>
+                    <Card.Text>
+                      Kindly download, print and fill up the guarantor form and
+                      then upload it. This will also be needed in the
+                      registration
+                    </Card.Text>
+                    <Button variant="info" onClick={fetchGuarantor}>
+                      Download
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </div>
+              <div className="bootstrap-cards-inner-box">
+                <Card className="bootstrap-card">
+                  <Card.Img variant="top" src={UploadImage} />
+                  <Card.Body>
+                    <Card.Title>Upload credentials</Card.Title>
+                    <Card.Text>
+                      Kindly download and print your acknowledgement letter
+                    </Card.Text>
+                    <Button
+                      variant="primary"
+                      onClick={handleShowCredentialForm}
+                    >
+                      Upload credentials
+                    </Button>
+                  </Card.Body>
+                </Card>
+                <Card className="bootstrap-card">
+                  <Card.Img variant="top" src={GuarantorImage} />
+                  <Card.Body>
+                    <Card.Title>Guarantor form (filled)</Card.Title>
+                    <Card.Text>
+                      Kindly download, print and fill up the guarantor form and
+                      then upload it. This will also be needed in the
+                      registration
+                    </Card.Text>
+                    <Button variant="primary">Upload guarantor form</Button>
+                  </Card.Body>
+                </Card>
+              </div>
             </div>
           </div>
+
+          <Modal show={showCredentialForm} onHide={handleCloseCredentialForm}>
+            <Modal.Header closeButton>
+              <Modal.Title>Upload credentials</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label>Qualification</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="e.g SSCE"
+                    size="sm"
+                    name="qualification"
+                    value={inputFields.qualification}
+                    onChange={handleChange}
+                    isInvalid={!!errors.qualification}
+                  />
+                  <span>
+                    *Minimum Qualification: SSCE/O &#39;Level Certifcate
+                  </span>
+
+                  <Form.Control.Feedback type="invalid">
+                    {errors.qualification}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="formFileSm" className="mb-3">
+                  <Form.Label>Upload credentials</Form.Label>
+                  <Form.Control
+                    type="file"
+                    size="sm"
+                    name="upload_credentials"
+                    onChange={handleChange}
+                    isInvalid={!!errors.upload_credentials}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.upload_credentials}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseCredentialForm}>
+                Close
+              </Button>
+              <Button variant="primary" type="submit" disabled={loading}>
+                {loading ? "Uploading..." : "Upload credentials"}
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
           <Footer />
         </div>

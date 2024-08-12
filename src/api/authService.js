@@ -159,6 +159,69 @@ const authService = {
       throw error;
     }
   },
+
+  downloadAcknowledgement: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/acknowledgement", {
+        responseType: "blob", // Important to handle PDF response as a blob
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "acknowledgement.pdf"); // or any other extension
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  downloadGuarantor: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/guarantor", {
+        responseType: "blob", // Important to handle PDF response as a blob
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "guarantor.pdf"); // or any other extension
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  uploadCredentials: async (qualification, upload_credentials) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      // Create a FormData object to hold the form fields and file
+      const formData = new FormData();
+      formData.append("credentials", qualification);
+      formData.append("upload", upload_credentials);
+
+      // Make the POST request with the FormData
+      const response = await axiosInstance.post(
+        "/upload-credentials",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

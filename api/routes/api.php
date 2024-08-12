@@ -51,6 +51,12 @@ Route::middleware(['api'])->group(function () {
 Route::middleware(['auth:api', 'scope:user'])->group(function () {
     Route::post('/user-logout', [UserAuthController::class, 'userLogout']);
     Route::get('/get-user', [UserController::class, 'getUser']);
+    //Acknowledgement generation
+    Route::get('/acknowledgement', [UserController::class, 'downloadAcknowledgement']);
+    //Guarantor generation
+    Route::get('/guarantor', [UserController::class, 'downloadGuarantorForm']);
+    //upload-credentials'
+    Route::post('/upload-credentials', [UserController::class, 'uploadCredentials']);
 });
 
 Route::middleware(['auth:api', 'scope:admin'])->group(function () {

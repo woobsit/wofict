@@ -32,6 +32,7 @@ return new class extends Migration
             $table->integer('guarantor_status')->default(0);
             $table->string('forget_password')->nullable();
             $table->string('expiry_timestamp')->nullable();
+            $table->string('credentials')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

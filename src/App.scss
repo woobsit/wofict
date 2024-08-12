@@ -448,6 +448,22 @@ width:100%;
   height:40px;
 }
 
+.admission-container{
+  display:flex;
+  align-items: center;
+  margin-top:40px;
+justify-content: center;
+}
+
+.icon-door-open{
+  margin-right:5px;
+  color:rgb(113, 123, 255);
+}
+
+.admission-text{
+  text-transform: capitalize;
+}
+
 .modal-body__span-text{
   font-weight:bold;
 }
@@ -469,6 +485,7 @@ width:100%;
 .bootstrap-card{
   margin-bottom:10px;
   width:100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 @media only screen and (min-width: 425px) {
@@ -479,9 +496,8 @@ width:100%;
 
   .bootstrap-cards-container{
     display:flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items:center;
-    justify-content: space-around;
   }
 
    .bootstrap-cards-inner-box{
@@ -493,6 +509,7 @@ width:100%;
 
    .bootstrap-card{
     margin:10px;
+    height:500px;
    }
 
  }
@@ -501,13 +518,17 @@ width:100%;
 
   .content{
     display:flex;
-       
   }
 
   .content__content-bar{
     flex:4;
   }
   
+  .bootstrap-cards-container{
+    display:flex;
+    flex-direction: row;
+  }
+
    .sidebar {
     flex:1;
     background-color: rgb(228, 228, 228);
