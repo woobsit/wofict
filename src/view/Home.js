@@ -30,15 +30,22 @@ function Home() {
   const [showCredentialForm, setShowCredentialForm] = useState(false);
   // Form state for upload credentials
   const [inputFields, setInputFields] = useState({
-    qualification: "",
+    qualification_level: "",
     upload_credentials: null,
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [errorsGuarantorForm, setErrorsGuarantorForm] = useState({});
+  const [submittingGuarantorForm, setSubmittingGuarantorForm] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  //Credential form
   const handleCloseCredentialForm = () => setShowCredentialForm(false);
   const handleShowCredentialForm = () => setShowCredentialForm(true);
+
+  //guarantor form
+  const handleCloseGuarantorForm = () => setShowGuarantorForm(false);
+  const handleShowGuarantorForm = () => setShowGuarantorForm(true);
 
   const handleClose = () => setShow(false);
 
@@ -72,11 +79,11 @@ function Home() {
 
   const validate = (inputValues) => {
     let errors = {};
-    if (!inputValues.qualification) {
-      errors.qualification = "Qualification is required";
+    if (!inputValues.qualification_level) {
+      errors.qualification_level = "Qualification is required";
     }
     if (!inputValues.upload_credentials) {
-      errors.upload_credentials = "Please upload your credentials";
+      errors.upload_credentials = "Please upload credentials";
     }
     return errors;
   };
@@ -92,6 +99,17 @@ function Home() {
       uploadCredentials();
     }
   }, [errors]);
+
+  const validateGuarantors = (inputValues) => {
+    let errors = {};
+    if (!inputValues.upload_guarantors_1) {
+      errors.upload_guarantors_1 = "Please upload first guarantor";
+    }
+    if (!inputValues.upload_guarantors_2) {
+      errors.upload_guarantors_2 = "Please upload second guarantor";
+    }
+    return errors;
+  };
 
   async function fetchAcknowledgement() {
     try {
@@ -127,12 +145,39 @@ function Home() {
     try {
       setLoading(true);
       const response = await authService.uploadCredentials(
-        inputFields.qualification,
+        inputFields.qualification_level,
         inputFields.upload_credentials
       );
       setLoading(false);
-      if (response.status === 200) {
+      if (response.status === 201) {
         notify("success", "Success", "Credentials uploaded successfully.");
+        handleCloseCredentialForm();
+      } else if (response.status === 422) {
+        notify("error", "Input Validation", response.message);
+      } else if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      } else {
+        notify("error", "Error", "An unexpected error occurred");
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+
+  async function uploadGuarantors() {
+    try {
+      setLoading(true);
+      const response = await authService.uploadGuarantors(
+        inputFields.upload_guarantors_1,
+        inputFields.upload_guarantors_2
+      );
+      setLoading(false);
+      if (response.status === 201) {
+        notify("success", "Success", "Guarantors uploaded successfully.");
         handleCloseCredentialForm();
       } else if (response.status === 422) {
         notify("error", "Input Validation", response.message);
@@ -183,12 +228,13 @@ function Home() {
                         </p>
                         <p>
                           To proceed with the evaluation of your application,
-                          please tender the following required documents:
+                          please follow the required steps and wait for the next
+                          process:
                         </p>
                         <ol>
-                          <li>Acknowledgement letter</li>
-                          <li>School Credentials</li>
-                          <li>Guarantor form</li>
+                          <li>Print Acknowledgement Letter</li>
+                          <li>Upload School Credentials</li>
+                          <li>Fill and Upload the Guarantor form </li>
                         </ol>
                       </>
                     ) : (
@@ -262,7 +308,7 @@ function Home() {
             <div className="admission-container">
               <FontAwesomeIcon icon={faDoorOpen} className="icon-door-open" />
               <Typography variant="h2" className="admission-text">
-                Admission Stage
+                Admission Process
               </Typography>
             </div>
             <div className="bootstrap-cards-container">
@@ -313,11 +359,9 @@ function Home() {
                 <Card className="bootstrap-card">
                   <Card.Img variant="top" src={GuarantorImage} />
                   <Card.Body>
-                    <Card.Title>Guarantor form (filled)</Card.Title>
+                    <Card.Title>Complete Guarantor form</Card.Title>
                     <Card.Text>
-                      Kindly download, print and fill up the guarantor form and
-                      then upload it. This will also be needed in the
-                      registration
+                      Kindly upload the two guarantor forms.
                     </Card.Text>
                     <Button variant="primary">Upload guarantor form</Button>
                   </Card.Body>
@@ -331,7 +375,7 @@ function Home() {
               <Modal.Title>Upload credentials</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} encType="multipart/form-data">
                 <Form.Group
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
@@ -341,17 +385,17 @@ function Home() {
                     type="text"
                     placeholder="e.g SSCE"
                     size="sm"
-                    name="qualification"
-                    value={inputFields.qualification}
+                    name="qualification_level"
+                    value={inputFields.qualification_level}
                     onChange={handleChange}
-                    isInvalid={!!errors.qualification}
+                    isInvalid={!!errors.qualification_level}
                   />
                   <span>
-                    *Minimum Qualification: SSCE/O &#39;Level Certifcate
+                    *Minimum Qualification: SSCE/O &#39;Level Certificate
                   </span>
 
                   <Form.Control.Feedback type="invalid">
-                    {errors.qualification}
+                    {errors.qualification_level}
                   </Form.Control.Feedback>
                 </Form.Group>
 
@@ -368,16 +412,19 @@ function Home() {
                     {errors.upload_credentials}
                   </Form.Control.Feedback>
                 </Form.Group>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={handleCloseCredentialForm}
+                  >
+                    Close
+                  </Button>
+                  <Button variant="primary" type="submit" disabled={loading}>
+                    {loading ? "Uploading..." : "Upload"}
+                  </Button>
+                </Modal.Footer>
               </Form>
             </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseCredentialForm}>
-                Close
-              </Button>
-              <Button variant="primary" type="submit" disabled={loading}>
-                {loading ? "Uploading..." : "Upload credentials"}
-              </Button>
-            </Modal.Footer>
           </Modal>
 
           <Footer />

@@ -57,6 +57,8 @@ Route::middleware(['auth:api', 'scope:user'])->group(function () {
     Route::get('/guarantor', [UserController::class, 'downloadGuarantorForm']);
     //upload-credentials'
     Route::post('/upload-credentials', [UserController::class, 'uploadCredentials']);
+    //upload-guarantors'
+    Route::post('/upload-guarantors', [UserController::class, 'uploadGuarantors']);
 });
 
 Route::middleware(['auth:api', 'scope:admin'])->group(function () {

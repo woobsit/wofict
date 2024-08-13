@@ -198,13 +198,19 @@ const authService = {
       throw error;
     }
   },
-  uploadCredentials: async (qualification, upload_credentials) => {
+  uploadCredentials: async (qualification_level, upload_credentials) => {
     // eslint-disable-next-line no-useless-catch
     try {
       // Create a FormData object to hold the form fields and file
       const formData = new FormData();
-      formData.append("credentials", qualification);
-      formData.append("upload", upload_credentials);
+
+      // Append the qualification text input
+      formData.append("qualification_level", qualification_level);
+
+      // Append the uploaded file (assuming upload_credentials is the file object)
+      if (upload_credentials) {
+        formData.append("upload_credentials", upload_credentials);
+      }
 
       // Make the POST request with the FormData
       const response = await axiosInstance.post(
@@ -217,6 +223,36 @@ const authService = {
         }
       );
 
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  uploadGuarantors: async (upload_credentials_1, upload_credentials_2) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      // Create a FormData object to hold the form fields and file
+      const formData = new FormData();
+      // Append the uploaded file
+      if (upload_credentials_1) {
+        formData.append("upload_credentials_1", upload_credentials_1);
+      } else if (upload_credentials_2) {
+        formData.append("upload_credentials_2", upload_credentials_2);
+      }
+
+      // Make the POST request with the FormData
+      const response = await axiosInstance.post(
+        "/upload-guarantors",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Return the response data
       return response.data;
     } catch (error) {
       throw error;

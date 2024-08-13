@@ -44,7 +44,7 @@ class UserController extends Controller
         try {
             // Validation rules
             $validator = Validator::make($request->all(), [
-                'qualification' => 'required|string|max:255',
+                'qualification_level' => 'required|string|max:255',
                 'upload_credentials' => 'required|mimes:pdf|max:2048', // Only allow PDF files up to 2MB
             ]);
 
@@ -61,18 +61,80 @@ class UserController extends Controller
                 // Generate a unique file name
                 $user = Auth::user();
                 $timestamp = time();
-                $originalName = $request->file('upload_credentials')->getClientOriginalName();
-                $fileName = $timestamp . '_' . $originalName;
-                // Store the file in the 'uploads' directory with the unique name
-                $filePath = $request->file('upload_credentials')->storeAs('uploads/credentials', $fileName, 'public');
+                $firstName = $user->firstname;
+                $surname = $user->surname;
 
-                $user->qualification_level = $request->input('qualification');
+
+                // Create the file name
+                $fileName = "{$firstName}_{$surname}_{$timestamp}.pdf";
+                $filePath = $request->file('upload_credentials')->storeAs('assets/uploads/credentials', $fileName, 'public');
+
+                $user->qualification_level = $request->input('qualification_level');
                 $user->credentials = $filePath;
+                $user->credentials_status = 1;
                 $user->save();
 
                 return response()->json([
                     'status' => 201,
                     'message' => 'Credentials uploaded successfully',
+
+                ]);
+            }
+
+            // Return an error if the file upload failed
+            return response()->json([
+                'status' => 500,
+                'message' => 'File upload failed',
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    public function uploadGuarantors(Request $request)
+    {
+        try {
+            // Validation rules
+            $validator = Validator::make($request->all(), [
+                'upload_guarantor_1' => 'required|mimes:pdf|max:2048',
+                'upload_guarantor_2' => 'required|mimes:pdf|max:2048',
+                // Only allow PDF files up to 2MB
+            ]);
+
+            // Check if validation fails
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 422,
+                    'message' => $validator->messages()->all()
+                ]);
+            }
+
+            // Handle the file upload
+            if ($request->hasFile('upload_guarantor_1') && $request->hasFile('upload_guarantor_2')) {
+                // Generate a unique file name
+                $user = Auth::user();
+                $timestamp = time();
+                $firstName = $user->firstname;
+                $surname = $user->surname;
+
+                // guarantor 1
+                $fileName = "{$firstName}_{$surname}_1_{$timestamp}.pdf";
+                $filePath = $request->file('upload_guarantor_1')->storeAs('assets/uploads/guarantors', $fileName, 'public');
+
+                $user->guarantor_1 = $filePath;
+
+                // guarantor 2
+                $fileName2 = "{$firstName}_{$surname}_2_{$timestamp}.pdf";
+                $filePath2 = $request->file('upload_guarantor_2')->storeAs('assets/uploads/guarantors', $fileName2, 'public');
+
+                $user->guarantor_2 = $filePath2;
+                $user->guarantors_status = 1;
+                $user->save();
+
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Guarantors uploaded successfully',
 
                 ]);
             }
