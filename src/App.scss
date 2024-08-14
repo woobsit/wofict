@@ -351,19 +351,23 @@ width:100%;
   display:flex;
   align-items: center;
   justify-content: space-between;
-  width:90px;
 }
 
 .nav__menu-image{
   height:35px;
   border-radius:50%;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 3px;
-  
+  margin-right:8px;
 }
 
 .nav__menu-icon{
   color:rgb(189, 189, 189);
   cursor: pointer;
+  width:17px;
+  height:17px; 
+  padding:5px;
+  border-radius:50%;
+  margin-right:5px;
 }
 
 .search-input-container{
@@ -379,7 +383,7 @@ width:100%;
   width:100%;
   height:50px;
   margin-top:10px;
-  padding:5px 10px
+  padding:5px 10px;
 }
 
 .card-student-info-container{
@@ -452,16 +456,34 @@ width:100%;
   display:flex;
   align-items: center;
   margin-top:40px;
-justify-content: center;
+  background-color: $primary-color;
+  padding:12px 0;
+
+}
+
+.admission-text-container{
+  display:flex;
+  flex-direction: column;
 }
 
 .icon-door-open{
-  margin-right:5px;
-  color:rgb(113, 123, 255);
+  margin-right:15px;
+  margin-left:10px;
+  color:rgb(255, 5, 5);
+  font-size:30px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 3px;
+  padding:8px;
+background: #adafff;
 }
 
 .admission-text{
   text-transform: capitalize;
+  color:rgb(255, 255, 255);
+}
+
+.admission-text-span{
+  color:rgb(255, 255, 255);
+
 }
 
 .modal-body__span-text{
@@ -485,8 +507,11 @@ justify-content: center;
 .bootstrap-card{
   margin-bottom:10px;
   width:100%;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(19, 19, 19, 0.35) 0px 5px 15px;
 }
+
+.modal-header {
+  background: $primary-color;}
 
 @media only screen and (min-width: 425px) {
 

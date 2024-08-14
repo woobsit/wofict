@@ -234,13 +234,13 @@ const authService = {
     try {
       // Create a FormData object to hold the form fields and file
       const formData = new FormData();
+
       // Append the uploaded file
       if (upload_credentials_1) {
         formData.append("upload_credentials_1", upload_credentials_1);
       } else if (upload_credentials_2) {
         formData.append("upload_credentials_2", upload_credentials_2);
       }
-
       // Make the POST request with the FormData
       const response = await axiosInstance.post(
         "/upload-guarantors",

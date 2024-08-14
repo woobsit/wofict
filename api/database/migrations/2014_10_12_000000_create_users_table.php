@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('qualification_level');
             $table->string('credentials')->nullable();
             $table->integer('credentials_status')->default(0);
-            $table->string('guarantor_1')->nullable();
-            $table->string('guarantor_2')->nullable();
+            $table->string('guarantors_1')->nullable();
+            $table->string('guarantors_2')->nullable();
             $table->integer('guarantors_status')->default(0);
             $table->enum('admission_status', ['Pending documentation', 'Processing', 'Admitted'])->default('Pending documentation');
             $table->string('forget_password')->nullable();

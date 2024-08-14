@@ -26,8 +26,13 @@ import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 function Home() {
   const [fetchUserData, setFetchUserData] = useState({});
   const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
+  const [loadingCredentials, setLoadingCredentials] = useState(false);
+  const [loadingGuarantors, setLoadingGuarantors] = useState(false);
   const [show, setShow] = useState(true);
+  //show credential form
   const [showCredentialForm, setShowCredentialForm] = useState(false);
+  //show guarantor form
+  const [showGuarantorForm, setShowGuarantorForm] = useState(false);
   // Form state for upload credentials
   const [inputFields, setInputFields] = useState({
     qualification_level: "",
@@ -35,19 +40,25 @@ function Home() {
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [errorsGuarantorForm, setErrorsGuarantorForm] = useState({});
-  const [submittingGuarantorForm, setSubmittingGuarantorForm] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  //Credential form
+  // Form state for upload guarantors
+  const [inputFieldsForGuarantors, setInputFieldsForGuarantors] = useState({
+    upload_guarantors_1: null,
+    upload_guarantors_2: null,
+  });
+  const [errorsGuarantorUpload, setErrorsGuarantorUpload] = useState({});
+  const [submittingGuarantorUpload, setSubmittingGuarantorUpload] =
+    useState(false);
+  //Show status info
+  const handleClose = () => setShow(false);
+
+  //show Credential form
   const handleCloseCredentialForm = () => setShowCredentialForm(false);
   const handleShowCredentialForm = () => setShowCredentialForm(true);
 
-  //guarantor form
+  //show guarantor form
   const handleCloseGuarantorForm = () => setShowGuarantorForm(false);
   const handleShowGuarantorForm = () => setShowGuarantorForm(true);
-
-  const handleClose = () => setShow(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -71,6 +82,7 @@ function Home() {
     fetchData();
   }, []);
 
+  //input changes
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     const newValue = type === "file" ? files[0] : value;
@@ -100,16 +112,41 @@ function Home() {
     }
   }, [errors]);
 
+  //input changes
+  const handleChangeGuarantors = (e) => {
+    const { name, files } = e.target;
+    const newValue = files[0];
+    setInputFieldsForGuarantors({
+      ...inputFieldsForGuarantors,
+      [name]: newValue,
+    });
+  };
+
   const validateGuarantors = (inputValues) => {
     let errors = {};
     if (!inputValues.upload_guarantors_1) {
-      errors.upload_guarantors_1 = "Please upload first guarantor";
+      errors.upload_guarantors_1 = "Please upload the first guarantor";
     }
     if (!inputValues.upload_guarantors_2) {
-      errors.upload_guarantors_2 = "Please upload second guarantor";
+      errors.upload_guarantors_2 = "Please upload the second guarantor";
     }
     return errors;
   };
+
+  const handleSubmitGuarantor = (e) => {
+    e.preventDefault();
+    setErrorsGuarantorUpload(validateGuarantors(inputFieldsForGuarantors));
+    setSubmittingGuarantorUpload(true);
+  };
+
+  useEffect(() => {
+    if (
+      Object.keys(errorsGuarantorUpload).length === 0 &&
+      submittingGuarantorUpload
+    ) {
+      uploadGuarantors();
+    }
+  }, [errors]);
 
   async function fetchAcknowledgement() {
     try {
@@ -143,12 +180,12 @@ function Home() {
 
   async function uploadCredentials() {
     try {
-      setLoading(true);
+      setLoadingCredentials(true);
       const response = await authService.uploadCredentials(
         inputFields.qualification_level,
         inputFields.upload_credentials
       );
-      setLoading(false);
+      setLoadingCredentials(false);
       if (response.status === 201) {
         notify("success", "Success", "Credentials uploaded successfully.");
         handleCloseCredentialForm();
@@ -170,15 +207,15 @@ function Home() {
 
   async function uploadGuarantors() {
     try {
-      setLoading(true);
+      setLoadingGuarantors(true);
       const response = await authService.uploadGuarantors(
-        inputFields.upload_guarantors_1,
-        inputFields.upload_guarantors_2
+        inputFieldsForGuarantors.upload_guarantors_1,
+        inputFieldsForGuarantors.upload_guarantors_2
       );
-      setLoading(false);
+      setLoadingGuarantors(false);
       if (response.status === 201) {
         notify("success", "Success", "Guarantors uploaded successfully.");
-        handleCloseCredentialForm();
+        handleCloseGuarantorForm();
       } else if (response.status === 422) {
         notify("error", "Input Validation", response.message);
       } else if (response.status === 500) {
@@ -240,10 +277,10 @@ function Home() {
                     ) : (
                       <>
                         <p>
-                          Thank you for your continued interest in WOB ICT HUB.
-                          We have received some of the required documents for
-                          your application. However, we are still missing the
-                          following document(s):
+                          Thank you for your continued interest in{" "}
+                          <b>WOB ICT HUB</b>. We have received some of the
+                          required documents for your application. However, we
+                          are still missing the following document(s):
                         </p>
                         <ol>
                           {fetchUserData.credentials_status === 0 && (
@@ -307,9 +344,14 @@ function Home() {
           <div>
             <div className="admission-container">
               <FontAwesomeIcon icon={faDoorOpen} className="icon-door-open" />
-              <Typography variant="h2" className="admission-text">
-                Admission Process
-              </Typography>
+              <div className="admission-text-container">
+                <Typography variant="h4" className="admission-text">
+                  Application Process
+                </Typography>
+                <Typography variant="span" className="admission-text-span">
+                  Stages and steps through which...
+                </Typography>
+              </div>
             </div>
             <div className="bootstrap-cards-container">
               <div className="bootstrap-cards-inner-box">
@@ -359,11 +401,13 @@ function Home() {
                 <Card className="bootstrap-card">
                   <Card.Img variant="top" src={GuarantorImage} />
                   <Card.Body>
-                    <Card.Title>Complete Guarantor form</Card.Title>
+                    <Card.Title>Completed Guarantor form</Card.Title>
                     <Card.Text>
                       Kindly upload the two guarantor forms.
                     </Card.Text>
-                    <Button variant="primary">Upload guarantor form</Button>
+                    <Button variant="primary" onClick={handleShowGuarantorForm}>
+                      Upload guarantor forms
+                    </Button>
                   </Card.Body>
                 </Card>
               </div>
@@ -419,8 +463,66 @@ function Home() {
                   >
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" disabled={loading}>
-                    {loading ? "Uploading..." : "Upload"}
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={loadingCredentials}
+                  >
+                    {loadingCredentials ? "Uploading..." : "Upload"}
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </Modal.Body>
+          </Modal>
+
+          <Modal show={showGuarantorForm} onHide={handleCloseGuarantorForm}>
+            <Modal.Header closeButton>
+              <Modal.Title>Upload Guarantors</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form
+                onSubmit={handleSubmitGuarantor}
+                encType="multipart/form-data"
+              >
+                <Form.Group controlId="formFileSm" className="mb-3">
+                  <Form.Label>First guarantor</Form.Label>
+                  <Form.Control
+                    type="file"
+                    size="sm"
+                    name="upload_guarantors_1"
+                    onChange={handleChangeGuarantors}
+                    isInvalid={!!errorsGuarantorUpload.upload_guarantors_1}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errorsGuarantorUpload.upload_guarantors_1}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="formFileSm" className="mb-3">
+                  <Form.Label>Second guarantor</Form.Label>
+                  <Form.Control
+                    type="file"
+                    size="sm"
+                    name="upload_guarantors_2"
+                    onChange={handleChangeGuarantors}
+                    isInvalid={!!errorsGuarantorUpload.upload_guarantors_2}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errorsGuarantorUpload.upload_guarantors_2}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={handleCloseGuarantorForm}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={loadingGuarantors}
+                  >
+                    {loadingGuarantors ? "Uploading..." : "Upload"}
                   </Button>
                 </Modal.Footer>
               </Form>

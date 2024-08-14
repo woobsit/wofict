@@ -97,8 +97,8 @@ class UserController extends Controller
         try {
             // Validation rules
             $validator = Validator::make($request->all(), [
-                'upload_guarantor_1' => 'required|mimes:pdf|max:2048',
-                'upload_guarantor_2' => 'required|mimes:pdf|max:2048',
+                'upload_guarantors_1' => 'required|mimes:pdf|max:2048',
+                'upload_guarantors_2' => 'required|mimes:pdf|max:2048',
                 // Only allow PDF files up to 2MB
             ]);
 
@@ -111,7 +111,7 @@ class UserController extends Controller
             }
 
             // Handle the file upload
-            if ($request->hasFile('upload_guarantor_1') && $request->hasFile('upload_guarantor_2')) {
+            if ($request->hasFile('upload_guarantors_1') && $request->hasFile('upload_guarantors_2')) {
                 // Generate a unique file name
                 $user = Auth::user();
                 $timestamp = time();
@@ -120,15 +120,15 @@ class UserController extends Controller
 
                 // guarantor 1
                 $fileName = "{$firstName}_{$surname}_1_{$timestamp}.pdf";
-                $filePath = $request->file('upload_guarantor_1')->storeAs('assets/uploads/guarantors', $fileName, 'public');
+                $filePath = $request->file('upload_guarantors_1')->storeAs('assets/uploads/guarantors', $fileName, 'public');
 
-                $user->guarantor_1 = $filePath;
+                $user->guarantors_1 = $filePath;
 
                 // guarantor 2
                 $fileName2 = "{$firstName}_{$surname}_2_{$timestamp}.pdf";
-                $filePath2 = $request->file('upload_guarantor_2')->storeAs('assets/uploads/guarantors', $fileName2, 'public');
+                $filePath2 = $request->file('upload_guarantors_2')->storeAs('assets/uploads/guarantors', $fileName2, 'public');
 
-                $user->guarantor_2 = $filePath2;
+                $user->guarantors_2 = $filePath2;
                 $user->guarantors_status = 1;
                 $user->save();
 
