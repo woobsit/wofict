@@ -69,8 +69,13 @@ class UserAuthController extends Controller
             }
 
             $credentials = $request->only('email', 'password');
+            //admitted user
+            $admittedUser = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 1, 'guarantors_status' => 1, 'credentials_status' => 1];
 
-            if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1])) {
+            //unadmitted user
+            $unadmittedUser = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 0];
+
+            if (Auth::attempt($admittedUser)) {
                 $user = Auth::user();
                 $rememberMe = $request->input('remember_token');
                 $remember = $rememberMe ? Str::random(60) : null;
@@ -79,8 +84,17 @@ class UserAuthController extends Controller
 
                 $token = $user->createToken('UserToken', ['user'])->accessToken;
 
+                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
+            } else if (Auth::attempt($unadmittedUser)) {
+                $user = Auth::user();
+                $rememberMe = $request->input('remember_token');
+                $remember = $rememberMe ? Str::random(60) : null;
+                $user->remember_token = $remember;
+                $user->save();
 
-                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe,]);
+                $token = $user->createToken('UserToken', ['user'])->accessToken;
+
+                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
             } else {
                 return response()->json(['status' => 401, 'message' => 'Wrong login details entered'],);
             }

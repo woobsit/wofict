@@ -7,6 +7,7 @@ import Home from "./view/Home";
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
 import ForgetPassword from "./view/ForgetPassword";
+import Admission from "./view/Admission";
 import EnterNewPassword from "./view/EnterNewPassword";
 import AdminLogin from "./view/admin/AdminLogin";
 import Dashboard from "./view/admin/Dashboard";
@@ -42,6 +43,8 @@ function App() {
           <Route path="/" element={<LandingPage />} key="landing-page" />
           <Route path="/register" element={<Register />} key="register" />
           <Route path="/home" element={<Home />} key="home" />
+          <Route path="/admission" element={<Admission />} key="admission" />
+
           <Route
             path="/forget-password"
             element={<ForgetPassword />}

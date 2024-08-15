@@ -97,7 +97,12 @@ function LandingPage() {
           sameSite: "lax",
         });
         setLoading(false);
-        navigate("/home");
+
+        if (response.admission_status === "admitted") {
+          navigate("/home");
+        } else {
+          navigate("/admission");
+        }
       } else if (response.status === 422) {
         setLoading(false);
         notify("error", "Input Validation", response.message);
