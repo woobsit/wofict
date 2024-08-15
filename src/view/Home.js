@@ -49,6 +49,7 @@ function Home() {
   const [errorsGuarantorUpload, setErrorsGuarantorUpload] = useState({});
   const [submittingGuarantorUpload, setSubmittingGuarantorUpload] =
     useState(false);
+
   //Show status info
   const handleClose = () => setShow(false);
 
@@ -125,10 +126,10 @@ function Home() {
   const validateGuarantors = (inputValues) => {
     let errors = {};
     if (!inputValues.upload_guarantors_1) {
-      errors.upload_guarantors_1 = "Please upload the first guarantor";
+      errors.upload_guarantors_1 = "Please upload the first guarantor form";
     }
     if (!inputValues.upload_guarantors_2) {
-      errors.upload_guarantors_2 = "Please upload the second guarantor";
+      errors.upload_guarantors_2 = "Please upload the second guarantor form";
     }
     return errors;
   };
@@ -146,7 +147,7 @@ function Home() {
     ) {
       uploadGuarantors();
     }
-  }, [errors]);
+  }, [errorsGuarantorUpload]);
 
   async function fetchAcknowledgement() {
     try {
@@ -179,21 +180,24 @@ function Home() {
   }
 
   async function uploadCredentials() {
+    setLoadingCredentials(true);
     try {
-      setLoadingCredentials(true);
       const response = await authService.uploadCredentials(
         inputFields.qualification_level,
         inputFields.upload_credentials
       );
-      setLoadingCredentials(false);
       if (response.status === 201) {
+        setLoadingCredentials(false);
         notify("success", "Success", "Credentials uploaded successfully.");
         handleCloseCredentialForm();
       } else if (response.status === 422) {
+        setLoadingCredentials(false);
         notify("error", "Input Validation", response.message);
       } else if (response.status === 500) {
+        setLoadingCredentials(false);
         notify("error", "System Error", response.message);
       } else {
+        setLoadingCredentials(false);
         notify("error", "Error", "An unexpected error occurred");
       }
     } catch (error) {
@@ -206,24 +210,28 @@ function Home() {
   }
 
   async function uploadGuarantors() {
+    setLoadingGuarantors(true);
     try {
-      setLoadingGuarantors(true);
       const response = await authService.uploadGuarantors(
         inputFieldsForGuarantors.upload_guarantors_1,
         inputFieldsForGuarantors.upload_guarantors_2
       );
-      setLoadingGuarantors(false);
       if (response.status === 201) {
+        setLoadingGuarantors(false);
         notify("success", "Success", "Guarantors uploaded successfully.");
         handleCloseGuarantorForm();
       } else if (response.status === 422) {
+        setLoadingGuarantors(false);
         notify("error", "Input Validation", response.message);
       } else if (response.status === 500) {
+        setLoadingGuarantors(false);
         notify("error", "System Error", response.message);
       } else {
+        setLoadingGuarantors(false);
         notify("error", "Error", "An unexpected error occurred");
       }
     } catch (error) {
+      setLoadingGuarantors(false);
       notify(
         "error",
         "Error",
@@ -401,7 +409,7 @@ function Home() {
                 <Card className="bootstrap-card">
                   <Card.Img variant="top" src={GuarantorImage} />
                   <Card.Body>
-                    <Card.Title>Completed Guarantor form</Card.Title>
+                    <Card.Title>Guarantor form (completed)</Card.Title>
                     <Card.Text>
                       Kindly upload the two guarantor forms.
                     </Card.Text>

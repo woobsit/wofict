@@ -119,13 +119,13 @@ class UserController extends Controller
                 $surname = $user->surname;
 
                 // guarantor 1
-                $fileName = "{$firstName}_{$surname}_1_{$timestamp}.pdf";
+                $fileName = "{$firstName}_{$surname}_{$timestamp}_1.pdf";
                 $filePath = $request->file('upload_guarantors_1')->storeAs('assets/uploads/guarantors', $fileName, 'public');
 
                 $user->guarantors_1 = $filePath;
 
                 // guarantor 2
-                $fileName2 = "{$firstName}_{$surname}_2_{$timestamp}.pdf";
+                $fileName2 = "{$firstName}_{$surname}_{$timestamp}_2.pdf";
                 $filePath2 = $request->file('upload_guarantors_2')->storeAs('assets/uploads/guarantors', $fileName2, 'public');
 
                 $user->guarantors_2 = $filePath2;
@@ -134,7 +134,7 @@ class UserController extends Controller
 
                 return response()->json([
                     'status' => 201,
-                    'message' => 'Guarantors uploaded successfully',
+                    'message' => 'Guarantor forms uploaded successfully',
 
                 ]);
             }

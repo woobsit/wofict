@@ -228,17 +228,17 @@ const authService = {
       throw error;
     }
   },
-  uploadGuarantors: async (upload_credentials_1, upload_credentials_2) => {
+  uploadGuarantors: async (upload_guarantors_1, upload_guarantors_2) => {
     // eslint-disable-next-line no-useless-catch
     try {
       // Create a FormData object to hold the form fields and file
       const formData = new FormData();
-      console.log(formData);
       // Append the uploaded file
-      if (upload_credentials_1) {
-        formData.append("upload_credentials_1", upload_credentials_1);
-      } else if (upload_credentials_2) {
-        formData.append("upload_credentials_2", upload_credentials_2);
+      if (upload_guarantors_1) {
+        formData.append("upload_guarantors_1", upload_guarantors_1);
+      }
+      if (upload_guarantors_2) {
+        formData.append("upload_guarantors_2", upload_guarantors_2);
       }
       // Make the POST request with the FormData
       const response = await axiosInstance.post(
