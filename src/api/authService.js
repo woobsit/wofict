@@ -203,7 +203,6 @@ const authService = {
     try {
       // Create a FormData object to hold the form fields and file
       const formData = new FormData();
-
       // Append the qualification text input
       formData.append("qualification_level", qualification_level);
 
@@ -234,7 +233,7 @@ const authService = {
     try {
       // Create a FormData object to hold the form fields and file
       const formData = new FormData();
-
+      console.log(formData);
       // Append the uploaded file
       if (upload_credentials_1) {
         formData.append("upload_credentials_1", upload_credentials_1);

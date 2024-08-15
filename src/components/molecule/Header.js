@@ -9,11 +9,7 @@ import Cookies from "js-cookie";
 import { notify } from "./../../utils/Notification";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCog,
-  faBell,
-  faEllipsisVertical,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCog, faBell, faBars } from "@fortawesome/free-solid-svg-icons";
 //Spinner loader
 import Loader from "./../../components/atom/loader";
 
@@ -130,14 +126,26 @@ function Header() {
                 fetchUserData.firstname + " " + fetchUserData.surname
               }
             />
-            <FontAwesomeIcon icon={faCog} className="nav__menu-icon" />
-            <FontAwesomeIcon icon={faBell} className="nav__menu-icon" />
-            <FontAwesomeIcon
-              icon={faEllipsisVertical}
-              className="nav__menu-icon"
-              onClick={userLogout}
-              disabled={loading}
-            />
+            <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-cog">
+              <FontAwesomeIcon
+                icon={faCog}
+                className="nav__menu-icon nav__menu-icon-cog"
+              />
+            </div>
+            <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-bell">
+              <FontAwesomeIcon
+                icon={faBell}
+                className="nav__menu-icon nav__menu-icon-bell"
+              />
+            </div>
+            <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-bars">
+              <FontAwesomeIcon
+                icon={faBars}
+                className="nav__menu-icon nav__menu-icon-bars"
+                onClick={userLogout}
+                disabled={loading}
+              />
+            </div>
           </div>
         </nav>
       </header>

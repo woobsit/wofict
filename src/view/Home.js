@@ -349,7 +349,7 @@ function Home() {
                   Application Process
                 </Typography>
                 <Typography variant="span" className="admission-text-span">
-                  Stages and steps through which...
+                  Documents download and upload stage.
                 </Typography>
               </div>
             </div>
