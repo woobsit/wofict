@@ -6,7 +6,6 @@ import { notify } from "./../utils/Notification";
 //Molecule
 import Header from "./../components/molecule/Header";
 import Sidebar from "./../components/molecule/Sidebar";
-import Main from "./../components/molecule/Main";
 import Footer from "./../components/molecule/Footer";
 //Atom component
 import Typography from "./../components/atom/typography/Typography";
@@ -40,6 +39,9 @@ function Admission() {
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+
+  const [showCredentialsCard, setShowCredentialsCard] = useState(true);
+  const [showGuarantorCard, setShowGuarantorCard] = useState(true);
 
   // Form state for upload guarantors
   const [inputFieldsForGuarantors, setInputFieldsForGuarantors] = useState({
@@ -190,6 +192,7 @@ function Admission() {
         setLoadingCredentials(false);
         notify("success", "Success", "Credentials uploaded successfully.");
         handleCloseCredentialForm();
+        setShowCredentialsCard(false);
       } else if (response.status === 422) {
         setLoadingCredentials(false);
         notify("error", "Input Validation", response.message);
@@ -220,6 +223,7 @@ function Admission() {
         setLoadingGuarantors(false);
         notify("success", "Success", "Guarantors uploaded successfully.");
         handleCloseGuarantorForm();
+        setShowGuarantorCard(false);
       } else if (response.status === 422) {
         setLoadingGuarantors(false);
         notify("error", "Input Validation", response.message);
@@ -294,7 +298,7 @@ function Admission() {
                           {fetchUserData.credentials_status === 0 && (
                             <li>School Credentials</li>
                           )}
-                          {fetchUserData.guarantor_status === 0 && (
+                          {fetchUserData.guarantors_status === 0 && (
                             <li>Guarantor form</li>
                           )}
                         </ol>
@@ -344,8 +348,7 @@ function Admission() {
                       </Button>
                     </Modal.Footer>
                   </Modal>
-                )) ||
-                (fetchUserData.admission_status === "Admitted" && <Main />)}
+                ))}
             </>
           )}
 
@@ -375,49 +378,59 @@ function Admission() {
                     </Button>
                   </Card.Body>
                 </Card>
-                <Card className="bootstrap-card">
-                  <Card.Img variant="top" src={GuarantorImage} />
-                  <Card.Body>
-                    <Card.Title>Guarantor form</Card.Title>
-                    <Card.Text>
-                      Kindly download, print and fill up the guarantor form and
-                      then upload it. This will also be needed in the
-                      registration
-                    </Card.Text>
-                    <Button variant="info" onClick={fetchGuarantor}>
-                      Download
-                    </Button>
-                  </Card.Body>
-                </Card>
+                {showGuarantorCard && fetchUserData.guarantors_status === 0 && (
+                  <Card className="bootstrap-card">
+                    <Card.Img variant="top" src={GuarantorImage} />
+                    <Card.Body>
+                      <Card.Title>Guarantor form</Card.Title>
+                      <Card.Text>
+                        Kindly download, print and fill up the guarantor form
+                        and then upload it. This will also be needed in the
+                        registration
+                      </Card.Text>
+                      <Button variant="info" onClick={fetchGuarantor}>
+                        Download
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                )}
               </div>
               <div className="bootstrap-cards-inner-box">
-                <Card className="bootstrap-card">
-                  <Card.Img variant="top" src={UploadImage} />
-                  <Card.Body>
-                    <Card.Title>Upload credentials</Card.Title>
-                    <Card.Text>
-                      Kindly download and print your acknowledgement letter
-                    </Card.Text>
-                    <Button
-                      variant="primary"
-                      onClick={handleShowCredentialForm}
-                    >
-                      Upload credentials
-                    </Button>
-                  </Card.Body>
-                </Card>
-                <Card className="bootstrap-card">
-                  <Card.Img variant="top" src={GuarantorImage} />
-                  <Card.Body>
-                    <Card.Title>Guarantor form (completed)</Card.Title>
-                    <Card.Text>
-                      Kindly upload the two guarantor forms.
-                    </Card.Text>
-                    <Button variant="primary" onClick={handleShowGuarantorForm}>
-                      Upload guarantor forms
-                    </Button>
-                  </Card.Body>
-                </Card>
+                {showCredentialsCard &&
+                  fetchUserData.credentials_status === 0 && (
+                    <Card className="bootstrap-card">
+                      <Card.Img variant="top" src={UploadImage} />
+                      <Card.Body>
+                        <Card.Title>Upload credentials</Card.Title>
+                        <Card.Text>
+                          Kindly download and print your acknowledgement letter
+                        </Card.Text>
+                        <Button
+                          variant="primary"
+                          onClick={handleShowCredentialForm}
+                        >
+                          Upload
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  )}
+                {showGuarantorCard && fetchUserData.guarantors_status === 0 && (
+                  <Card className="bootstrap-card">
+                    <Card.Img variant="top" src={GuarantorImage} />
+                    <Card.Body>
+                      <Card.Title>Upload Guarantor form (completed)</Card.Title>
+                      <Card.Text>
+                        Kindly upload the two guarantor forms.
+                      </Card.Text>
+                      <Button
+                        variant="primary"
+                        onClick={handleShowGuarantorForm}
+                      >
+                        Upload
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                )}
               </div>
             </div>
           </div>

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('state_of_origin');
             $table->string('photo')->default('storage/assets/images/users/default.jpg');
             $table->string('class_sessions');
-            $table->string('qualification_level');
+            $table->string('qualification_level')->nullable();
             $table->string('credentials')->nullable();
             $table->integer('credentials_status')->default(0);
             $table->string('guarantors_1')->nullable();

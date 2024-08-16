@@ -72,6 +72,12 @@ class UserController extends Controller
                 $user->qualification_level = $request->input('qualification_level');
                 $user->credentials = $filePath;
                 $user->credentials_status = 1;
+
+                //Set status to Processing
+                if ($user->credentials_status == 1 && $user->guarantors_status == 1) {
+                    $user->admission_status =  'Processing';
+                }
+
                 $user->save();
 
                 return response()->json([
@@ -130,6 +136,12 @@ class UserController extends Controller
 
                 $user->guarantors_2 = $filePath2;
                 $user->guarantors_status = 1;
+
+                //Set status to Processing
+                if ($user->credentials_status == 1 && $user->guarantors_status == 1) {
+                    $user->admission_status =  'Processing';
+                }
+
                 $user->save();
 
                 return response()->json([

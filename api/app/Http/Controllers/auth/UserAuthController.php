@@ -69,11 +69,15 @@ class UserAuthController extends Controller
             }
 
             $credentials = $request->only('email', 'password');
-            //admitted user
-            $admittedUser = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 1, 'guarantors_status' => 1, 'credentials_status' => 1];
 
-            //unadmitted user
-            $unadmittedUser = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 0];
+            //admitted user
+            $admittedUser = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 'Admitted', 'guarantors_status' => 1, 'credentials_status' => 1];
+
+            //unadmitted user (pending documentation)
+            $unadmittedUserPending = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 'Pending documentation'];
+
+            //unadmitted user (processing)
+            $unadmittedUserProcessing = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 'Processing'];
 
             if (Auth::attempt($admittedUser)) {
                 $user = Auth::user();
@@ -85,7 +89,17 @@ class UserAuthController extends Controller
                 $token = $user->createToken('UserToken', ['user'])->accessToken;
 
                 return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
-            } else if (Auth::attempt($unadmittedUser)) {
+            } else if (Auth::attempt($unadmittedUserPending)) {
+                $user = Auth::user();
+                $rememberMe = $request->input('remember_token');
+                $remember = $rememberMe ? Str::random(60) : null;
+                $user->remember_token = $remember;
+                $user->save();
+
+                $token = $user->createToken('UserToken', ['user'])->accessToken;
+
+                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
+            } else if (Auth::attempt($unadmittedUserProcessing)) {
                 $user = Auth::user();
                 $rememberMe = $request->input('remember_token');
                 $remember = $rememberMe ? Str::random(60) : null;
