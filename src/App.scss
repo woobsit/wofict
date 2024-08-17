@@ -416,6 +416,17 @@ width:100%;
   color:black;
 }
 
+/*header-hamburger*/
+.header-hamburger{
+  width: 150px;
+  right: 10px;
+  top: 40px;
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border:1px solid rgb(236, 236, 236);
+}
+
 .search-input-container{
   margin-top:10px;
   height:50px;

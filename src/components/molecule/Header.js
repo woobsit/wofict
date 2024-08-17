@@ -12,6 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faBell, faBars } from "@fortawesome/free-solid-svg-icons";
 //Spinner loader
 import Loader from "./../../components/atom/loader";
+//Atom component
+import Card from "./../atom/card/Card";
 
 function Header() {
   const navigate = useNavigate();
@@ -21,6 +23,12 @@ function Header() {
   const [fetchUserData, setFetchUserData] = useState({});
   const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
   const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
+
+  const [menuStatus, setMenuStatus] = useState(false);
+
+  const setMenu = () => {
+    setMenuStatus(!menuStatus);
+  };
 
   const userLogout = async () => {
     try {
@@ -142,10 +150,19 @@ function Header() {
               <FontAwesomeIcon
                 icon={faBars}
                 className="nav__menu-icon nav__menu-icon-bars"
-                onClick={userLogout}
-                disabled={loading}
+                onClick={setMenu}
               />
             </div>
+            {menuStatus && (
+              <Card className="header-hamburger">
+                <ul>
+                  <li>list one</li>
+                  {/* <li onClick={userLogout} disabled={loading}>
+              Log out
+            </li> */}
+                </ul>
+              </Card>
+            )}
           </div>
         </nav>
       </header>
