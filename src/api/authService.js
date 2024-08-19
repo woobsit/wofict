@@ -159,7 +159,15 @@ const authService = {
       throw error;
     }
   },
-
+  getAdmin: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/get-admin");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   downloadAcknowledgement: async () => {
     // eslint-disable-next-line no-useless-catch
     try {

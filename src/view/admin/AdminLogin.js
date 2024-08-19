@@ -95,7 +95,7 @@ function AdminLogin() {
           sameSite: "lax",
         });
         setLoading(false);
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } else if (response.status === 422) {
         setLoading(false);
         notify("error", "Input Validation", response.message);

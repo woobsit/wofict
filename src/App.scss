@@ -618,7 +618,9 @@ width:100%;
 
    .sidebar {
     flex:1;
-    background-color: rgb(228, 228, 228);
+    background:linear-gradient(0deg, rgba(0, 0, 0, 0.671), rgba(0, 0, 0, 0.788)), url('./assets/images/sidebar-back.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
     height: 100vh;
     display:flex;
     flex-direction: column;

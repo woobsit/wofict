@@ -5,7 +5,6 @@ import authService from "./../api/authService";
 import { notify } from "./../utils/Notification";
 //Molecule
 import Header from "./../components/molecule/Header";
-import Sidebar from "./../components/molecule/Sidebar";
 import Footer from "./../components/molecule/Footer";
 //Atom component
 import Typography from "./../components/atom/typography/Typography";
@@ -247,7 +246,6 @@ function Admission() {
   return (
     <div className="dashboard-container">
       <div className="content">
-        <Sidebar />
         <div className="content__content-bar">
           <Header />
           {fetchUserDataStatus && (

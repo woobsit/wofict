@@ -56,17 +56,21 @@ function App() {
           element={<EnterNewPassword />}
           key="enter-new-password"
         />
-        <Route path="/admin-login" element={<AdminLogin />} key="admin-login" />
-        <Route path="/dashboard" element={<Dashboard />} key="dashboard" />
+        <Route path="/admin/login" element={<AdminLogin />} key="admin-login" />
         <Route
-          path="/admin-forget-password"
-          element={<AdminForgetPassword />}
-          key="admin-forget-password"
+          path="/admin/dashboard"
+          element={<Dashboard />}
+          key="dashboard"
         />
         <Route
-          path="/admin-enter-new-password/:id"
+          path="/admin/forget-password"
+          element={<AdminForgetPassword />}
+          key="admin/forget-password"
+        />
+        <Route
+          path="/admin/enter-new-password/:id"
           element={<AdminEnterNewPassword />}
-          key="admin-enter-new-password"
+          key="admin/enter-new-password"
         />
       </Routes>
     </div>

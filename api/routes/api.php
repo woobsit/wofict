@@ -3,6 +3,7 @@
 use App\Http\Controllers\auth\UserAuthController;
 use App\Http\Controllers\auth\AdminAuthController;
 use App\Http\Controllers\admin\WebsiteInfoController;
+use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\UserController;
 
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route::post('/register', [UserAuthController::class, 'register']);
 // Route::post('/admin-login', [AdminAuthController::class, 'adminLogin']);
-Route::middleware(['api'])->group(function () {
+Route::middleware(['api'])->prefix('v1')->group(function () {
     //User Login
     Route::post('/user-login', [UserAuthController::class, 'userLogin']);
     //User forget password endpoint
@@ -47,8 +48,8 @@ Route::middleware(['api'])->group(function () {
     Route::get('/website-info', [WebsiteInfoController::class, 'showWebsiteInfo']);
 });
 
-
-Route::middleware(['auth:api', 'scope:user'])->group(function () {
+/*User routes*/
+Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {
     Route::post('/user-logout', [UserAuthController::class, 'userLogout']);
     Route::get('/get-user', [UserController::class, 'getUser']);
     //Acknowledgement generation
@@ -61,9 +62,15 @@ Route::middleware(['auth:api', 'scope:user'])->group(function () {
     Route::post('/upload-guarantors', [UserController::class, 'uploadGuarantors']);
 });
 
-Route::middleware(['auth:api', 'scope:admin'])->group(function () {
+
+/*Admin routes*/
+Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () {
+    //Admin Login
+    Route::post('/admin-login', [AdminAuthController::class, 'adminLogin']);
     //Admin Logout
     Route::post('/admin-logout', [AdminAuthController::class, 'adminLogout']);
+    //get admin
+    Route::get('/get-admin', [AdminController::class, 'getAdmin']);
 });
     // Endpoints that require admin scope
 

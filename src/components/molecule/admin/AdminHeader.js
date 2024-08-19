@@ -2,27 +2,27 @@ import React, { useState, useEffect } from "react";
 //React route dom
 import { useNavigate, Link } from "react-router-dom";
 //API service
-import authService from "./../../api/authService";
+import authService from "./../../../api/authService";
 //js-cookies
 import Cookies from "js-cookie";
 //utils
-import { notify } from "./../../utils/Notification";
+import { notify } from "./../../../utils/Notification";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faBell, faBars } from "@fortawesome/free-solid-svg-icons";
 //Spinner loader
-import Loader from "./../../components/atom/loader";
+import Loader from "./../../../components/atom/loader";
 //Atom component
-import Card from "./../atom/card/Card";
+import Card from "./../../atom/card/Card";
 
-function Header() {
+function AdminHeader() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
-  const [fetchUserData, setFetchUserData] = useState({});
+  const [fetchAdminData, setFetchAdminData] = useState({});
   const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
-  const [fetchUserDataStatus, setFetchUserDataStatus] = useState(false);
+  const [fetchAdminDataStatus, setFetchAdminDataStatus] = useState(false);
 
   const [menuStatus, setMenuStatus] = useState(false);
 
@@ -30,15 +30,15 @@ function Header() {
     setMenuStatus(!menuStatus);
   };
 
-  const userLogout = async () => {
+  const adminLogout = async () => {
     try {
       setLoading(true);
-      const response = await authService.userLogout();
+      const response = await authService.adminLogout();
 
       if (response.status === 204) {
         setLoading(false);
-        Cookies.remove("auth_user_token"); // remove token in cookies
-        navigate("/");
+        Cookies.remove("auth_admin_token"); // remove token in cookies
+        navigate("/admin/login");
       } else if (response.status === 401) {
         setLoading(false);
         notify("error", "Unauthorized", response.message);
@@ -80,11 +80,11 @@ function Header() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await authService.getUser();
+        const response = await authService.getAdmin();
 
         if (response.status === 201) {
-          setFetchUserData(response.result);
-          setFetchUserDataStatus(true);
+          setFetchAdminData(response.result);
+          setFetchAdminDataStatus(true);
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -120,18 +120,18 @@ function Header() {
               className="nav__menu-image"
               src={
                 fetchWebsiteDataStatus &&
-                fetchUserDataStatus &&
-                fetchWebsiteInfo[2].value + "" + fetchUserData.photo
+                fetchAdminDataStatus &&
+                fetchWebsiteInfo[2].value + "" + fetchAdminData.photo
               }
               alt={
                 fetchWebsiteDataStatus &&
-                fetchUserDataStatus &&
-                fetchUserData.firstname + " " + fetchUserData.surname
+                fetchAdminDataStatus &&
+                fetchAdminData.firstname + " " + fetchAdminData.surname
               }
               title={
                 fetchWebsiteDataStatus &&
-                fetchUserDataStatus &&
-                fetchUserData.firstname + " " + fetchUserData.surname
+                fetchAdminDataStatus &&
+                fetchAdminData.firstname + " " + fetchAdminData.surname
               }
             />
             <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-cog">
@@ -156,7 +156,7 @@ function Header() {
             {menuStatus && (
               <Card
                 className="header-hamburger"
-                onClick={userLogout}
+                onClick={adminLogout}
                 disabled={loading}
               >
                 <ul>
@@ -172,4 +172,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default AdminHeader;
