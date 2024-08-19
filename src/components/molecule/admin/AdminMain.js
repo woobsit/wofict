@@ -6,9 +6,9 @@ import Card from "./../../../components/atom/card/Card";
 import Typography from "./../../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "./../../../utils/Notification";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function AdminMain() {
   const [fetchAdminData, setFetchAdminData] = useState({});

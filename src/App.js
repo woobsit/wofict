@@ -17,8 +17,8 @@ import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 import "bootstrap/dist/css/bootstrap.min.css";
 //scss style
 import "./App.scss";
-
-//import store from './store';
+//Routes
+import routes from "routes";
 
 function App() {
   setupInterceptors();
@@ -35,6 +35,26 @@ function App() {
   };
 
   const backgroundClass = getBackgroundClass(location.pathname);
+
+  const getRoutes = (allRoutes) =>
+    allRoutes.map((route) => {
+      if (route.collapse) {
+        return getRoutes(route.collapse);
+      }
+
+      if (route.route) {
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
+      }
+
+      return null;
+    });
 
   return (
     <div className={`${backgroundClass}`}>

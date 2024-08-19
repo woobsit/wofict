@@ -109,7 +109,7 @@ function Header() {
               className="nav__logo"
               src={
                 fetchWebsiteDataStatus &&
-                fetchWebsiteInfo[2].value + "" + fetchWebsiteInfo[3].value
+                fetchWebsiteInfo[2].value + fetchWebsiteInfo[3].value
               }
               alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
               title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
