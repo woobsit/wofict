@@ -10,7 +10,7 @@ import ForgetPassword from "./view/ForgetPassword";
 import Admission from "./view/Admission";
 import EnterNewPassword from "./view/EnterNewPassword";
 import AdminLogin from "./view/admin/AdminLogin";
-import Dashboard from "./view/admin/Dashboard";
+//import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminForgetPassword from "./view/admin/AdminForgetPassword";
 import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 //React Bootstrap
@@ -18,13 +18,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //scss style
 import "./App.scss";
 //Routes
-import routes from "routes";
+import adminRoutes from "./adminRoutes";
+//Authenticated routes
+import IsStudentOrAdminRoute from "./middlewares/IsStudentOrAdminRoute";
+import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
 
 function App() {
   setupInterceptors();
 
   const location = useLocation();
 
+  //pages background
   const getBackgroundClass = (pathname) => {
     switch (pathname) {
       case "/":
@@ -36,10 +40,10 @@ function App() {
 
   const backgroundClass = getBackgroundClass(location.pathname);
 
-  const getRoutes = (allRoutes) =>
+  const getAdminRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
-        return getRoutes(route.collapse);
+        return getAdminRoutes(route.collapse);
       }
 
       if (route.route) {
@@ -56,44 +60,74 @@ function App() {
       return null;
     });
 
+  // const getStudentRoutes = (allRoutes) =>
+  //   allRoutes.map((route) => {
+  //     if (route.collapse) {
+  //       return getStudentRoutes(route.collapse);
+  //     }
+
+  //     if (route.route) {
+  //       return (
+  //         <Route
+  //           exact
+  //           path={route.route}
+  //           element={route.component}
+  //           key={route.key}
+  //         />
+  //       );
+  //     }
+
+  //     return null;
+  //   });
+
   return (
-    <div className={`${backgroundClass}`}>
-      <Routes>
-        <Route>
+    <Routes>
+      <div className={`${backgroundClass}`}>
+        <Route element={<CanAccessAuthenticated />}>
           <Route path="/" element={<LandingPage />} key="landing-page" />
           <Route path="/register" element={<Register />} key="register" />
           <Route path="/home" element={<Home />} key="home" />
-          <Route path="/admission" element={<Admission />} key="admission" />
-
           <Route
             path="/forget-password"
             element={<ForgetPassword />}
             key="forget-password"
           />
+          <Route
+            path="/enter-new-password/:id"
+            element={<EnterNewPassword />}
+            key="enter-new-password"
+          />
+          <Route
+            path="/admin/login"
+            element={<AdminLogin />}
+            key="admin-login"
+          />
+          <Route
+            path="/admin/forget-password"
+            element={<AdminForgetPassword />}
+            key="admin/forget-password"
+          />
+          <Route
+            path="/admin/enter-new-password/:id"
+            element={<AdminEnterNewPassword />}
+            key="admin/enter-new-password"
+          />
         </Route>
-        <Route
-          path="/enter-new-password/:id"
-          element={<EnterNewPassword />}
-          key="enter-new-password"
-        />
-        <Route path="/admin/login" element={<AdminLogin />} key="admin-login" />
-        <Route
-          path="/admin/dashboard"
-          element={<Dashboard />}
-          key="dashboard"
-        />
-        <Route
-          path="/admin/forget-password"
-          element={<AdminForgetPassword />}
-          key="admin/forget-password"
-        />
-        <Route
-          path="/admin/enter-new-password/:id"
-          element={<AdminEnterNewPassword />}
-          key="admin/enter-new-password"
-        />
-      </Routes>
-    </div>
+        {/* User protected route */}
+        <Route element={<IsStudentOrAdminRoute userType="student" />}>
+          <Route path="/admission" element={<Admission />} key="admission" />
+        </Route>
+        {/* Admin protected route */}
+        <Route element={<IsStudentOrAdminRoute userType="admin" />}>
+          {getAdminRoutes(adminRoutes)}
+          {/* <Route
+            path="/admin/dashboard"
+            element={<AdminDashboard />}
+            key="dashboard"
+          /> */}
+        </Route>
+      </div>
+    </Routes>
   );
 }
 

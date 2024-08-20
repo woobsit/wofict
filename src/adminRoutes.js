@@ -7,19 +7,19 @@ import {
   faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
 //views
-import Admission from "./view/Admission";
-import Dashboard from "./view/admin/AdminDashboard";
-import Admins from "./view/admin/Admins";
-import Settings from "./view/admin/Settings";
+import AdminAdmission from "./view/admin/AdminAdmission";
+import AdminDashboard from "./view/admin/AdminDashboard";
+import AdminAdmins from "./view/admin/AdminAdmins";
+import AdminSettings from "./view/admin/AdminSettings";
 
-const routes = [
+const adminRoutes = [
   {
     type: "collapse",
     name: "Dashboard",
     key: "dashboard",
     icon: <FontAwesomeIcon icon={faDashboard} />,
     route: "/admin/dashboard",
-    component: <Dashboard />,
+    component: <AdminDashboard />,
   },
   {
     type: "collapse",
@@ -27,7 +27,7 @@ const routes = [
     key: "admission",
     icon: <FontAwesomeIcon icon={faUniversity} />,
     route: "/admin/admission",
-    component: <Admission />,
+    component: <AdminAdmission />,
   },
   {
     type: "collapse",
@@ -35,7 +35,7 @@ const routes = [
     key: "settings",
     icon: <FontAwesomeIcon icon={faCog} />,
     route: "/admin/settings",
-    component: <Settings />,
+    component: <AdminSettings />,
   },
   {
     type: "collapse",
@@ -43,7 +43,7 @@ const routes = [
     key: "admins",
     icon: <FontAwesomeIcon icon={faUserGear} />,
     route: "/admin/admins",
-    component: <Admins />,
+    component: <AdminAdmins />,
   },
 ];
-export default routes;
+export default adminRoutes;
