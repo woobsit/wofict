@@ -81,8 +81,8 @@ function App() {
   //   });
 
   return (
-    <Routes>
-      <div className={`${backgroundClass}`}>
+    <div className={`${backgroundClass}`}>
+      <Routes>
         <Route element={<CanAccessAuthenticated />}>
           <Route path="/" element={<LandingPage />} key="landing-page" />
           <Route path="/register" element={<Register />} key="register" />
@@ -126,8 +126,8 @@ function App() {
             key="dashboard"
           /> */}
         </Route>
-      </div>
-    </Routes>
+      </Routes>
+    </div>
   );
 }
 

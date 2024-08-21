@@ -65,8 +65,7 @@ Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {
 
 /*Admin routes*/
 Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () {
-    //Admin Login
-    Route::post('/admin-login', [AdminAuthController::class, 'adminLogin']);
+   
     //Admin Logout
     Route::post('/admin-logout', [AdminAuthController::class, 'adminLogout']);
     //get admin

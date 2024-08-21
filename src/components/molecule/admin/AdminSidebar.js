@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import authService from "./../../../api/authService";
 //utils
 import { notify } from "./../../../utils/Notification";
+//prop types
+// import PropTypes from "prop-types";
 
-function AdminSidebar({ routes }) {
+function AdminSidebar() {
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
   const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
 
@@ -44,5 +46,9 @@ function AdminSidebar({ routes }) {
     </sidebar>
   );
 }
+
+// AdminSidebar.propTypes = {
+//   routes: PropTypes.array,
+// };
 
 export default AdminSidebar;
