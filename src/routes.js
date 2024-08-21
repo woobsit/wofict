@@ -2,15 +2,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDashboard,
-  faUniversity,
   faCog,
-  faUserGear,
+  faUser,
+  faUniversity,
 } from "@fortawesome/free-solid-svg-icons";
 //views
+import Profile from "./view/Profile";
+import Dashboard from "./view/Dashboard";
+import Settings from "./view/Settings";
 import Admission from "./view/Admission";
-import Dashboard from "./view/admin/AdminDashboard";
-import Admins from "./view/admin/Admins";
-import Settings from "./view/admin/Settings";
 
 const routes = [
   {
@@ -18,7 +18,7 @@ const routes = [
     name: "Dashboard",
     key: "dashboard",
     icon: <FontAwesomeIcon icon={faDashboard} />,
-    route: "/admin/dashboard",
+    route: "/dashboard",
     component: <Dashboard />,
   },
   {
@@ -26,24 +26,24 @@ const routes = [
     name: "Admission",
     key: "admission",
     icon: <FontAwesomeIcon icon={faUniversity} />,
-    route: "/admin/admission",
+    route: "/admission",
     component: <Admission />,
+  },
+  {
+    type: "collapse",
+    name: "Profile",
+    key: "profile",
+    icon: <FontAwesomeIcon icon={faUser} />,
+    route: "/profile",
+    component: <Profile />,
   },
   {
     type: "collapse",
     name: "Settings",
     key: "settings",
     icon: <FontAwesomeIcon icon={faCog} />,
-    route: "/admin/settings",
+    route: "/settings",
     component: <Settings />,
-  },
-  {
-    type: "collapse",
-    name: "Admins",
-    key: "admins",
-    icon: <FontAwesomeIcon icon={faUserGear} />,
-    route: "/admin/admins",
-    component: <Admins />,
   },
 ];
 export default routes;

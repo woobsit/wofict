@@ -7,7 +7,7 @@ import Home from "./view/Home";
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
 import ForgetPassword from "./view/ForgetPassword";
-import Admission from "./view/Admission";
+// import Admission from "./view/Admission";
 import EnterNewPassword from "./view/EnterNewPassword";
 import AdminLogin from "./view/admin/AdminLogin";
 //import AdminDashboard from "./view/admin/AdminDashboard";
@@ -19,6 +19,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
 //Routes
 import adminRoutes from "./adminRoutes";
+import routes from "./routes";
 //Authenticated routes
 import IsStudentOrAdminRoute from "./middlewares/IsStudentOrAdminRoute";
 import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
@@ -60,25 +61,25 @@ function App() {
       return null;
     });
 
-  // const getStudentRoutes = (allRoutes) =>
-  //   allRoutes.map((route) => {
-  //     if (route.collapse) {
-  //       return getStudentRoutes(route.collapse);
-  //     }
+  const getStudentRoutes = (allRoutes) =>
+    allRoutes.map((route) => {
+      if (route.collapse) {
+        return getStudentRoutes(route.collapse);
+      }
 
-  //     if (route.route) {
-  //       return (
-  //         <Route
-  //           exact
-  //           path={route.route}
-  //           element={route.component}
-  //           key={route.key}
-  //         />
-  //       );
-  //     }
+      if (route.route) {
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
+      }
 
-  //     return null;
-  //   });
+      return null;
+    });
 
   return (
     <div className={`${backgroundClass}`}>
@@ -115,16 +116,11 @@ function App() {
         </Route>
         {/* User protected route */}
         <Route element={<IsStudentOrAdminRoute userType="student" />}>
-          <Route path="/admission" element={<Admission />} key="admission" />
+          {getStudentRoutes(routes)}
         </Route>
         {/* Admin protected route */}
         <Route element={<IsStudentOrAdminRoute userType="admin" />}>
           {getAdminRoutes(adminRoutes)}
-          {/* <Route
-            path="/admin/dashboard"
-            element={<AdminDashboard />}
-            key="dashboard"
-          /> */}
         </Route>
       </Routes>
     </div>
