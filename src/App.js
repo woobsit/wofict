@@ -23,6 +23,8 @@ import routes from "./routes";
 //Authenticated routes
 import IsStudentOrAdminRoute from "./middlewares/IsStudentOrAdminRoute";
 import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
+//Molecule
+import AdminSidebar from "./components/molecule/admin/AdminSidebar";
 
 function App() {
   setupInterceptors();
@@ -83,6 +85,7 @@ function App() {
 
   return (
     <div className={`${backgroundClass}`}>
+      <AdminSidebar routes={adminRoutes} />
       <Routes>
         <Route element={<CanAccessAuthenticated />}>
           <Route path="/" element={<LandingPage />} key="landing-page" />

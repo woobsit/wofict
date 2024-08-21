@@ -1,35 +1,36 @@
-import React, { useEffect } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 import PropTypes from "prop-types";
 
 const IsStudentOrAdminRoute = ({ userType }) => {
-  const navigate = useNavigate();
+  const isAuthenticatedStudent = Cookies.get("auth_user_token");
+  const isAuthenticatedAdmin = Cookies.get("auth_admin_token");
 
-  useEffect(() => {
-    const isAuthenticatedStudent = Cookies.get("auth_user_token");
-    const isAuthenticatedAdmin = Cookies.get("auth_admin_token");
+  if (userType === "student") {
+    if (!isAuthenticatedStudent) {
+      // If user is not authenticated, check if admin is authenticated
+      if (isAuthenticatedAdmin) {
+        return <Navigate to="/admin/dashboard" replace />;
 
-    if (userType === "student") {
-      if (!isAuthenticatedStudent) {
-        // If user is not authenticated, check if admin is authenticated
-        if (isAuthenticatedAdmin) {
-          navigate("/admin/dashboard"); // Redirect admin to their dashboard
-        } else {
-          navigate("/admin/login"); // Redirect unauthenticated users to homepage
-        }
-      }
-    } else if (userType === "admin") {
-      if (!isAuthenticatedAdmin) {
-        // If admin is not authenticated, check if user is authenticated
-        if (isAuthenticatedStudent) {
-          navigate("/dashboard"); // Redirect user to their dashboard
-        } else {
-          navigate("/"); // Redirect unauthenticated admins to homepage
-        }
+        //navigate("/admin/dashboard"); // Redirect admin to their dashboard
+      } else {
+        return <Navigate to="/admin/login" replace />;
+        //navigate("/admin/login"); // Redirect unauthenticated users to homepage
       }
     }
-  }, [userType, navigate]);
+  } else if (userType === "admin") {
+    if (!isAuthenticatedAdmin) {
+      // If admin is not authenticated, check if user is authenticated
+      if (isAuthenticatedStudent) {
+        return <Navigate to="/dashboard" replace />;
+        //navigate("/dashboard"); // Redirect user to their dashboard
+      } else {
+        return <Navigate to="/" replace />;
+        //navigate("/"); // Redirect unauthenticated admins to homepage
+      }
+    }
+  }
 
   return <Outlet />;
 };
