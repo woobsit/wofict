@@ -44,7 +44,13 @@ function AdminSidebar({ routes }) {
 
       if (type === "collapse") {
         returnValue = href ? (
-          <Link href={href} key={key} target="_blank" rel="noreferrer">
+          <Link
+            href={href}
+            key={key}
+            target="_blank"
+            rel="noreferrer"
+            className="sidebar__link"
+          >
             {icon}
             <Typography
               variant="span"
@@ -98,7 +104,7 @@ function AdminSidebar({ routes }) {
       </div>
 
       <div className="sidebar__list-container">
-        <ul>{renderRoutes}</ul>
+        <ul className="sidebar__unordered-list">{renderRoutes}</ul>
       </div>
     </sidebar>
   );

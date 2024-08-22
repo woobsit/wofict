@@ -306,19 +306,37 @@
 /*        User dashboard       */
 /*****************************/
 
-.dashboard-container {
+// .dashboard-container {
+//   width: 100%;
+//   border:2px solid red;
+// }
+
+.main-container{
+  display:flex;
   width: 100%;
 }
 
 .content {
+  display:flex;
+  flex-direction: column;
   width: 100%;
 }
 .sidebar {
   display: none;
+  height:100vh;
 }
 
-.content__content-bar {
-  width: 100%;
+.sidebar__unordered-list{
+  display:flex;
+  flex-direction: column;
+}
+
+.sidebar__unordered-list a{
+  color:$gray;
+}
+
+.sidebar__link{
+
 }
 
 .header {
@@ -595,10 +613,11 @@
 @media only screen and (min-width: 1024px) {
   .content {
     display: flex;
+    flex: 4;
   }
 
   .content__content-bar {
-    flex: 4;
+   
   }
 
   .bootstrap-cards-container {
@@ -641,11 +660,10 @@ background-size: cover;
 background-repeat: no-repeat;
 height: 100vh;
 width:100%;
+padding:10px;
 }
 
-  .content__content-bar {
-    flex: 4;
-  }
+ 
 }
 
 @media only screen and (min-width: 1440px) {

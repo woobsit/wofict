@@ -25,6 +25,9 @@ import IsStudentOrAdminRoute from "./middlewares/IsStudentOrAdminRoute";
 import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
 //Molecule
 import AdminSidebar from "./components/molecule/admin/AdminSidebar";
+import Sidebar from "./components/molecule/Sidebar";
+//js-cookies
+import Cookies from "js-cookie";
 
 function App() {
   setupInterceptors();
@@ -85,47 +88,53 @@ function App() {
 
   return (
     <div className={`${backgroundClass}`}>
-      <AdminSidebar routes={adminRoutes} />
-      <Routes>
-        <Route element={<CanAccessAuthenticated />}>
-          <Route path="/" element={<LandingPage />} key="landing-page" />
-          <Route path="/register" element={<Register />} key="register" />
-          <Route path="/home" element={<Home />} key="home" />
-          <Route
-            path="/forget-password"
-            element={<ForgetPassword />}
-            key="forget-password"
-          />
-          <Route
-            path="/enter-new-password/:id"
-            element={<EnterNewPassword />}
-            key="enter-new-password"
-          />
-          <Route
-            path="/admin/login"
-            element={<AdminLogin />}
-            key="admin-login"
-          />
-          <Route
-            path="/admin/forget-password"
-            element={<AdminForgetPassword />}
-            key="admin/forget-password"
-          />
-          <Route
-            path="/admin/enter-new-password/:id"
-            element={<AdminEnterNewPassword />}
-            key="admin/enter-new-password"
-          />
-        </Route>
-        {/* User protected route */}
-        <Route element={<IsStudentOrAdminRoute userType="student" />}>
-          {getStudentRoutes(routes)}
-        </Route>
-        {/* Admin protected route */}
-        <Route element={<IsStudentOrAdminRoute userType="admin" />}>
-          {getAdminRoutes(adminRoutes)}
-        </Route>
-      </Routes>
+      <div className="main-container">
+        {Cookies.get("auth_admin_token") && (
+          <AdminSidebar routes={adminRoutes} />
+        )}
+        {Cookies.get("auth_user_token") && <Sidebar routes={routes} />}
+
+        <Routes>
+          <Route element={<CanAccessAuthenticated />}>
+            <Route path="/" element={<LandingPage />} key="landing-page" />
+            <Route path="/register" element={<Register />} key="register" />
+            <Route path="/home" element={<Home />} key="home" />
+            <Route
+              path="/forget-password"
+              element={<ForgetPassword />}
+              key="forget-password"
+            />
+            <Route
+              path="/enter-new-password/:id"
+              element={<EnterNewPassword />}
+              key="enter-new-password"
+            />
+            <Route
+              path="/admin/login"
+              element={<AdminLogin />}
+              key="admin-login"
+            />
+            <Route
+              path="/admin/forget-password"
+              element={<AdminForgetPassword />}
+              key="admin/forget-password"
+            />
+            <Route
+              path="/admin/enter-new-password/:id"
+              element={<AdminEnterNewPassword />}
+              key="admin/enter-new-password"
+            />
+          </Route>
+          {/* User protected route */}
+          <Route element={<IsStudentOrAdminRoute userType="student" />}>
+            {getStudentRoutes(routes)}
+          </Route>
+          {/* Admin protected route */}
+          <Route element={<IsStudentOrAdminRoute userType="admin" />}>
+            {getAdminRoutes(adminRoutes)}
+          </Route>
+        </Routes>
+      </div>
     </div>
   );
 }

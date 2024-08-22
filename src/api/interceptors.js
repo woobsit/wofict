@@ -1,7 +1,7 @@
-// src/api/interceptors.js
 import axiosInstance from "./axiosInstance";
 //js-cookies
 import Cookies from "js-cookie";
+//React route dom
 
 export const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
@@ -29,7 +29,12 @@ export const setupInterceptors = () => {
       return response;
     },
     (error) => {
-      // Handle errors globally if needed
+      if (error.response && error.response.status === 401) {
+        // Unauthorized error, meaning the token is invalid
+        Cookies.remove("auth_user_token");
+        Cookies.remove("auth_admin_token");
+        window.location.href = "/"; // Redirect
+      }
       return Promise.reject(error);
     }
   );
