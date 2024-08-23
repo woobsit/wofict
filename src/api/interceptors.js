@@ -2,6 +2,7 @@ import axiosInstance from "./axiosInstance";
 //js-cookies
 import Cookies from "js-cookie";
 //React route dom
+//utils
 
 export const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
@@ -29,11 +30,20 @@ export const setupInterceptors = () => {
       return response;
     },
     (error) => {
+      Cookies.remove("auth_user_token");
+      Cookies.remove("auth_admin_token");
       if (error.response && error.response.status === 401) {
         // Unauthorized error, meaning the token is invalid
-        Cookies.remove("auth_user_token");
-        Cookies.remove("auth_admin_token");
-        window.location.href = "/"; // Redirect
+        window.location.replace("/");
+        alert(
+          "Session has expired. You have been logged out. Please try again later."
+        );
+      } else if (!error.response) {
+        // Redirect to the login page with a message
+        window.location.replace("/");
+        alert(
+          "There seems to be a problem with the backend. Please try again later."
+        );
       }
       return Promise.reject(error);
     }

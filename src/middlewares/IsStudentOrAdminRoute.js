@@ -13,10 +13,10 @@ const IsStudentOrAdminRoute = ({ userType }) => {
       if (isAuthenticatedAdmin) {
         return <Navigate to="/admin/dashboard" replace />;
 
-        //navigate("/admin/dashboard"); // Redirect admin to their dashboard
+        // Redirect admin to their dashboard
       } else {
         return <Navigate to="/admin/login" replace />;
-        //navigate("/admin/login"); // Redirect unauthenticated users to homepage
+        // Redirect unauthenticated users to homepage
       }
     }
   } else if (userType === "admin") {
@@ -24,10 +24,10 @@ const IsStudentOrAdminRoute = ({ userType }) => {
       // If admin is not authenticated, check if user is authenticated
       if (isAuthenticatedStudent) {
         return <Navigate to="/dashboard" replace />;
-        //navigate("/dashboard"); // Redirect user to their dashboard
+        // Redirect user to their dashboard
       } else {
         return <Navigate to="/" replace />;
-        //navigate("/"); // Redirect unauthenticated admins to homepage
+        // Redirect unauthenticated admins to homepage
       }
     }
   }
