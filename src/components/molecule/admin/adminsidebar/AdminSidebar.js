@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 //React route dom
 import { useLocation, Link } from "react-router-dom";
 //API service
-import authService from "./../../../api/authService";
+import authService from "../../../../api/authService";
 //utils
-import { notify } from "./../../../utils/Notification";
+import { notify } from "../../../../utils/Notification";
 //prop types
 import PropTypes from "prop-types";
 //Atom component
-import Typography from "./../../atom/typography/Typography";
+import Typography from "../../../atom/typography/Typography";
+//Molecule
+import SidenavCollapse from "./SidenavCollapse";
 
 function AdminSidebar({ routes }) {
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
   const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
   const location = useLocation();
-  const collapseName = location.pathname.replace("/admin/dashboard", "");
+  const collapseName = location.pathname.replace("/", "");
 
   useEffect(() => {
     async function displayWebsiteInfo() {
@@ -39,35 +41,33 @@ function AdminSidebar({ routes }) {
 
   // Render all the routes from the AmdinSidebar.js
   const renderRoutes = routes.map(
-    ({ type, name, icon, title, key, href, route }) => {
+    ({ type, name, icon, title, noCollapse, key, href, route }) => {
       let returnValue;
 
       if (type === "collapse") {
         returnValue = href ? (
-          <Link
+          <a
             href={href}
             key={key}
             target="_blank"
             rel="noreferrer"
             className="sidebar__link"
           >
-            {icon}
-            <Typography
-              variant="span"
-              className={key === collapseName ? "active" : ""}
-            >
-              {name}
-            </Typography>
-          </Link>
+            <SidenavCollapse
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
+          </a>
         ) : (
           <Link key={key} to={route}>
-            {icon}
-            <Typography
-              variant="span"
-              className={key === collapseName ? "active" : ""}
-            >
-              {name}
-            </Typography>
+            <SidenavCollapse
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
           </Link>
         );
       } else if (type === "title") {

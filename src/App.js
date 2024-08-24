@@ -24,7 +24,7 @@ import routes from "./routes";
 import IsStudentOrAdminRoute from "./middlewares/IsStudentOrAdminRoute";
 import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
 //Molecule
-import AdminSidebar from "./components/molecule/admin/AdminSidebar";
+import AdminSidebar from "./components/molecule/admin/adminsidebar/AdminSidebar";
 import Sidebar from "./components/molecule/Sidebar";
 //js-cookies
 import Cookies from "js-cookie";
