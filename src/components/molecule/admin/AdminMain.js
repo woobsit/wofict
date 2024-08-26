@@ -6,9 +6,11 @@ import Card from "./../../../components/atom/card/Card";
 import Typography from "./../../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "./../../../utils/Notification";
+//Molecule
+import AdminBreadcrumbs from "./AdminBreadcrumbs";
 
 function AdminMain() {
   const [fetchAdminData, setFetchAdminData] = useState({});
@@ -61,18 +63,10 @@ function AdminMain() {
 
   return (
     <main>
-      <div className="image-container">
-        <div>
-          <Typography variant="h3">Dashboard</Typography>
-          <Typography variant="span">
-            Welcome back, {fetchAdminDataStatus && fetchAdminData.firstname}
-          </Typography>
-        </div>
-        <div>
-          <FontAwesomeIcon icon={faHome} className="nav__menu-icon" /> /
-          <Typography variant="span"> dashboard</Typography>
-        </div>
-      </div>
+      <AdminBreadcrumbs
+        firstname={fetchAdminDataStatus && fetchAdminData.firstname}
+      />
+
       <div className="search-input-container">
         <div className="landing-form__input-box">
           <FontAwesomeIcon
