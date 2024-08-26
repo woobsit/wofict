@@ -6,9 +6,12 @@ import PropTypes from "prop-types";
 
 function SidenavCollapse({ name, icon, active, ...rest }) {
   return (
-    <li {...rest}>
-      <span>{icon}</span>
-      <Typography variant="span" className={active ? "active" : ""}>
+    <li
+      {...rest}
+      className={`sidebar__link ${active ? "sidebar__link-active" : ""}`}
+    >
+      <span className="sidebar__list-span-icon">{icon}</span>
+      <Typography variant="span" className="sidebar__list-span-text">
         {name}
       </Typography>
     </li>

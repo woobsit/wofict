@@ -17,7 +17,6 @@ function AdminSidebar({ routes }) {
   const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
-
   useEffect(() => {
     async function displayWebsiteInfo() {
       try {
@@ -46,13 +45,7 @@ function AdminSidebar({ routes }) {
 
       if (type === "collapse") {
         returnValue = href ? (
-          <a
-            href={href}
-            key={key}
-            target="_blank"
-            rel="noreferrer"
-            className="sidebar__link"
-          >
+          <a href={href} key={key} target="_blank" rel="noreferrer">
             <SidenavCollapse
               name={name}
               icon={icon}

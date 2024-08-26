@@ -16,7 +16,7 @@ const adminRoutes = [
   {
     type: "collapse",
     name: "Dashboard",
-    key: "dashboard",
+    key: "admin/dashboard",
     icon: <FontAwesomeIcon icon={faDashboard} />,
     route: "/admin/dashboard",
     component: <AdminDashboard />,
@@ -24,26 +24,26 @@ const adminRoutes = [
   {
     type: "collapse",
     name: "Admission",
-    key: "admission",
+    key: "admin/admission",
     icon: <FontAwesomeIcon icon={faUniversity} />,
     route: "/admin/admission",
     component: <AdminAdmission />,
   },
   {
     type: "collapse",
-    name: "Settings",
-    key: "settings",
-    icon: <FontAwesomeIcon icon={faCog} />,
-    route: "/admin/settings",
-    component: <AdminSettings />,
-  },
-  {
-    type: "collapse",
     name: "Admins",
-    key: "admins",
+    key: "admin/admins",
     icon: <FontAwesomeIcon icon={faUserGear} />,
     route: "/admin/admins",
     component: <AdminAdmins />,
+  },
+  {
+    type: "collapse",
+    name: "Settings",
+    key: "admin/settings",
+    icon: <FontAwesomeIcon icon={faCog} />,
+    route: "/admin/settings",
+    component: <AdminSettings />,
   },
 ];
 export default adminRoutes;
