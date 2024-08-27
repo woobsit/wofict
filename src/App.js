@@ -1,6 +1,6 @@
 import React from "react";
 //React Router package
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { setupInterceptors } from "./api/interceptors";
 //views
 import Home from "./view/Home";
@@ -123,6 +123,11 @@ function App() {
               path="/admin/enter-new-password/:id"
               element={<AdminEnterNewPassword />}
               key="admin/enter-new-password"
+            />
+            {/* Redirect /admin to /admin/dashboard */}
+            <Route
+              path="/admin"
+              element={<Navigate to="/admin/dashboard" replace />}
             />
           </Route>
           {/* User protected route */}

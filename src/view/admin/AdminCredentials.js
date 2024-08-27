@@ -1,10 +1,11 @@
 import React from "react";
+//React bootstrap
 import Table from "react-bootstrap/Table";
 //Molecule
 import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import Footer from "../../components/molecule/Footer";
 
-function AdminAdmission() {
+function AdminCredentials() {
   return (
     <div className="content">
       <AdminHeader />
@@ -12,12 +13,13 @@ function AdminAdmission() {
         <thead>
           <tr>
             <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
-            <th>Username</th>
-            <th>Last Name</th>
-            <th>Username</th>
+            <th>Firstname</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Credentials</th>
+            <th>Credentials status</th>
+            <th>Approve</th>
             <th>Username</th>
           </tr>
         </thead>
@@ -59,4 +61,4 @@ function AdminAdmission() {
   );
 }
 
-export default AdminAdmission;
+export default AdminCredentials;

@@ -5,12 +5,16 @@ import {
   faUniversity,
   faCog,
   faUserGear,
+  faFileText,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 //views
 import AdminAdmission from "./view/admin/AdminAdmission";
 import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminAdmins from "./view/admin/AdminAdmins";
 import AdminSettings from "./view/admin/AdminSettings";
+import AdminCredentials from "./view/admin/AdminCredentials";
+import AdminGuarantors from "./view/admin/AdminGuarantors";
 
 const adminRoutes = [
   {
@@ -28,6 +32,40 @@ const adminRoutes = [
     icon: <FontAwesomeIcon icon={faUniversity} />,
     route: "/admin/admission",
     component: <AdminAdmission />,
+    collapse: [
+      {
+        type: "collapse",
+        name: "Credentials",
+        key: "admin/admission/credentials",
+        icon: <FontAwesomeIcon icon={faUniversity} />,
+        route: "/admin/admission/credentials",
+        component: <AdminCredentials />,
+      },
+      {
+        type: "collapse",
+        name: "Guarantors",
+        key: "admin/admission/guarantors",
+        icon: <FontAwesomeIcon icon={faUniversity} />,
+        route: "/admin/admission/guarantors",
+        component: <AdminGuarantors />,
+      },
+    ],
+  },
+  {
+    type: "collapse",
+    name: "Credentials",
+    key: "admin/admission/credentials",
+    icon: <FontAwesomeIcon icon={faFileText} />,
+    route: "/admin/admission/credentials",
+    component: <AdminCredentials />,
+  },
+  {
+    type: "collapse",
+    name: "Guarantors",
+    key: "admin/admission/guarantors",
+    icon: <FontAwesomeIcon icon={faUsers} />,
+    route: "/admin/admission/guarantors",
+    component: <AdminGuarantors />,
   },
   {
     type: "collapse",

@@ -1,6 +1,6 @@
 import React from "react";
 //Custom component
-import Typography from "./../../components/atom/typography/Typography";
+import Typography from "./../../atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //utils
@@ -23,7 +23,7 @@ function AdminBreadcrumbs({ firstname }) {
   );
 }
 
-AdminBreadcrumbs.protoTypes = {
+AdminBreadcrumbs.propTypes = {
   firstname: PropTypes.string.isRequired,
 };
 
