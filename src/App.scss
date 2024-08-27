@@ -704,3 +704,46 @@ padding:20px 10px 10px 10px;
     flex: 5;
   }
 }
+
+
+/******************************/
+/*       Credentials page    */
+/******************************/
+
+.credentials{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  padding:$card-margin;
+}
+
+.credentials__table-box{
+  width:100%;
+  padding:$card-padding;
+  border:1px solid rgb(224, 224, 224);
+  border-radius:7px;
+  background: white;
+}
+
+.credentials__infograph-box{
+  width:100%;
+}
+
+.credentials__table-wrapper{
+  scrollbar-width: thin;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.credentials__table-wrapper::-webkit-scrollbar{
+  height: 6px;
+}
+
+.credentials__table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #888; 
+  border-radius: 3px; 
+}
+
+.credentials__table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #555; 
+}
