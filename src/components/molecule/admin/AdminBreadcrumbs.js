@@ -3,7 +3,6 @@ import React from "react";
 import Typography from "./../../atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-//utils
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";

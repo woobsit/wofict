@@ -725,6 +725,36 @@ padding:20px 10px 10px 10px;
   background: white;
 }
 
+.nav{
+  font-weight:bold;
+}
+
+.nav-link{
+color:#ff4444;
+font-size:15px;
+}
+
+.credentials__table-title-box{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.credentials__table-title{
+  font-family:"roboto";
+  font-weight: 600;
+  font-size:25px;
+}
+
+.credentials__table-title-icon{
+  font-size:15px;
+  color:white;
+  background: linear-gradient(to right, #1172f1, #004bad);
+  border-radius:3px;
+  padding:5px;
+  cursor: pointer;
+}
+
 .credentials__infograph-box{
   width:100%;
 }
@@ -733,6 +763,7 @@ padding:20px 10px 10px 10px;
   scrollbar-width: thin;
   overflow-x: auto;
   white-space: nowrap;
+  margin-top:10px;
 }
 
 .credentials__table-wrapper::-webkit-scrollbar{
