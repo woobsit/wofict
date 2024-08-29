@@ -268,8 +268,8 @@
 @media only screen and (min-width: 425px) {
   .landing-form__container {
     width: 75%;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -313,30 +313,29 @@
 //   border:2px solid red;
 // }
 
-.main-container{
-  display:flex;
+.main-container {
+  display: flex;
   width: 100%;
 }
 
 .content {
-  display:flex;
+  display: flex;
   flex-direction: column;
   width: 100%;
 }
 .sidebar {
   display: none;
-  height:100vh;
+  height: 100vh;
 }
 
-.sidebar__unordered-list{
-  display:flex;
+.sidebar__unordered-list {
+  display: flex;
   flex-direction: column;
 }
 
-.sidebar__unordered-list a{
-  color:$gray;
+.sidebar__unordered-list a {
+  color: $gray;
 }
-
 
 .header {
   display: flex;
@@ -614,9 +613,8 @@
     display: flex;
     flex: 4;
   }
-  
+
   .content__content-bar {
-   
   }
 
   .bootstrap-cards-container {
@@ -632,68 +630,63 @@
     align-items: center;
   }
 
-  .sidebar__link{
-    width:100%;
-    display:flex;
+  .sidebar__link {
+    width: 100%;
+    display: flex;
     align-items: center;
-    padding:6px 10px;
+    padding: 6px 10px;
     margin-bottom: 6px;
     border-radius: 5px;
   }
 
-  .sidebar__link:hover{
+  .sidebar__link:hover {
     background: rgba(131, 131, 252, 0.589);
-    
   }
-  
-  .sidebar__link-active{
+
+  .sidebar__link-active {
     background: rgba(23, 23, 255, 0.589);
-    color:white;
+    color: white;
   }
 
-  
-  .sidebar__list-span-icon{
-    margin-right:12px;
-    font-size:24px;
-}
+  .sidebar__list-span-icon {
+    margin-right: 12px;
+    font-size: 24px;
+  }
 
-  .sidebar__list-span-text{
+  .sidebar__list-span-text {
     text-transform: uppercase;
     font-weight: bold;
   }
-
 
   .nav__logo {
     display: none;
   }
 
-.sidebar__logo-image-container{
-  height: 60px;
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  height:65px;
-}
-
-.sidebar__logo-image {
-  height: 40px;
+  .sidebar__logo-image-container {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 65px;
   }
 
-.sidebar__list-container{ 
-  background: linear-gradient(
-  0deg,
-  rgba(0, 0, 0, 0.671),
-  rgba(0, 0, 0, 0.788)
-),
-url("./assets/images/sidebar-back.jpg");
-background-size: cover;
-background-repeat: no-repeat;
-height: 100vh;
-width:100%;
-padding:20px 10px 10px 10px;
-}
+  .sidebar__logo-image {
+    height: 40px;
+  }
 
- 
+  .sidebar__list-container {
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.671),
+        rgba(0, 0, 0, 0.788)
+      ),
+      url("./assets/images/sidebar-back.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    padding: 20px 10px 10px 10px;
+  }
 }
 
 @media only screen and (min-width: 1440px) {
@@ -705,45 +698,44 @@ padding:20px 10px 10px 10px;
   }
 }
 
-
 /******************************/
 /*       Credentials page    */
 /******************************/
 
-.credentials{
-  display:flex;
+.credentials {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  padding:$card-margin;
+  padding: $card-margin;
 }
 
-.credentials__table-box{
-  width:100%;
-  padding:$card-padding;
-  border:1px solid rgb(224, 224, 224);
-  border-radius:7px;
+.credentials__table-box {
+  width: 100%;
+  padding: $card-padding;
+  border: 1px solid rgb(224, 224, 224);
+  border-radius: 7px;
   background: white;
 }
 
-.credentials__infograph-box{
-  width:100%;
+.credentials__infograph-box {
+  width: 100%;
 }
 
-.credentials__table-wrapper{
+.credentials__table-wrapper {
   scrollbar-width: thin;
   overflow-x: auto;
   white-space: nowrap;
 }
 
-.credentials__table-wrapper::-webkit-scrollbar{
+.credentials__table-wrapper::-webkit-scrollbar {
   height: 6px;
 }
 
 .credentials__table-wrapper::-webkit-scrollbar-thumb {
-  background-color: #888; 
-  border-radius: 3px; 
+  background-color: #888;
+  border-radius: 3px;
 }
 
 .credentials__table-wrapper::-webkit-scrollbar-thumb:hover {
-  background-color: #555; 
+  background-color: #555;
 }

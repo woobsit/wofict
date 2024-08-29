@@ -1,4 +1,5 @@
 import React from "react";
+
 //React bootstrap
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -11,6 +12,7 @@ function AdminCredentials() {
   return (
     <div className="content">
       <AdminHeader />
+
       <div className="credentials">
         <div className="credentials__table-box">
           <Tabs
