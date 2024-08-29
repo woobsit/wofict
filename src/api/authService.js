@@ -265,11 +265,11 @@ const authService = {
       throw error;
     }
   },
-  getAllUsers: async () => {
+  getAllUsers: async (page = 1) => {
     //Admin gets active users
     // eslint-disable-next-line no-useless-catch
     try {
-      const response = await axiosInstance.get("/get-all-users");
+      const response = await axiosInstance.get(`/get-all-users?page=${page}`);
       return response.data;
     } catch (error) {
       throw error;

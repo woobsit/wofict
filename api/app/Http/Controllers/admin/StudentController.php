@@ -14,12 +14,20 @@ class StudentController extends Controller
     public function getAllUsers(Request $request)
     {
         try {
-            $user = User::where('active', 1)->orderBy('created_at', 'desc')->paginate(15);
+            $user = User::where('active', 1)->orderBy('created_at', 'desc')->paginate(10);
             if ($user) {
                 return response()->json([
                     'status' => 201,
                     'message' => 'success',
-                    'result' => $user,
+                    'result' => $user->items(),
+                    'pagination' => [
+                        'total' => $user->total(),
+                        'per_page' => $user->perPage(),
+                        'current_page' => $user->currentPage(),
+                        'last_page' => $user->lastPage(),
+                        'from' => $user->firstItem(),
+                        'to' => $user->lastItem(),
+                    ],
                 ]);
             }
         } catch (Exception $e) {
