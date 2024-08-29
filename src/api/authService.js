@@ -265,6 +265,16 @@ const authService = {
       throw error;
     }
   },
+  getAllUsers: async () => {
+    //Admin gets active users
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/get-all-users");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

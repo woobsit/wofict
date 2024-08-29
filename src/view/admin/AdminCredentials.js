@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 //React bootstrap
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+
 //Molecule
 import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import Footer from "../../components/molecule/Footer";
@@ -11,8 +13,36 @@ import Typography from "./../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+//utils
+import { notify } from "./../../utils/Notification";
+//API service
+import authService from "./../../api/authService";
 
 function AdminCredentials() {
+  const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
+  const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
+
+  useEffect(() => {
+    async function fetchAllUsers() {
+      try {
+        const response = await authService.getAllUsers();
+        if (response.status === 201) {
+          setFetchAllUsersData(response.result.data);
+          setFetchAllUserDataStatus(true);
+        } else if (response.status === 500) {
+          notify("error", "System Error", response.message);
+        }
+      } catch (error) {
+        notify(
+          "error",
+          "Error",
+          "An unexpected error occurred. Please try again."
+        );
+      }
+    }
+    fetchAllUsers();
+  }, []);
+
   return (
     <div className="content">
       <AdminHeader />
@@ -68,42 +98,44 @@ function AdminCredentials() {
                       <th>Email</th>
                       <th>Gender</th>
                       <th>Credentials</th>
-                      <th>Credentials status</th>
-                      <th>Approve</th>
-                      <th>Username</th>
+                      <th>Course</th>
+                      <th>Status</th>
+                      <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                      <td>@fat</td>
-                      <td>@fat</td>
-                      <td>@fat</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>Larry the Bird</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                    </tr>
+                    {fetchAllUserDataStatus &&
+                      fetchAllUsersData.map((user, index) => (
+                        <tr key={user.id}>
+                          <td>{index + 1}</td>
+                          <td>{user.firstname}</td>
+                          <td>{user.surname}</td>
+                          <td>{user.email}</td>
+                          <td>{user.gender}</td>
+                          <td>
+                            {user.credentials ? "Available" : "Unavailable"}
+                          </td>
+                          <td>{user.course}</td>
+                          <td>
+                            <Typography variant="p" className="">
+                              {user.credentials_status === 1
+                                ? "Approved"
+                                : "Unapproved"}
+                            </Typography>
+                          </td>
+                          <td>
+                            <Button variant="primary" size="sm">
+                              View user details
+                            </Button>
+                          </td>
+                          <td>
+                            <Button variant="info" size="sm">
+                              View credentials
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
               </div>
