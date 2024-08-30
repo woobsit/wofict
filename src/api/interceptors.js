@@ -1,19 +1,21 @@
 import axiosInstance from "./axiosInstance";
 //js-cookies
 import Cookies from "js-cookie";
-//React route dom
-//utils
+//api
+import getAuthAdminData from "./handleAuthAdminCookies"; // Import the getAuthAdminData function
+import getAuthUserData from "./handleAuthUserCookies"; // Import the getAuthUserData function
 
 export const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
     (config) => {
+      const authAdminData = getAuthAdminData(); // Use the getAuthAdminData function
+      const authUserData = getAuthUserData(); // Use the getAuthUserData function
+
       var token = "";
-      if (Cookies.get("auth_user_token")) {
-        token = Cookies.get("auth_user_token");
-        config.headers["Authorization"] = token ? `Bearer ${token}` : "";
-      } else if (Cookies.get("auth_admin_token")) {
-        token = Cookies.get("auth_admin_token");
-        config.headers["Authorization"] = token ? `Bearer ${token}` : "";
+      if (authUserData && authUserData.token) {
+        config.headers["Authorization"] = `Bearer ${authUserData.token}`;
+      } else if (authAdminData && authAdminData.token) {
+        config.headers["Authorization"] = `Bearer ${authAdminData.token}`;
       } else {
         config.headers["Authorization"] = `Bearer ${token}`;
       }
@@ -30,8 +32,16 @@ export const setupInterceptors = () => {
       return response;
     },
     (error) => {
-      Cookies.remove("auth_user_token");
-      Cookies.remove("auth_admin_token");
+      const authAdminData = getAuthAdminData();
+      const authUserData = getAuthUserData();
+
+      if (authUserData) {
+        Cookies.remove("auth_user_data");
+      }
+
+      if (authAdminData) {
+        Cookies.remove("auth_admin_data");
+      }
       if (error.response && error.response.status === 401) {
         // Unauthorized error, meaning the token is invalid
         window.location.replace("/");

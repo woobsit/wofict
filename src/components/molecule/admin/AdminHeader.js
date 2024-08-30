@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 //API service
 import authService from "./../../../api/authService";
+import getAuthAdminData from "./api/handleAuthAdminCookies";
 //js-cookies
 import Cookies from "js-cookie";
 //utils
@@ -56,26 +57,13 @@ function AdminHeader() {
     }
   };
 
-  useEffect(() => {
-    async function displayWebsiteInfo() {
-      try {
-        const response = await authService.websiteInfo();
-        if (response.status === 201) {
-          setFetchWebsiteInfo(response.result);
-          setFetchWebsiteDataStatus(true);
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
-        notify(
-          "error",
-          "Error",
-          "An unexpected error occurred. Please try again."
-        );
-      }
-    }
-    displayWebsiteInfo();
-  }, []);
+  function displayWebsiteInfo() {
+    const result = getAuthAdminData();
+
+    setFetchWebsiteInfo(result);
+    setFetchWebsiteDataStatus(true);
+  }
+  displayWebsiteInfo();
 
   useEffect(() => {
     async function fetchData() {

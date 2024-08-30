@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 //React bootstrap
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -8,19 +9,18 @@ import Button from "react-bootstrap/Button";
 import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import Footer from "../../components/molecule/Footer";
 //Custom component
-import Typography from "./../../components/atom/typography/Typography";
+import Typography from "../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 //utils
-import { notify } from "./../../utils/Notification";
+import { notify } from "../../utils/Notification";
 //API service
-import authService from "./../../api/authService";
-//ApexCharts
-import ReactApexChart from "react-apexcharts";
-import Chart from "react-apexcharts";
+import authService from "../../api/authService";
 
-function AdminCredentials() {
+function AdminCredentialsList() {
+  const navigate = useNavigate();
+
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
   const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
   const [pagination, setPagination] = useState({});
@@ -123,76 +123,10 @@ function AdminCredentials() {
     return paginationButtons;
   };
 
-  const chartData = {
-    series: [
-      {
-        name: "Net Profit",
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-      },
-      {
-        name: "Revenue",
-        data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-      },
-      {
-        name: "Free Cash Flow",
-        data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
-      },
-    ],
-    options: {
-      chart: {
-        type: "bar",
-        height: 350,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "55%",
-          endingShape: "rounded",
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ["transparent"],
-      },
-      xaxis: {
-        categories: [
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-        ],
-      },
-      yaxis: {
-        title: {
-          text: "(number of students)",
-        },
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        y: {
-          formatter: (val) => `$ ${val} thousands`,
-        },
-      },
-    },
+  const handleViewUserDetails = (id) => {
+    navigate(`/admin/user-info-by-credentials/${id}`);
   };
 
-  const pieData = {
-    series: [44, 55, 41, 17, 15],
-    chartOptions: {
-      labels: ["Apple", "Mango", "Orange", "Watermelon"],
-    },
-  };
   return (
     <div className="content">
       <AdminHeader />
@@ -252,7 +186,6 @@ function AdminCredentials() {
                       <th>Course</th>
                       <th>Status</th>
                       <th></th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -276,13 +209,12 @@ function AdminCredentials() {
                             </Typography>
                           </td>
                           <td>
-                            <Button variant="primary" size="sm">
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              onClick={() => handleViewUserDetails(user.id)}
+                            >
                               View user details
-                            </Button>
-                          </td>
-                          <td>
-                            <Button variant="info" size="sm">
-                              View credentials
                             </Button>
                           </td>
                         </tr>
@@ -304,26 +236,9 @@ function AdminCredentials() {
           </Tabs>
         </div>
         <div className="credentials__infograph-box">
-          <div className="credentials__table-box">
-            <div id="chart">
-              <ReactApexChart
-                options={chartData.options}
-                series={chartData.series}
-                type="bar"
-                height={350}
-              />
-            </div>
-            <div id="html-dist"></div>
-          </div>
+          <div className="credentials__table-box"></div>
 
-          <div className="credentials__table-box">
-            <Chart
-              options={pieData.chartOptions}
-              series={pieData.series}
-              type="donut"
-              width="380"
-            />
-          </div>
+          <div className="credentials__table-box"></div>
         </div>
       </div>
 
@@ -332,4 +247,4 @@ function AdminCredentials() {
   );
 }
 
-export default AdminCredentials;
+export default AdminCredentialsList;

@@ -13,7 +13,7 @@ import AdminAdmission from "./view/admin/AdminAdmission";
 import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminAdmins from "./view/admin/AdminAdmins";
 import AdminSettings from "./view/admin/AdminSettings";
-import AdminCredentials from "./view/admin/AdminCredentials";
+import AdminCredentialsList from "./view/admin/AdminCredentialsList";
 import AdminGuarantors from "./view/admin/AdminGuarantors";
 
 const adminRoutes = [
@@ -32,24 +32,6 @@ const adminRoutes = [
     icon: <FontAwesomeIcon icon={faUniversity} />,
     route: "/admin/admission",
     component: <AdminAdmission />,
-    collapse: [
-      {
-        type: "collapse",
-        name: "Credentials",
-        key: "admin/admission/credentials",
-        icon: <FontAwesomeIcon icon={faUniversity} />,
-        route: "/admin/admission/credentials",
-        component: <AdminCredentials />,
-      },
-      {
-        type: "collapse",
-        name: "Guarantors",
-        key: "admin/admission/guarantors",
-        icon: <FontAwesomeIcon icon={faUniversity} />,
-        route: "/admin/admission/guarantors",
-        component: <AdminGuarantors />,
-      },
-    ],
   },
   {
     type: "collapse",
@@ -57,7 +39,7 @@ const adminRoutes = [
     key: "admin/admission/credentials",
     icon: <FontAwesomeIcon icon={faFileText} />,
     route: "/admin/admission/credentials",
-    component: <AdminCredentials />,
+    component: <AdminCredentialsList />,
   },
   {
     type: "collapse",

@@ -783,12 +783,34 @@ font-size:15px;
   background-color: #555; 
 }
 
-// @media only screen and (min-width: 1024px) {
-//   .sidebar {
-//     flex: 1;
-//   }
-//   .content__content-bar {
-//     flex: 5;
-//   }
-// }
 
+/******************************/
+/*     Credentials All Info    */
+/******************************/
+.card{
+  padding:$card-padding;
+  border:1px solid rgb(224, 224, 224);
+  border-radius:7px;
+  background: white;
+}
+
+.user-name{
+  margin:$card-margin;
+}
+
+.user-image{
+  border-radius: 10px;
+  height:100px;
+}
+
+.user-info-wrapper{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-info{
+  flex:1;
+}
+
+.user-personal-info{}
