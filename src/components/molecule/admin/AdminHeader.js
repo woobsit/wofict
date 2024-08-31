@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //React route dom
 import { useNavigate, Link } from "react-router-dom";
 //API service
 import authService from "./../../../api/authService";
-import getAuthAdminData from "./api/handleAuthAdminCookies";
+import getAuthAdminData from "./../../../api/handleAuthAdminCookies";
 //js-cookies
 import Cookies from "js-cookie";
 //utils
@@ -20,11 +20,6 @@ function AdminHeader() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
-  const [fetchAdminData, setFetchAdminData] = useState({});
-  const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
-  const [fetchAdminDataStatus, setFetchAdminDataStatus] = useState(false);
-
   const [menuStatus, setMenuStatus] = useState(false);
 
   const setMenu = () => {
@@ -38,7 +33,7 @@ function AdminHeader() {
 
       if (response.status === 204) {
         setLoading(false);
-        Cookies.remove("auth_admin_token"); // remove token in cookies
+        Cookies.remove("auth_admin_data"); // remove token in cookies
         navigate("/admin/login");
       } else if (response.status === 401) {
         setLoading(false);
@@ -57,35 +52,7 @@ function AdminHeader() {
     }
   };
 
-  function displayWebsiteInfo() {
-    const result = getAuthAdminData();
-
-    setFetchWebsiteInfo(result);
-    setFetchWebsiteDataStatus(true);
-  }
-  displayWebsiteInfo();
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await authService.getAdmin();
-
-        if (response.status === 201) {
-          setFetchAdminData(response.result);
-          setFetchAdminDataStatus(true);
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
-        notify(
-          "error",
-          "Error",
-          "An unexpected error occurred. Please try again."
-        );
-      }
-    }
-    fetchData();
-  }, []);
+  const { admin_user, website_info } = getAuthAdminData();
 
   return (
     <>
@@ -95,32 +62,17 @@ function AdminHeader() {
           <Link to="/home">
             <img
               className="nav__logo"
-              src={
-                fetchWebsiteDataStatus &&
-                fetchWebsiteInfo[2].value + "" + fetchWebsiteInfo[3].value
-              }
-              alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
-              title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
+              src={website_info[2].value + "" + website_info[3].value}
+              alt={website_info[0].value}
+              title={website_info[0].value}
             />
           </Link>
           <div className="nav__menu-box">
             <img
               className="nav__menu-image"
-              src={
-                fetchWebsiteDataStatus &&
-                fetchAdminDataStatus &&
-                fetchWebsiteInfo[2].value + "" + fetchAdminData.photo
-              }
-              alt={
-                fetchWebsiteDataStatus &&
-                fetchAdminDataStatus &&
-                fetchAdminData.firstname + " " + fetchAdminData.surname
-              }
-              title={
-                fetchWebsiteDataStatus &&
-                fetchAdminDataStatus &&
-                fetchAdminData.firstname + " " + fetchAdminData.surname
-              }
+              src={website_info[2].value + "" + admin_user.photo}
+              alt={admin_user.firstname + " " + admin_user.surname}
+              title={admin_user.firstname + " " + admin_user.surname}
             />
             <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-cog">
               <FontAwesomeIcon

@@ -1,11 +1,14 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import Cookies from "js-cookie";
+//api
+import getAuthAdminData from "./../api/handleAuthAdminCookies";
+import getAuthUserData from "./../api/handleAuthUserCookies";
+
 import PropTypes from "prop-types";
 
 const IsStudentOrAdminRoute = ({ userType }) => {
-  const isAuthenticatedStudent = Cookies.get("auth_user_token");
-  const isAuthenticatedAdmin = Cookies.get("auth_admin_token");
+  const isAuthenticatedStudent = getAuthUserData();
+  const isAuthenticatedAdmin = getAuthAdminData();
 
   if (userType === "student") {
     if (!isAuthenticatedStudent) {

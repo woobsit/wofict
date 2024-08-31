@@ -10,7 +10,7 @@ function getAuthUserData() {
     return {
       token: authData.token,
       user: authData.user,
-      websiteInfo: authData.website_info,
+      website_info: authData.website_info,
     };
   }
 }

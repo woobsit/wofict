@@ -90,9 +90,9 @@ function AdminLogin() {
         // Combine token, user info, and any other data
         const userInfo = {
           token: response.token,
-          admin_info: {
+          admin_user: {
             firstname: response.admin_info.firstname,
-            lastname: response.admin_info.lastname,
+            surname: response.admin_info.surname,
             email: response.admin_info.email,
             photo: response.admin_info.photo,
             admin_type: response.admin_info.admin_type_id,

@@ -88,12 +88,13 @@ function App() {
       return null;
     });
 
+  console.log(getAuthUserData());
+
   return (
     <div className={`${backgroundClass}`}>
       <div className="main-container">
         {getAuthAdminData() && <AdminSidebar routes={adminRoutes} />}
-        {getAuthUserData && <Sidebar routes={routes} />}
-
+        {getAuthUserData() && <Sidebar routes={routes} />}
         <Routes>
           <Route element={<CanAccessAuthenticated />}>
             <Route path="/" element={<LandingPage />} key="landing-page" />

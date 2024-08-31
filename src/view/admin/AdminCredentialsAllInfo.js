@@ -9,20 +9,19 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 //API service
 import authService from "../../api/authService";
+import getAuthAdminData from "./../../api/handleAuthAdminCookies";
 //utils
 import { notify } from "../../utils/Notification";
 
 function AdminCredentialsAllInfo() {
   const { id } = useParams();
+  const { website_info } = getAuthAdminData();
 
   const [fetchUserByCredentialsData, setFetchUserByCredentialsData] = useState(
     []
   );
   const [fetchUserByCredentialsStatus, setFetchUserByCredentialsStatus] =
     useState(false);
-
-  const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
-  const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
 
   useEffect(() => {
     if (id) {
@@ -81,20 +80,43 @@ function AdminCredentialsAllInfo() {
         </div>
       </div>
       <div>
-      <div className="card user-name">
-          <img src={fetchWebsiteDataStatus && fetchWebsiteInfo[2].value} alt={} title={} className="user-image"/>
-          <Typography variant="span" className="">
-            {fetchUserByCredentialsStatus &&
-              fetchUserByCredentialsData.firstname +
-                " " +
-                fetchUserByCredentialsData.surname}
-          </Typography>
-      </div>
-      <div className="user-info-wrapper">
-      <div className="card user-info user-personal-info"></div>
-      <div className="card user-info user-education-info"></div>
-      <div className="card user-info user-other-info"></div>
-      </div>
+        <div className="card user-name">
+          {fetchUserByCredentialsStatus && (
+            <>
+              <img
+                src={
+                  website_info[2].value + "" + fetchUserByCredentialsData.photo
+                }
+                alt={
+                  fetchUserByCredentialsData.firstname +
+                  " " +
+                  fetchUserByCredentialsData.surname
+                }
+                title={
+                  fetchUserByCredentialsData.firstname +
+                  " " +
+                  fetchUserByCredentialsData.surname
+                }
+                className="user-image"
+              />
+              <div className="user-fullname-email">
+                <Typography variant="h4" className="user-fullname">
+                  {fetchUserByCredentialsData.firstname +
+                    " " +
+                    fetchUserByCredentialsData.surname}
+                </Typography>
+                <Typography variant="p" className="user-email">
+                  {fetchUserByCredentialsData.email}
+                </Typography>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="user-info-wrapper">
+          <div className="card user-info user-personal-info"></div>
+          <div className="card user-info user-education-info"></div>
+          <div className="card user-info user-other-info"></div>
+        </div>
       </div>
     </div>
   );

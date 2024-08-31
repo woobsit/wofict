@@ -796,11 +796,22 @@ font-size:15px;
 
 .user-name{
   margin:$card-margin;
+  display:flex;
+  align-items: center;
+  flex-direction: row;
 }
 
 .user-image{
   border-radius: 10px;
-  height:100px;
+  height:70px;
+  width: 70px;
+  margin-right:12px;
+  box-shadow: 0 .3125rem .625rem 0 rgba(0,0,0,.12);
+}
+
+.user-fullname-email{
+  display:flex;
+  flex-direction: column;
 }
 
 .user-info-wrapper{

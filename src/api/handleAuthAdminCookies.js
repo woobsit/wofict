@@ -9,8 +9,8 @@ function getAuthAdminData() {
 
     return {
       token: authData.token,
-      user: authData.user,
-      websiteInfo: authData.website_info,
+      admin_user: authData.admin_user,
+      website_info: authData.website_info,
     };
   }
 }
