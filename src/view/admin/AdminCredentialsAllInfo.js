@@ -11,6 +11,8 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 //API service
 import authService from "../../api/authService";
 import getAuthAdminData from "./../../api/handleAuthAdminCookies";
+import axiosInstance from "./../../api/axiosInstance";
+
 //utils
 import { notify } from "../../utils/Notification";
 
@@ -58,12 +60,17 @@ function AdminCredentialsAllInfo() {
 
   async function fetchCredentials(id) {
     try {
-      const response = await authService.viewCredentials(id);
+      const response = await axiosInstance.get(`/view-credentials/${id}`, {
+        responseType: "blob",
+      });
+
       if (response.status === 200) {
         const pdfUrl = URL.createObjectURL(
           new Blob([response.data], { type: "application/pdf" })
         );
         setPdfUrl(pdfUrl);
+      } else if (response.status === 404) {
+        notify("error", "Error", "PDF not found");
       } else {
         throw new Error("Failed to fetch PDF");
       }
@@ -188,7 +195,7 @@ function AdminCredentialsAllInfo() {
               </div>
               <div className="user-heading-name">
                 <Typography variant="h6" className="user-heading">
-                  Contact address
+                  Contact address:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
                   {fetchUserByCredentialsStatus &&
@@ -213,10 +220,32 @@ function AdminCredentialsAllInfo() {
                     fetchUserByCredentialsData.state_of_origin}
                 </Typography>
               </div>
+              <div className="user-heading-name">
+                <Typography variant="h6" className="user-heading">
+                  Credentials status:
+                </Typography>
+                <Typography variant="span" className="user-name-value">
+                  {fetchUserByCredentialsStatus &&
+                  fetchUserByCredentialsData.credentials_status === 1
+                    ? "Verified"
+                    : "Unverified"}
+                </Typography>
+              </div>
+              <div className="user-heading-name">
+                <Typography variant="h6" className="user-heading">
+                  Guarantor status:
+                </Typography>
+                <Typography variant="span" className="user-name-value">
+                  {fetchUserByCredentialsStatus &&
+                  fetchUserByCredentialsData.guarantors_status === 1
+                    ? "Verified"
+                    : "Unverified"}
+                </Typography>
+              </div>
             </div>
           </div>
           <div className="card user-info user-education-info">
-            <Typography variant="h5" className="user-text">
+            <Typography variant="h4" className="user-text">
               Educational Background
             </Typography>
             <div className="">
@@ -257,12 +286,12 @@ function AdminCredentialsAllInfo() {
             </div>
           </div>
           <div className="card user-info user-other-info">
-            <Typography variant="h5" className="user-text">
+            <Typography variant="h4" className="user-text">
               Other Info
             </Typography>
             <div className="user-heading-name">
               <Typography variant="h6" className="user-heading">
-                Converstion Strenght:
+                Conversation Strenght:
               </Typography>
               <Typography variant="span" className="user-name-value">
                 To be set later
@@ -270,7 +299,7 @@ function AdminCredentialsAllInfo() {
             </div>
             <div className="user-heading-name">
               <Typography variant="h6" className="user-heading">
-                Conputer Literacy:
+                Computer Literacy:
               </Typography>
               <Typography variant="span" className="user-name-value">
                 To be set later
@@ -278,7 +307,7 @@ function AdminCredentialsAllInfo() {
             </div>
             <div className="user-heading-name">
               <Typography variant="h6" className="user-heading">
-                ICT Referral
+                ICT Referral:
               </Typography>
               <Typography variant="span" className="user-name-value">
                 To be set later

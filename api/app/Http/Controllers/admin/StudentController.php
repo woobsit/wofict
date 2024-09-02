@@ -61,28 +61,28 @@ class StudentController extends Controller
     }
 
     public function viewCredentials($id)
-{
-    try {
-        $user = User::where('active', 1)->where('id', $id)->first();
-        
-        if ($user && $user->credentials) {
-            $filePath = storage_path('app/public/credentials/' . $user->credentials);
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)->first();
 
-            if (file_exists($filePath)) {
-                return response()->file($filePath, [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="' . $user->credentials . '"'
-                ]);
+            if ($user && $user->credentials) {
+                $filePath = public_path('storage/assets/uploads/credentials/' . $user->credentials);
+
+
+                if (file_exists($filePath)) {
+                    return response()->file($filePath, [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'inline; filename="' . $user->credentials . '"'
+                    ])->setStatusCode(200);
+                } else {
+                    return response()->json(['status' => 404, 'message' => 'File not found']);
+                }
             } else {
-                return response()->json(['status' => 404, 'message' => 'File not found']);
+                return response()->json(['status' => 404, 'message' => 'User or file not found']);
             }
-        } else {
-            return response()->json(['status' => 404, 'message' => 'User or file not found']);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
-    } catch (Exception $e) {
-        Log::error($e->getMessage());
-        return response()->json(['status' => 500, 'message' => 'System error occurred']);
     }
-}
-
 }

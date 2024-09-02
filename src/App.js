@@ -88,8 +88,6 @@ function App() {
       return null;
     });
 
-  console.log(getAuthUserData());
-
   return (
     <div className={`${backgroundClass}`}>
       <div className="main-container">

@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('guarantors_2')->nullable();
             $table->integer('guarantors_status')->default(0);
             $table->enum('admission_status', ['Pending documentation', 'Processing', 'Admitted'])->default('Pending documentation');
-            $table->string('course');
+            $table->string('course')->nullable();
             $table->string('forget_password')->nullable();
             $table->string('expiry_timestamp')->nullable();
             $table->timestamp('email_verified_at')->nullable();

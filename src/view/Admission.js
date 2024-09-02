@@ -262,8 +262,9 @@ function Admission() {
                   </Modal.Header>
                   <Modal.Body>
                     Dear {fetchUserData.firstname},
-                    {fetchUserData.credentials_status === 0 &&
-                    fetchUserData.guarantor_status === 0 ? (
+                    {!fetchUserData.credentials &&
+                    !fetchUserData.guarantors_1 &&
+                    !fetchUserData.guarantors_2 ? (
                       <>
                         <p>
                           Thank you for applying. Your admission status is
@@ -293,12 +294,13 @@ function Admission() {
                           are still missing the following document(s):
                         </p>
                         <ol>
-                          {fetchUserData.credentials_status === 0 && (
+                          {!fetchUserData.credentials && (
                             <li>School Credentials</li>
                           )}
-                          {fetchUserData.guarantors_status === 0 && (
-                            <li>Guarantor form</li>
-                          )}
+                          {!fetchUserData.guarantors_1 &&
+                            !fetchUserData.guarantors_2 && (
+                              <li>Guarantor form</li>
+                            )}
                         </ol>
                         <p>
                           Your admission status remains{" "}
@@ -376,59 +378,64 @@ function Admission() {
                     </Button>
                   </Card.Body>
                 </Card>
-                {showGuarantorCard && fetchUserData.guarantors_status === 0 && (
-                  <Card className="bootstrap-card">
-                    <Card.Img variant="top" src={GuarantorImage} />
-                    <Card.Body>
-                      <Card.Title>Guarantor form</Card.Title>
-                      <Card.Text>
-                        Kindly download, print and fill up the guarantor form
-                        and then upload it. This will also be needed in the
-                        registration
-                      </Card.Text>
-                      <Button variant="info" onClick={fetchGuarantor}>
-                        Download
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                )}
-              </div>
-              <div className="bootstrap-cards-inner-box">
-                {showCredentialsCard &&
-                  fetchUserData.credentials_status === 0 && (
+                {showGuarantorCard &&
+                  !fetchUserData.guarantors_1 &&
+                  !fetchUserData.guarantors_2 && (
                     <Card className="bootstrap-card">
-                      <Card.Img variant="top" src={UploadImage} />
+                      <Card.Img variant="top" src={GuarantorImage} />
                       <Card.Body>
-                        <Card.Title>Upload credentials</Card.Title>
+                        <Card.Title>Guarantor form</Card.Title>
                         <Card.Text>
-                          Kindly download and print your acknowledgement letter
+                          Kindly download, print and fill up the guarantor form
+                          and then upload it. This will also be needed in the
+                          registration
                         </Card.Text>
-                        <Button
-                          variant="primary"
-                          onClick={handleShowCredentialForm}
-                        >
-                          Upload
+                        <Button variant="info" onClick={fetchGuarantor}>
+                          Download
                         </Button>
                       </Card.Body>
                     </Card>
                   )}
-                {showGuarantorCard && fetchUserData.guarantors_status === 0 && (
+              </div>
+              <div className="bootstrap-cards-inner-box">
+                {showCredentialsCard && !fetchUserData.credentials && (
                   <Card className="bootstrap-card">
-                    <Card.Img variant="top" src={GuarantorImage} />
+                    <Card.Img variant="top" src={UploadImage} />
                     <Card.Body>
-                      <Card.Title>Upload Guarantor form (completed)</Card.Title>
+                      <Card.Title>Upload credentials</Card.Title>
                       <Card.Text>
-                        Kindly upload the two guarantor forms.
+                        Kindly download and print your acknowledgement letter
                       </Card.Text>
                       <Button
                         variant="primary"
-                        onClick={handleShowGuarantorForm}
+                        onClick={handleShowCredentialForm}
                       >
                         Upload
                       </Button>
                     </Card.Body>
                   </Card>
                 )}
+                {showGuarantorCard &&
+                  !fetchUserData.guarantors_1 &&
+                  !fetchUserData.guarantors_2 && (
+                    <Card className="bootstrap-card">
+                      <Card.Img variant="top" src={GuarantorImage} />
+                      <Card.Body>
+                        <Card.Title>
+                          Upload Guarantor form (completed)
+                        </Card.Title>
+                        <Card.Text>
+                          Kindly upload the two guarantor forms.
+                        </Card.Text>
+                        <Button
+                          variant="primary"
+                          onClick={handleShowGuarantorForm}
+                        >
+                          Upload
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  )}
               </div>
             </div>
           </div>

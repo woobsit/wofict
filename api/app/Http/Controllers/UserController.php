@@ -71,10 +71,10 @@ class UserController extends Controller
 
                 $user->qualification_level = $request->input('qualification_level');
                 $user->credentials = $filePath;
-                $user->credentials_status = 1;
+                //$user->credentials_status = 1;
 
                 //Set status to Processing
-                if ($user->credentials_status == 1 && $user->guarantors_status == 1) {
+                if ($user->credentials && $user->guarantors_1 && $user->guarantors_2) {
                     $user->admission_status =  'Processing';
                 }
 
@@ -135,10 +135,10 @@ class UserController extends Controller
                 $filePath2 = $request->file('upload_guarantors_2')->storeAs('assets/uploads/guarantors', $fileName2, 'public');
 
                 $user->guarantors_2 = $filePath2;
-                $user->guarantors_status = 1;
+                //$user->guarantors_status = 1;
 
                 //Set status to Processing
-                if ($user->credentials_status == 1 && $user->guarantors_status == 1) {
+                if ($user->credentials && $user->guarantors_1 && $user->guarantors_2) {
                     $user->admission_status =  'Processing';
                 }
 
