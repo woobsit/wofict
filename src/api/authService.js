@@ -1,294 +1,111 @@
-// src/api/authService.js
 import axiosInstance from "./axiosInstance";
 
+const handleRequest = async (url, method = "get", data = null, config = {}) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await axiosInstance[method](url, data, config);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const authService = {
-  userLogin: async (email, password, remember_token) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/user-login", {
-        email,
-        password,
-        remember_token,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  userLogout: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/user-logout");
+  userLogin: (email, password, remember_token) =>
+    handleRequest("/user-login", "post", { email, password, remember_token }),
 
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  userForgetPassword: async (email) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/user-forget-password", {
-        email,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  userConfirmForgetPasswordToken: async (id) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post(
-        "/user-confirm-forget-password-token",
-        { forget_password: id }
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  userEnterNewPassword: async (
+  userLogout: () => handleRequest("/user-logout", "post"),
+
+  userForgetPassword: (email) =>
+    handleRequest("/user-forget-password", "post", { email }),
+
+  userConfirmForgetPasswordToken: (id) =>
+    handleRequest("/user-confirm-forget-password-token", "post", {
+      forget_password: id,
+    }),
+
+  userEnterNewPassword: (
     email,
     password,
     password_confirmation,
     forget_password
-  ) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/user-enter-new-password", {
-        email,
-        password,
-        password_confirmation,
-        forget_password,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  userRegister: async (userData) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/register", userData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  adminLogin: async (email, password, remember_token) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/admin-login", {
-        email,
-        password,
-        remember_token,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  adminLogout: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/admin-logout");
+  ) =>
+    handleRequest("/user-enter-new-password", "post", {
+      email,
+      password,
+      password_confirmation,
+      forget_password,
+    }),
 
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  adminForgetPassword: async (email) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/admin-forget-password", {
-        email,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  adminConfirmForgetPasswordToken: async (id) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post(
-        "/admin-confirm-forget-password-token",
-        { forget_password: id }
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  adminEnterNewPassword: async (
+  userRegister: (userData) => handleRequest("/register", "post", userData),
+
+  adminLogin: (email, password, remember_token) =>
+    handleRequest("/admin-login", "post", { email, password, remember_token }),
+
+  adminLogout: () => handleRequest("/admin-logout", "post"),
+
+  adminForgetPassword: (email) =>
+    handleRequest("/admin-forget-password", "post", { email }),
+
+  adminConfirmForgetPasswordToken: (id) =>
+    handleRequest("/admin-confirm-forget-password-token", "post", {
+      forget_password: id,
+    }),
+
+  adminEnterNewPassword: (
     email,
     password,
     password_confirmation,
     forget_password
-  ) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.post("/admin-enter-new-password", {
-        email,
-        password,
-        password_confirmation,
-        forget_password,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  websiteInfo: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get("/website-info");
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getUser: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get("/get-user");
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAdmin: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get("/get-admin");
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  downloadAcknowledgement: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get("/acknowledgement", {
-        responseType: "blob", // Important to handle PDF response as a blob
-      });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "acknowledgement.pdf"); // or any other extension
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+  ) =>
+    handleRequest("/admin-enter-new-password", "post", {
+      email,
+      password,
+      password_confirmation,
+      forget_password,
+    }),
 
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  downloadGuarantor: async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get("/guarantor", {
-        responseType: "blob", // Important to handle PDF response as a blob
-      });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "guarantor.pdf"); // or any other extension
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+  websiteInfo: () => handleRequest("/website-info"),
 
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  uploadCredentials: async (qualification_level, upload_credentials) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      // Create a FormData object to hold the form fields and file
-      const formData = new FormData();
-      // Append the qualification text input
-      formData.append("qualification_level", qualification_level);
+  getUser: () => handleRequest("/get-user"),
 
-      // Append the uploaded file (assuming upload_credentials is the file object)
-      if (upload_credentials) {
-        formData.append("upload_credentials", upload_credentials);
-      }
+  getAdmin: () => handleRequest("/get-admin"),
 
-      // Make the POST request with the FormData
-      const response = await axiosInstance.post(
-        "/upload-credentials",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+  downloadAcknowledgement: () =>
+    handleRequest("/acknowledgement", "get", null, { responseType: "blob" }),
 
-      // Return the response data
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  uploadGuarantors: async (upload_guarantors_1, upload_guarantors_2) => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      // Create a FormData object to hold the form fields and file
-      const formData = new FormData();
-      // Append the uploaded file
-      if (upload_guarantors_1) {
-        formData.append("upload_guarantors_1", upload_guarantors_1);
-      }
-      if (upload_guarantors_2) {
-        formData.append("upload_guarantors_2", upload_guarantors_2);
-      }
-      // Make the POST request with the FormData
-      const response = await axiosInstance.post(
-        "/upload-guarantors",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+  downloadGuarantor: () =>
+    handleRequest("/guarantor", "get", null, { responseType: "blob" }),
 
-      // Return the response data
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+  uploadCredentials: (qualification_level, upload_credentials) => {
+    const formData = new FormData();
+    formData.append("qualification_level", qualification_level);
+    if (upload_credentials)
+      formData.append("upload_credentials", upload_credentials);
+    return handleRequest("/upload-credentials", "post", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
-  getAllUsers: async (page = 1) => {
-    //Admin
-    //gets active users
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get(`/get-all-users?page=${page}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+
+  uploadGuarantors: (upload_guarantors_1, upload_guarantors_2) => {
+    const formData = new FormData();
+    if (upload_guarantors_1)
+      formData.append("upload_guarantors_1", upload_guarantors_1);
+    if (upload_guarantors_2)
+      formData.append("upload_guarantors_2", upload_guarantors_2);
+    return handleRequest("/upload-guarantors", "post", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
-  getUserByCredentials: async (id) => {
-    //Admin
-    //get active user
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await axiosInstance.get(
-        `/get-user-by-credentials/${id}`
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
+
+  getAllUsers: (page = 1) => handleRequest(`/get-all-users?page=${page}`),
+
+  getUserByCredentials: (id) => handleRequest(`/get-user-by-credentials/${id}`),
+
+  viewCredentials: (id) =>
+    handleRequest(`/view-credentials/${id}`, "get", null, {
+      responseType: "blob",
+    }),
 };
 
 export default authService;

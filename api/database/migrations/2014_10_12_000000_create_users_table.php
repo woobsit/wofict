@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('other_names')->nullable();
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->date('date_of_birth');
             $table->string('contact_address');
             $table->string('phone_number', 11);
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('guarantors_2')->nullable();
             $table->integer('guarantors_status')->default(0);
             $table->enum('admission_status', ['Pending documentation', 'Processing', 'Admitted'])->default('Pending documentation');
+            $table->string('course');
             $table->string('forget_password')->nullable();
             $table->string('expiry_timestamp')->nullable();
             $table->timestamp('email_verified_at')->nullable();

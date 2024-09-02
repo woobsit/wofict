@@ -59,4 +59,30 @@ class StudentController extends Controller
             return response()->json(['status' => 500, 'message' => 'System error occured']);
         }
     }
+
+    public function viewCredentials($id)
+{
+    try {
+        $user = User::where('active', 1)->where('id', $id)->first();
+        
+        if ($user && $user->credentials) {
+            $filePath = storage_path('app/public/credentials/' . $user->credentials);
+
+            if (file_exists($filePath)) {
+                return response()->file($filePath, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $user->credentials . '"'
+                ]);
+            } else {
+                return response()->json(['status' => 404, 'message' => 'File not found']);
+            }
+        } else {
+            return response()->json(['status' => 404, 'message' => 'User or file not found']);
+        }
+    } catch (Exception $e) {
+        Log::error($e->getMessage());
+        return response()->json(['status' => 500, 'message' => 'System error occurred']);
+    }
+}
+
 }

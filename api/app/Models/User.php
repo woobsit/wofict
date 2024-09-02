@@ -33,6 +33,7 @@ class User extends Authenticatable
         'state_of_origin',
         'qualification_level',
         'class_sessions',
+        'course',
 
     ];
 
