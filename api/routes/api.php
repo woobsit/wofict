@@ -4,6 +4,8 @@ use App\Http\Controllers\auth\UserAuthController;
 use App\Http\Controllers\auth\AdminAuthController;
 use App\Http\Controllers\admin\WebsiteInfoController;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\StudentController;
+
 use App\Http\Controllers\UserController;
 
 use Illuminate\Support\Facades\Route;
@@ -65,11 +67,15 @@ Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {
 
 /*Admin routes*/
 Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () {
-   
+
     //Admin Logout
     Route::post('/admin-logout', [AdminAuthController::class, 'adminLogout']);
     //get admin
     Route::get('/get-admin', [AdminController::class, 'getAdmin']);
+    //get users
+    Route::get('/get-all-users', [StudentController::class, 'getAllUsers']);
+    //get user
+    Route::get('/get-user-by-credentials/{id}', [StudentController::class, 'getUserByCredentials']);
 });
     // Endpoints that require admin scope
 

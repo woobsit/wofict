@@ -265,6 +265,30 @@ const authService = {
       throw error;
     }
   },
+  getAllUsers: async (page = 1) => {
+    //Admin
+    //gets active users
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get(`/get-all-users?page=${page}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getUserByCredentials: async (id) => {
+    //Admin
+    //get active user
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get(
+        `/get-user-by-credentials/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

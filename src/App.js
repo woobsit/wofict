@@ -26,8 +26,10 @@ import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
 //Molecule
 import AdminSidebar from "./components/molecule/admin/adminsidebar/AdminSidebar";
 import Sidebar from "./components/molecule/Sidebar";
-//js-cookies
-import Cookies from "js-cookie";
+import AdminCredentialsAllInfo from "./view/admin/AdminCredentialsAllInfo";
+//api
+import getAuthAdminData from "./api/handleAuthAdminCookies";
+import getAuthUserData from "./api/handleAuthUserCookies";
 
 function App() {
   setupInterceptors();
@@ -86,14 +88,13 @@ function App() {
       return null;
     });
 
+  console.log(getAuthUserData());
+
   return (
     <div className={`${backgroundClass}`}>
       <div className="main-container">
-        {Cookies.get("auth_admin_token") && (
-          <AdminSidebar routes={adminRoutes} />
-        )}
-        {Cookies.get("auth_user_token") && <Sidebar routes={routes} />}
-
+        {getAuthAdminData() && <AdminSidebar routes={adminRoutes} />}
+        {getAuthUserData() && <Sidebar routes={routes} />}
         <Routes>
           <Route element={<CanAccessAuthenticated />}>
             <Route path="/" element={<LandingPage />} key="landing-page" />
@@ -137,6 +138,11 @@ function App() {
           {/* Admin protected route */}
           <Route element={<IsStudentOrAdminRoute userType="admin" />}>
             {getAdminRoutes(adminRoutes)}
+            <Route
+              path="/admin/user-info-by-credentials/:id"
+              element={<AdminCredentialsAllInfo />}
+              key="admin-search-user-info-by-credentials"
+            />
           </Route>
         </Routes>
       </div>

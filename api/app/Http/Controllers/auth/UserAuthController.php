@@ -5,6 +5,7 @@ namespace App\Http\Controllers\auth;
 use App\Http\Controllers\Controller;
 use App\Mail\ForgetPassword;
 use App\Models\User;
+use App\Models\WebsiteInfo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +81,7 @@ class UserAuthController extends Controller
             $unadmittedUserProcessing = ['email' => $credentials['email'], 'password' => $credentials['password'], 'active' => 1, 'admission_status' => 'Processing'];
 
             if (Auth::attempt($admittedUser)) {
+
                 $user = Auth::user();
                 $rememberMe = $request->input('remember_token');
                 $remember = $rememberMe ? Str::random(60) : null;
@@ -88,7 +90,25 @@ class UserAuthController extends Controller
 
                 $token = $user->createToken('UserToken', ['user'])->accessToken;
 
-                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
+                $userInfo = [
+                    'firstname' => $user->firstname,
+                    'surname' => $user->surname,
+                    'other_names' => $user->other_names,
+                    'email' => $user->email,
+                    'photo' => $user->photo,
+
+                ];
+
+                $websiteInfo = WebsiteInfo::all();
+
+                return response()->json([
+                    'status' => 200,
+                    'token' => $token,
+                    'remember_me' => $rememberMe,
+                    'admission_status' => $user->admission_status,
+                    'user_info' => $userInfo,
+                    'website_info' => $websiteInfo
+                ]); //Dont think I will need the 'admission_status'. Or at least not now 
             } else if (Auth::attempt($unadmittedUserPending)) {
                 $user = Auth::user();
                 $rememberMe = $request->input('remember_token');
@@ -98,7 +118,25 @@ class UserAuthController extends Controller
 
                 $token = $user->createToken('UserToken', ['user'])->accessToken;
 
-                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
+                $userInfo = [
+                    'firstname' => $user->firstname,
+                    'surname' => $user->surname,
+                    'other_names' => $user->other_names,
+                    'email' => $user->email,
+                    'photo' => $user->photo,
+
+                ];
+
+                $websiteInfo = WebsiteInfo::all();
+
+                return response()->json([
+                    'status' => 200,
+                    'token' => $token,
+                    'remember_me' => $rememberMe,
+                    'admission_status' => $user->admission_status,
+                    'user_info' => $userInfo,
+                    'website_info' => $websiteInfo
+                ]); //Dont think I will need the 'admission_status'. Or at least not now
             } else if (Auth::attempt($unadmittedUserProcessing)) {
                 $user = Auth::user();
                 $rememberMe = $request->input('remember_token');
@@ -108,7 +146,25 @@ class UserAuthController extends Controller
 
                 $token = $user->createToken('UserToken', ['user'])->accessToken;
 
-                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe, 'admission_status' => $user->admission_status]);
+                $userInfo = [
+                    'firstname' => $user->firstname,
+                    'surname' => $user->surname,
+                    'other_names' => $user->other_names,
+                    'email' => $user->email,
+                    'photo' => $user->photo,
+
+                ];
+
+                $websiteInfo = WebsiteInfo::all();
+
+                return response()->json([
+                    'status' => 200,
+                    'token' => $token,
+                    'remember_me' => $rememberMe,
+                    'admission_status' => $user->admission_status,
+                    'user_info' => $userInfo,
+                    'website_info' => $websiteInfo
+                ]); //Dont think I will need the 'admission_status'. Or at least not now
             } else {
                 return response()->json(['status' => 401, 'message' => 'Wrong login details entered'],);
             }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('gender')->nullable();
-            $table->string('photo')->default('/storage/assets/images/admins/default.png');
+            $table->string('photo')->default('storage/assets/images/admins/default.jpg');
             $table->string('address')->nullable();
             $table->integer('status')->default(0);
             $table->string('expiry_timestamp')->nullable();

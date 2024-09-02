@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin;
+use App\Models\WebsiteInfo;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -49,7 +50,24 @@ class AdminAuthController extends Controller
 
                 $token = $admin->createToken('AdminToken', ['admin'])->accessToken;
 
-                return response()->json(['status' => 200, 'token' => $token, 'remember_me' => $rememberMe,]);
+                $adminInfo = [
+
+                    'firstname' => $admin->firstname,
+                    'surname' => $admin->surname,
+                    'email' => $admin->email,
+                    'photo' => $admin->photo,
+                    'admin_type ' => $admin->admin_type_id,
+                ];
+
+                $websiteInfo = WebsiteInfo::all();
+
+                return response()->json([
+                    'status' => 200,
+                    'token' => $token,
+                    'remember_me' => $rememberMe,
+                    'admin_info' => $adminInfo,
+                    'website_info' => $websiteInfo
+                ]);
             } else {
                 return response()->json(['status' => 401, 'message' => 'Wrong login details entered'],);
             }

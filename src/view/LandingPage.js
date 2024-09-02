@@ -89,9 +89,27 @@ function LandingPage() {
       );
 
       if (response.status === 200) {
-        //Here I used the remember me value in the checkbox as the condition of the lenght of the token. With this I do not have to create a remember me cookie which would be different from the token cookie.
+        // Combine token, user info, and any other data
+        const userInfo = {
+          token: response.token,
+          user_info: {
+            firstname: response.user_info.firstname,
+            lastname: response.user_info.lastname,
+            other_names: response.user_info.other_names,
+            email: response.user_info.email,
+            photo: response.photo_info.photo,
+
+            // Add any other essential user info here
+          },
+          website_info: response.website_info, // If you need to store website info as well
+        };
+
+        // Stringify the combined data
+        const cookieData = JSON.stringify(userInfo);
+
+        //Here I used the remember me value in the checkbox as the condition of the lenght of the token.
         const expirationTime = response.remember_me ? 30 : 1;
-        Cookies.set("auth_user_token", response.token, {
+        Cookies.set("auth_user_data", cookieData, {
           expires: expirationTime,
           secure: true,
           sameSite: "lax",

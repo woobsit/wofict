@@ -30,6 +30,8 @@ class UserSeeder extends Seeder
                 'phone_number' => '08074574512',
                 'state_of_origin' => 'Ogun',
                 'qualification_level' => 'Bsc',
+                'credentials' => 'hasCredentials.pdf',
+                'credentials_status' => 1,
                 'class_sessions' => 'Morning',
                 'forget_password' => '',
                 'created_at' => Carbon::now(),
@@ -48,6 +50,8 @@ class UserSeeder extends Seeder
                 'phone_number' => '08034523497',
                 'state_of_origin' => 'Anambra',
                 'qualification_level' => 'Bsc',
+                'credentials' => null,
+                'credentials_status' => 0,
                 'class_sessions' => 'Evening',
                 'forget_password' => '',
                 'created_at' => Carbon::now(),
@@ -56,5 +60,7 @@ class UserSeeder extends Seeder
         ];
 
         User::insert($users);
+
+        User::factory()->count(200)->create();
     }
 }
