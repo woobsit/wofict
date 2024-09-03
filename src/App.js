@@ -92,7 +92,12 @@ function App() {
     <div className={`${backgroundClass}`}>
       <div className="main-container">
         {getAuthAdminData() && <AdminSidebar routes={adminRoutes} />}
-        {getAuthUserData() && <Sidebar routes={routes} />}
+        {getAuthUserData() &&
+        getAuthUserData().user.admission_status == "Admitted" ? (
+          <Sidebar routes={routes} />
+        ) : (
+          ""
+        )}
         <Routes>
           <Route element={<CanAccessAuthenticated />}>
             <Route path="/" element={<LandingPage />} key="landing-page" />

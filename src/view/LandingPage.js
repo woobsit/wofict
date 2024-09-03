@@ -94,19 +94,16 @@ function LandingPage() {
           token: response.token,
           user_info: {
             firstname: response.user_info.firstname,
-            lastname: response.user_info.lastname,
+            surname: response.user_info.surname,
             other_names: response.user_info.other_names,
             email: response.user_info.email,
-            photo: response.photo_info.photo,
-
+            photo: response.user_info.photo,
             // Add any other essential user info here
           },
           website_info: response.website_info, // If you need to store website info as well
         };
-
         // Stringify the combined data
         const cookieData = JSON.stringify(userInfo);
-
         //Here I used the remember me value in the checkbox as the condition of the lenght of the token.
         const expirationTime = response.remember_me ? 30 : 1;
         Cookies.set("auth_user_data", cookieData, {

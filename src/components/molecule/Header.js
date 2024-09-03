@@ -25,7 +25,6 @@ function Header() {
   const setMenu = () => {
     setMenuStatus(!menuStatus);
   };
-
   const userLogout = async () => {
     try {
       setLoading(true);
@@ -53,7 +52,6 @@ function Header() {
   };
 
   const { user, website_info } = getAuthUserData();
-
   return (
     <>
       {loading && <Loader />}

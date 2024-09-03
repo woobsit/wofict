@@ -279,11 +279,10 @@ function Admission() {
                           please follow the required steps and wait for the next
                           process:
                         </p>
-                        <ol>
-                          <li>Print Acknowledgement Letter</li>
-                          <li>Upload School Credentials</li>
-                          <li>Fill and Upload the Guarantor form </li>
-                        </ol>
+
+                        <h6>1. Print your acknowledgement letter</h6>
+                        <h6>2. Upload your school credentials</h6>
+                        <h6>3. Fill and upload the two guarantor forms</h6>
                       </>
                     ) : (
                       <>
@@ -366,14 +365,17 @@ function Admission() {
             </div>
             <div className="bootstrap-cards-container">
               <div className="bootstrap-cards-inner-box">
-                <Card className="bootstrap-card">
+                <Card
+                  className="bootstrap-card admin-card-link"
+                  onClick={fetchAcknowledgement}
+                >
                   <Card.Img variant="top" src={LetterImage} />
                   <Card.Body>
                     <Card.Title>Acknowledgement letter</Card.Title>
                     <Card.Text>
                       Kindly download and print your acknowledgement letter
                     </Card.Text>
-                    <Button variant="info" onClick={fetchAcknowledgement}>
+                    <Button variant="primary" onClick={fetchAcknowledgement}>
                       Download
                     </Button>
                   </Card.Body>
@@ -381,7 +383,10 @@ function Admission() {
                 {showGuarantorCard &&
                   !fetchUserData.guarantors_1 &&
                   !fetchUserData.guarantors_2 && (
-                    <Card className="bootstrap-card">
+                    <Card
+                      className="bootstrap-card admin-card-link"
+                      onClick={fetchGuarantor}
+                    >
                       <Card.Img variant="top" src={GuarantorImage} />
                       <Card.Body>
                         <Card.Title>Guarantor form</Card.Title>
@@ -390,7 +395,7 @@ function Admission() {
                           and then upload it. This will also be needed in the
                           registration
                         </Card.Text>
-                        <Button variant="info" onClick={fetchGuarantor}>
+                        <Button variant="primary" onClick={fetchGuarantor}>
                           Download
                         </Button>
                       </Card.Body>
@@ -399,7 +404,10 @@ function Admission() {
               </div>
               <div className="bootstrap-cards-inner-box">
                 {showCredentialsCard && !fetchUserData.credentials && (
-                  <Card className="bootstrap-card">
+                  <Card
+                    className="bootstrap-card admin-card-link"
+                    onClick={handleShowCredentialForm}
+                  >
                     <Card.Img variant="top" src={UploadImage} />
                     <Card.Body>
                       <Card.Title>Upload credentials</Card.Title>
@@ -418,14 +426,15 @@ function Admission() {
                 {showGuarantorCard &&
                   !fetchUserData.guarantors_1 &&
                   !fetchUserData.guarantors_2 && (
-                    <Card className="bootstrap-card">
+                    <Card
+                      className="bootstrap-card admin-card-link"
+                      onClick={handleShowGuarantorForm}
+                    >
                       <Card.Img variant="top" src={GuarantorImage} />
                       <Card.Body>
-                        <Card.Title>
-                          Upload Guarantor form (completed)
-                        </Card.Title>
+                        <Card.Title>Upload Complete Guarantor form</Card.Title>
                         <Card.Text>
-                          Kindly upload the two guarantor forms.
+                          Kindly upload the two guarantor forms that you filled.
                         </Card.Text>
                         <Button
                           variant="primary"

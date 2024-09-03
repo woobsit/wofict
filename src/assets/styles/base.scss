@@ -36,3 +36,24 @@ ul {
 li {
   list-style-type: none;
 }
+
+/* overide bootstrap */
+.btn-primary {
+    color: #fff;
+    background: linear-gradient(45deg, rgb(86, 201, 255), rgb(64, 64, 255));
+    border:none;
+    font-size: 14px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, rgb(0, 162, 255), rgb(55, 0, 255));
+  }
+
+.h5{
+  font-size:18px;
+  margin-bottom:0px;
+}
+
+p{
+  font-size:14px;
+}
