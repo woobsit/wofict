@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 //API service
 import authService from "./../api/authService";
+//import getAuthUserData from "./../api/handleAuthUserCookies";
 //utils
 import { notify } from "./../utils/Notification";
 //Molecule
@@ -20,6 +21,8 @@ import LetterImage from "./../assets/images/letter.jpg";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
+//safe-file
+import { saveAs } from "file-saver";
 
 function Admission() {
   const [fetchUserData, setFetchUserData] = useState({});
@@ -50,6 +53,8 @@ function Admission() {
   const [errorsGuarantorUpload, setErrorsGuarantorUpload] = useState({});
   const [submittingGuarantorUpload, setSubmittingGuarantorUpload] =
     useState(false);
+
+  //const { user } = getAuthUserData();
 
   //Show status info
   const handleClose = () => setShow(false);
@@ -153,6 +158,11 @@ function Admission() {
   async function fetchAcknowledgement() {
     try {
       const response = await authService.downloadAcknowledgement();
+      // Create a Blob from the PDF response
+      const blob = new Blob([response], { type: "application/pdf" });
+      console.log(blob);
+      // Use file-saver to save the PDF with a filename
+      saveAs(blob, "Acknowledgement.pdf");
       if (response.status === 500) {
         notify("error", "System Error", response.message);
       }
@@ -373,7 +383,7 @@ function Admission() {
                   <Card.Body>
                     <Card.Title>Acknowledgement letter</Card.Title>
                     <Card.Text>
-                      Kindly download and print your acknowledgement letter
+                      Kindly download and print your acknowledgement letter.
                     </Card.Text>
                     <Button variant="primary" onClick={fetchAcknowledgement}>
                       Download
@@ -393,7 +403,7 @@ function Admission() {
                         <Card.Text>
                           Kindly download, print and fill up the guarantor form
                           and then upload it. This will also be needed in the
-                          registration
+                          registration.
                         </Card.Text>
                         <Button variant="primary" onClick={fetchGuarantor}>
                           Download
@@ -412,7 +422,7 @@ function Admission() {
                     <Card.Body>
                       <Card.Title>Upload credentials</Card.Title>
                       <Card.Text>
-                        Kindly download and print your acknowledgement letter
+                        Kindly download and print your acknowledgement letter.
                       </Card.Text>
                       <Button
                         variant="primary"
