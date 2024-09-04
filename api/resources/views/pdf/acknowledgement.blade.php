@@ -18,7 +18,6 @@
         [City, State, ZIP Code]
         [Email Address]
         [Phone Number]
-        [Website URL]
 
         [Date]
 

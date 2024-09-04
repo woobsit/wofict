@@ -71,9 +71,34 @@ const authService = {
 
   getAdmin: () => handleRequest("/get-admin"),
 
-  downloadAcknowledgement: () =>
-    handleRequest("/acknowledgement", "get", null, { responseType: "blob" }),
+  downloadAcknowledgement: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/acknowledgement", {
+        responseType: "blob", // Important to handle PDF response as a blob
+      });
 
+      if (response.status === 200) {
+        // Process the blob response
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "acknowledgement.pdf");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        return { status: response.status, data: response.data };
+      } else {
+        return {
+          status: response.status,
+          message: "Unexpected response status",
+        };
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
   downloadGuarantor: () =>
     handleRequest("/guarantor", "get", null, { responseType: "blob" }),
 

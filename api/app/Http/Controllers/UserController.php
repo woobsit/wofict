@@ -19,8 +19,9 @@ class UserController extends Controller
             $user = Auth::user();
             $data = ['user' => $user->firstname . ' ' . $user->surname, 'email' => $user->email];
             $pdf = PDF::loadView('pdf.acknowledgement', $data);
-            return $pdf->download('acknowledgement', [
+            return response($pdf->output(), 201, [
                 'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="acknowledgement.pdf"',
             ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());

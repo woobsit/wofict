@@ -21,8 +21,6 @@ import LetterImage from "./../assets/images/letter.jpg";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
-//safe-file
-import { saveAs } from "file-saver";
 
 function Admission() {
   const [fetchUserData, setFetchUserData] = useState({});
@@ -66,6 +64,9 @@ function Admission() {
   //show guarantor form
   const handleCloseGuarantorForm = () => setShowGuarantorForm(false);
   const handleShowGuarantorForm = () => setShowGuarantorForm(true);
+
+  //acknowledgement download status
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -156,15 +157,23 @@ function Admission() {
   }, [errorsGuarantorUpload]);
 
   async function fetchAcknowledgement() {
+    setIsDownloading(true); // Disable the button
     try {
       const response = await authService.downloadAcknowledgement();
-      // Create a Blob from the PDF response
-      const blob = new Blob([response], { type: "application/pdf" });
-      console.log(blob);
-      // Use file-saver to save the PDF with a filename
-      saveAs(blob, "Acknowledgement.pdf");
-      if (response.status === 500) {
-        notify("error", "System Error", response.message);
+
+      if (response.status === 200) {
+        // Check for 200 status code
+        notify(
+          "success",
+          "Download Complete",
+          "Acknowledgement letter downloaded successfully."
+        );
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred."
+        );
       }
     } catch (error) {
       notify(
@@ -172,9 +181,10 @@ function Admission() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setIsDownloading(false); // Re-enable the button
     }
   }
-
   async function fetchGuarantor() {
     try {
       const response = await authService.downloadGuarantor();
@@ -375,28 +385,26 @@ function Admission() {
             </div>
             <div className="bootstrap-cards-container">
               <div className="bootstrap-cards-inner-box">
-                <Card
-                  className="bootstrap-card admin-card-link"
-                  onClick={fetchAcknowledgement}
-                >
+                <Card className="bootstrap-card admin-card-link">
                   <Card.Img variant="top" src={LetterImage} />
                   <Card.Body>
                     <Card.Title>Acknowledgement letter</Card.Title>
                     <Card.Text>
                       Kindly download and print your acknowledgement letter.
                     </Card.Text>
-                    <Button variant="primary" onClick={fetchAcknowledgement}>
-                      Download
+                    <Button
+                      variant="primary"
+                      onClick={fetchAcknowledgement}
+                      disabled={isDownloading}
+                    >
+                      {isDownloading ? "Downloading..." : "Download"}
                     </Button>
                   </Card.Body>
                 </Card>
                 {showGuarantorCard &&
                   !fetchUserData.guarantors_1 &&
                   !fetchUserData.guarantors_2 && (
-                    <Card
-                      className="bootstrap-card admin-card-link"
-                      onClick={fetchGuarantor}
-                    >
+                    <Card className="bootstrap-card admin-card-link">
                       <Card.Img variant="top" src={GuarantorImage} />
                       <Card.Body>
                         <Card.Title>Guarantor form</Card.Title>
@@ -414,10 +422,7 @@ function Admission() {
               </div>
               <div className="bootstrap-cards-inner-box">
                 {showCredentialsCard && !fetchUserData.credentials && (
-                  <Card
-                    className="bootstrap-card admin-card-link"
-                    onClick={handleShowCredentialForm}
-                  >
+                  <Card className="bootstrap-card admin-card-link">
                     <Card.Img variant="top" src={UploadImage} />
                     <Card.Body>
                       <Card.Title>Upload credentials</Card.Title>
@@ -436,10 +441,7 @@ function Admission() {
                 {showGuarantorCard &&
                   !fetchUserData.guarantors_1 &&
                   !fetchUserData.guarantors_2 && (
-                    <Card
-                      className="bootstrap-card admin-card-link"
-                      onClick={handleShowGuarantorForm}
-                    >
+                    <Card className="bootstrap-card admin-card-link">
                       <Card.Img variant="top" src={GuarantorImage} />
                       <Card.Body>
                         <Card.Title>Upload Complete Guarantor form</Card.Title>
