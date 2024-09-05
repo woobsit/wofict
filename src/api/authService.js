@@ -77,8 +77,7 @@ const authService = {
       const response = await axiosInstance.get("/acknowledgement", {
         responseType: "blob", // Important to handle PDF response as a blob
       });
-
-      if (response.status === 200) {
+      if (response.status === 201) {
         // Process the blob response
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
@@ -99,9 +98,33 @@ const authService = {
       throw error;
     }
   },
-  downloadGuarantor: () =>
-    handleRequest("/guarantor", "get", null, { responseType: "blob" }),
+  downloadGuarantor: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axiosInstance.get("/guarantor", {
+        responseType: "blob", // Important to handle PDF response as a blob
+      });
+      if (response.status === 201) {
+        // Process the blob response
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "guarantor.pdf");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
 
+        return { status: response.status, data: response.data };
+      } else {
+        return {
+          status: response.status,
+          message: "Unexpected response status",
+        };
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
   uploadCredentials: (qualification_level, upload_credentials) => {
     const formData = new FormData();
     formData.append("qualification_level", qualification_level);

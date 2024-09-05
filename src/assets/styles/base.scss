@@ -49,6 +49,18 @@ li {
     background: linear-gradient(45deg, rgb(0, 162, 255), rgb(55, 0, 255));
   }
 
+.btn-secondary{
+  border:none;
+  font-size: 14px;
+  background: linear-gradient(45deg, rgb(209, 209, 209), rgb(39, 39, 39));
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(45deg, rgb(139, 139, 139), rgb(29, 29, 29));
+}
+
+
+
 .h5{
   font-size:18px;
   margin-bottom:0px;
@@ -56,4 +68,13 @@ li {
 
 p{
   font-size:14px;
+}
+
+.modal-header{
+  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));
+}
+
+.form-label{
+  font-size:15px;
+  margin-bottom:0px;
 }

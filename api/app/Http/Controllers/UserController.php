@@ -35,7 +35,10 @@ class UserController extends Controller
             $user = Auth::user();
             $data = ['user' => $user->firstname . ' ' . $user->surname, 'email' => $user->email];
             $pdf = PDF::loadView('pdf.guarantor', $data);
-            return $pdf->download('guarantor');
+            return response($pdf->output(), 201, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="guarantor.pdf"',
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occured']);

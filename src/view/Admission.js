@@ -66,7 +66,11 @@ function Admission() {
   const handleShowGuarantorForm = () => setShowGuarantorForm(true);
 
   //acknowledgement download status
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isDownloadingAcknowledgement, setIsDownloadingAcknowledgement] =
+    useState(false);
+
+  //guarantor download status
+  const [isDownloadingGuarantor, setIsDownloadingGuarantor] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -157,11 +161,11 @@ function Admission() {
   }, [errorsGuarantorUpload]);
 
   async function fetchAcknowledgement() {
-    setIsDownloading(true); // Disable the button
+    setIsDownloadingAcknowledgement(true); // Disable the button
     try {
       const response = await authService.downloadAcknowledgement();
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         // Check for 200 status code
         notify(
           "success",
@@ -182,14 +186,26 @@ function Admission() {
         "An unexpected error occurred. Please try again."
       );
     } finally {
-      setIsDownloading(false); // Re-enable the button
+      setIsDownloadingAcknowledgement(false); // Re-enable the button
     }
   }
   async function fetchGuarantor() {
+    setIsDownloadingGuarantor(true); // Disable the button
     try {
       const response = await authService.downloadGuarantor();
-      if (response.status === 500) {
-        notify("error", "System Error", response.message);
+      if (response.status === 201) {
+        // Check for 200 status code
+        notify(
+          "success",
+          "Download Complete",
+          "Guarantor form downloaded successfully."
+        );
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred."
+        );
       }
     } catch (error) {
       notify(
@@ -197,6 +213,8 @@ function Admission() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setIsDownloadingGuarantor(false); // Re-enable the button
     }
   }
 
@@ -302,7 +320,7 @@ function Admission() {
 
                         <h6>1. Print your acknowledgement letter</h6>
                         <h6>2. Upload your school credentials</h6>
-                        <h6>3. Fill and upload the two guarantor forms</h6>
+                        <h6>3. Fill and upload two guarantor forms</h6>
                       </>
                     ) : (
                       <>
@@ -395,9 +413,11 @@ function Admission() {
                     <Button
                       variant="primary"
                       onClick={fetchAcknowledgement}
-                      disabled={isDownloading}
+                      disabled={isDownloadingAcknowledgement}
                     >
-                      {isDownloading ? "Downloading..." : "Download"}
+                      {isDownloadingAcknowledgement
+                        ? "Downloading..."
+                        : "Download"}
                     </Button>
                   </Card.Body>
                 </Card>
@@ -413,8 +433,14 @@ function Admission() {
                           and then upload it. This will also be needed in the
                           registration.
                         </Card.Text>
-                        <Button variant="primary" onClick={fetchGuarantor}>
-                          Download
+                        <Button
+                          variant="primary"
+                          onClick={fetchGuarantor}
+                          disabled={isDownloadingGuarantor}
+                        >
+                          {isDownloadingGuarantor
+                            ? "Downloading..."
+                            : "Download"}
                         </Button>
                       </Card.Body>
                     </Card>
@@ -481,10 +507,10 @@ function Admission() {
                     onChange={handleChange}
                     isInvalid={!!errors.qualification_level}
                   />
-                  <span>
-                    *Minimum Qualification: SSCE/O &#39;Level Certificate
+                  <span className="upload-credentials__span">*</span>
+                  <span className="upload-credentials__span">
+                    Minimum Qualification: SSCE/O &#39;Level Certificate
                   </span>
-
                   <Form.Control.Feedback type="invalid">
                     {errors.qualification_level}
                   </Form.Control.Feedback>
