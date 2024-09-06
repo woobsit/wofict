@@ -40,9 +40,6 @@ function Admission() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  const [showCredentialsCard, setShowCredentialsCard] = useState(true);
-  const [showGuarantorCard, setShowGuarantorCard] = useState(true);
-
   // Form state for upload guarantors
   const [inputFieldsForGuarantors, setInputFieldsForGuarantors] = useState({
     upload_guarantors_1: null,
@@ -229,7 +226,6 @@ function Admission() {
         setLoadingCredentials(false);
         notify("success", "Success", "Credentials uploaded successfully.");
         handleCloseCredentialForm();
-        setShowCredentialsCard(false);
       } else if (response.status === 422) {
         setLoadingCredentials(false);
         notify("error", "Input Validation", response.message);
@@ -260,7 +256,6 @@ function Admission() {
         setLoadingGuarantors(false);
         notify("success", "Success", "Guarantors uploaded successfully.");
         handleCloseGuarantorForm();
-        setShowGuarantorCard(false);
       } else if (response.status === 422) {
         setLoadingGuarantors(false);
         notify("error", "Input Validation", response.message);
@@ -330,15 +325,15 @@ function Admission() {
                           required documents for your application. However, we
                           are still missing the following document(s):
                         </p>
-                        <ol>
-                          {!fetchUserData.credentials && (
-                            <li>School Credentials</li>
+
+                        {!fetchUserData.credentials && (
+                          <h6>&#x2022; School Credentials</h6>
+                        )}
+                        {!fetchUserData.guarantors_1 &&
+                          !fetchUserData.guarantors_2 && (
+                            <h6>&#x2022; Completed Guarantor form</h6>
                           )}
-                          {!fetchUserData.guarantors_1 &&
-                            !fetchUserData.guarantors_2 && (
-                              <li>Guarantor form</li>
-                            )}
-                        </ol>
+
                         <p>
                           Your admission status remains{" "}
                           <span className="modal-body__span-text">
@@ -421,13 +416,21 @@ function Admission() {
                     </Button>
                   </Card.Body>
                 </Card>
-                {showGuarantorCard &&
-                  !fetchUserData.guarantors_1 &&
-                  !fetchUserData.guarantors_2 && (
-                    <Card className="bootstrap-card admin-card-link">
-                      <Card.Img variant="top" src={GuarantorImage} />
-                      <Card.Body>
-                        <Card.Title>Guarantor form</Card.Title>
+
+                <Card className="bootstrap-card admin-card-link">
+                  <Card.Img variant="top" src={GuarantorImage} />
+                  <Card.Body>
+                    <Card.Title>Guarantor form</Card.Title>
+                    {fetchUserData.guarantors_1 &&
+                    fetchUserData.guarantors_2 ? (
+                      <>
+                        <Card.Text>
+                          Thank you for filling and uploading your two guarantor
+                          forms.
+                        </Card.Text>
+                      </>
+                    ) : (
+                      <>
                         <Card.Text>
                           Kindly download, print and fill up the guarantor form
                           and then upload it. This will also be needed in the
@@ -442,35 +445,51 @@ function Admission() {
                             ? "Downloading..."
                             : "Download"}
                         </Button>
-                      </Card.Body>
-                    </Card>
-                  )}
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
               </div>
               <div className="bootstrap-cards-inner-box">
-                {showCredentialsCard && !fetchUserData.credentials && (
-                  <Card className="bootstrap-card admin-card-link">
-                    <Card.Img variant="top" src={UploadImage} />
-                    <Card.Body>
-                      <Card.Title>Upload credentials</Card.Title>
-                      <Card.Text>
-                        Kindly download and print your acknowledgement letter.
-                      </Card.Text>
-                      <Button
-                        variant="primary"
-                        onClick={handleShowCredentialForm}
-                      >
-                        Upload
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                )}
-                {showGuarantorCard &&
-                  !fetchUserData.guarantors_1 &&
-                  !fetchUserData.guarantors_2 && (
-                    <Card className="bootstrap-card admin-card-link">
-                      <Card.Img variant="top" src={GuarantorImage} />
-                      <Card.Body>
-                        <Card.Title>Upload Complete Guarantor form</Card.Title>
+                <Card className="bootstrap-card admin-card-link">
+                  <Card.Img variant="top" src={UploadImage} />
+                  <Card.Body>
+                    <Card.Title>Upload credentials</Card.Title>
+                    {fetchUserData.credentials ? (
+                      <>
+                        <Card.Text>
+                          Thank you for uploading your credentials.
+                        </Card.Text>
+                        <Button variant="info">View credentials</Button>
+                      </>
+                    ) : (
+                      <>
+                        <Card.Text>Kindly upload your credentials.</Card.Text>
+                        <Button
+                          variant="primary"
+                          onClick={handleShowCredentialForm}
+                        >
+                          Upload
+                        </Button>
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
+                <Card className="bootstrap-card admin-card-link">
+                  <Card.Img variant="top" src={GuarantorImage} />
+                  <Card.Body>
+                    <Card.Title>Upload Complete Guarantor form</Card.Title>
+                    {fetchUserData.guarantors_1 &&
+                    fetchUserData.guarantors_2 ? (
+                      <>
+                        <Card.Text>
+                          Thank you for filling and uploading the two guarantor
+                          forms.
+                        </Card.Text>
+                        <Button variant="info">View guarantors</Button>
+                      </>
+                    ) : (
+                      <>
                         <Card.Text>
                           Kindly upload the two guarantor forms that you filled.
                         </Card.Text>
@@ -480,9 +499,10 @@ function Admission() {
                         >
                           Upload
                         </Button>
-                      </Card.Body>
-                    </Card>
-                  )}
+                      </>
+                    )}
+                  </Card.Body>
+                </Card>
               </div>
             </div>
           </div>
@@ -497,7 +517,11 @@ function Admission() {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>Qualification</Form.Label>
+                  <Form.Label>Qualification</Form.Label> -
+                  <span className="upload-credentials__asterisk"> *</span>
+                  <span className="upload-credentials__span">
+                    Minimum Qualification: SSCE/O &#39;Level Certificate
+                  </span>
                   <Form.Control
                     type="text"
                     placeholder="e.g SSCE"
@@ -507,10 +531,6 @@ function Admission() {
                     onChange={handleChange}
                     isInvalid={!!errors.qualification_level}
                   />
-                  <span className="upload-credentials__span">*</span>
-                  <span className="upload-credentials__span">
-                    Minimum Qualification: SSCE/O &#39;Level Certificate
-                  </span>
                   <Form.Control.Feedback type="invalid">
                     {errors.qualification_level}
                   </Form.Control.Feedback>

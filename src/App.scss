@@ -2,8 +2,6 @@
 @import "./assets/styles/variables";
 @import "./assets/styles/base";
 
-bootstrap-cards-inner-box
-
 .landing-page-background {
   min-height: 100vh;
   background-image: url("./assets/images/background-login.jpg");
@@ -13,6 +11,19 @@ bootstrap-cards-inner-box
   display: flex;
   justify-content: center; /* Center content horizontally */
   align-items: center; /* Center content vertically */
+}
+
+.home-background{
+ 
+}
+
+.dashboard-container{
+  width:100%;
+}
+
+
+.content__content-bar{
+  width:100%;
 }
 
 .landing-form__container {
@@ -310,11 +321,6 @@ bootstrap-cards-inner-box
 /*        User dashboard       */
 /*****************************/
 
-// .dashboard-container {
-//   width: 100%;
-//   border:2px solid red;
-// }
-
 .main-container {
   display: flex;
   width: 100%;
@@ -561,6 +567,14 @@ bootstrap-cards-inner-box
   color: rgb(255, 255, 255);
 }
 
+.upload-credentials__asterisk{
+  color:red;
+}
+
+.upload-credentials__span{
+  font-size:13px;
+}
+
 .bootstrap-cards-container {
   margin-top: 20px;
   display: flex;
@@ -581,12 +595,18 @@ bootstrap-cards-inner-box
   box-shadow: rgba(19, 19, 19, 0.35) 0px 5px 15px;
 }
 
+.admin-credentials-visibility{
+  display:none;
+}
 
 .admin-card-link:hover{
   box-shadow: rgba(255, 45, 45, 0.589) 0px 5px 15px;
 }
 
 @media only screen and (min-width: 425px) {
+  .bootstrap-cards-container{
+    
+  }
 }
 
 @media only screen and (min-width: 768px) {
