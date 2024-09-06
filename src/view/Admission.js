@@ -420,31 +420,32 @@ function Admission() {
                 <Card className="bootstrap-card admin-card-link">
                   <Card.Img variant="top" src={GuarantorImage} />
                   <Card.Body>
-                    <Card.Title>Guarantor form</Card.Title>
-                    {fetchUserData.guarantors_1 &&
-                    fetchUserData.guarantors_2 ? (
+                    <Card.Title>Guarantor Form</Card.Title>
+                    {fetchUserDataStatus && (
                       <>
-                        <Card.Text>
-                          Thank you for filling and uploading your two guarantor
-                          forms.
-                        </Card.Text>
-                      </>
-                    ) : (
-                      <>
-                        <Card.Text>
-                          Kindly download, print and fill up the guarantor form
-                          and then upload it. This will also be needed in the
-                          registration.
-                        </Card.Text>
-                        <Button
-                          variant="primary"
-                          onClick={fetchGuarantor}
-                          disabled={isDownloadingGuarantor}
-                        >
-                          {isDownloadingGuarantor
-                            ? "Downloading..."
-                            : "Download"}
-                        </Button>
+                        {fetchUserData.guarantors_1 &&
+                        fetchUserData.guarantors_2 ? (
+                          <Card.Text>
+                            Thank you for filling and uploading your two
+                            guarantor forms.
+                          </Card.Text>
+                        ) : (
+                          <>
+                            <Card.Text>
+                              Kindly download, print, and fill up the two
+                              guarantor forms and upload them.
+                            </Card.Text>
+                            <Button
+                              variant="primary"
+                              onClick={fetchGuarantor}
+                              disabled={isDownloadingGuarantor}
+                            >
+                              {isDownloadingGuarantor
+                                ? "Downloading..."
+                                : "Download"}
+                            </Button>
+                          </>
+                        )}
                       </>
                     )}
                   </Card.Body>
@@ -454,51 +455,63 @@ function Admission() {
                 <Card className="bootstrap-card admin-card-link">
                   <Card.Img variant="top" src={UploadImage} />
                   <Card.Body>
-                    <Card.Title>Upload credentials</Card.Title>
-                    {fetchUserData.credentials ? (
+                    <Card.Title>Upload Credentials</Card.Title>
+                    {fetchUserDataStatus && (
                       <>
-                        <Card.Text>
-                          Thank you for uploading your credentials.
-                        </Card.Text>
-                        <Button variant="info">View credentials</Button>
-                      </>
-                    ) : (
-                      <>
-                        <Card.Text>Kindly upload your credentials.</Card.Text>
-                        <Button
-                          variant="primary"
-                          onClick={handleShowCredentialForm}
-                        >
-                          Upload
-                        </Button>
+                        {fetchUserData.credentials ? (
+                          <>
+                            <Card.Text>
+                              Thank you for uploading your credentials.
+                            </Card.Text>
+                            {/* <Button variant="info">View credentials</Button> */}
+                          </>
+                        ) : (
+                          <>
+                            <Card.Text>
+                              Kindly upload your credentials.
+                            </Card.Text>
+                            <Button
+                              variant="primary"
+                              onClick={handleShowCredentialForm}
+                            >
+                              Upload
+                            </Button>
+                          </>
+                        )}
                       </>
                     )}
                   </Card.Body>
                 </Card>
+
                 <Card className="bootstrap-card admin-card-link">
                   <Card.Img variant="top" src={GuarantorImage} />
                   <Card.Body>
-                    <Card.Title>Upload Complete Guarantor form</Card.Title>
-                    {fetchUserData.guarantors_1 &&
-                    fetchUserData.guarantors_2 ? (
+                    <Card.Title>Upload Complete Guarantor Form</Card.Title>
+                    {fetchUserDataStatus && (
                       <>
-                        <Card.Text>
-                          Thank you for filling and uploading the two guarantor
-                          forms.
-                        </Card.Text>
-                        <Button variant="info">View guarantors</Button>
-                      </>
-                    ) : (
-                      <>
-                        <Card.Text>
-                          Kindly upload the two guarantor forms that you filled.
-                        </Card.Text>
-                        <Button
-                          variant="primary"
-                          onClick={handleShowGuarantorForm}
-                        >
-                          Upload
-                        </Button>
+                        {fetchUserData.guarantors_1 &&
+                        fetchUserData.guarantors_2 ? (
+                          <>
+                            <Card.Text>
+                              Thank you for filling and uploading the two
+                              guarantor forms.
+                            </Card.Text>
+                            {/* <Button variant="info">View guarantors</Button> */}
+                          </>
+                        ) : (
+                          <>
+                            <Card.Text>
+                              Kindly upload the two guarantor forms that you
+                              filled.
+                            </Card.Text>
+                            <Button
+                              variant="primary"
+                              onClick={handleShowGuarantorForm}
+                            >
+                              Upload
+                            </Button>
+                          </>
+                        )}
                       </>
                     )}
                   </Card.Body>

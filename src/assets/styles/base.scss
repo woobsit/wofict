@@ -87,3 +87,9 @@ p{
   font-size:14px;
   margin-bottom:0px;
 }
+
+.nav-link.active{
+  color:white !important;
+  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));
+
+}
