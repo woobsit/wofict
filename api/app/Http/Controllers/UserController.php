@@ -76,7 +76,7 @@ class UserController extends Controller
                 $filePath = $request->file('upload_credentials')->storeAs('assets/uploads/credentials', $fileName, 'public');
 
                 $user->qualification_level = $request->input('qualification_level');
-                $user->credentials = $filePath;
+                $user->credentials = 'storage/' . $filePath;
                 //$user->credentials_status = 1;
 
                 //Set status to Processing
@@ -134,13 +134,13 @@ class UserController extends Controller
                 $fileName = "{$firstName}_{$surname}_{$timestamp}_1.pdf";
                 $filePath = $request->file('upload_guarantors_1')->storeAs('assets/uploads/guarantors', $fileName, 'public');
 
-                $user->guarantors_1 = $filePath;
+                $user->guarantors_1 = 'storage/' . $filePath;
 
                 // guarantor 2
                 $fileName2 = "{$firstName}_{$surname}_{$timestamp}_2.pdf";
                 $filePath2 = $request->file('upload_guarantors_2')->storeAs('assets/uploads/guarantors', $fileName2, 'public');
 
-                $user->guarantors_2 = $filePath2;
+                $user->guarantors_2 = 'storage/' . $filePath2;
                 //$user->guarantors_status = 1;
 
                 //Set status to Processing

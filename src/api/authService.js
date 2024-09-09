@@ -145,15 +145,50 @@ const authService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-
   getAllUsers: (page = 1) => handleRequest(`/get-all-users?page=${page}`),
-
+  getApprovedCredentials: (page = 1) =>
+    handleRequest(`/get-approved-credentials?page=${page}`),
+  getUnapprovedCredentials: (page = 1) =>
+    handleRequest(`/get-unapproved-credentials?page=${page}`),
   getUserByCredentials: (id) => handleRequest(`/get-user-by-credentials/${id}`),
 
   viewCredentials: (id) =>
     handleRequest(`/view-credentials/${id}`, "get", null, {
       responseType: "blob",
     }),
+
+  downloadStudentCredentials: async (studentId) => {
+    try {
+      const response = await axiosInstance.get(
+        `/download-student-credentials/${studentId}`,
+        {
+          responseType: "blob", // Important to handle the PDF response as a blob
+        }
+      );
+
+      if (response.status === 200) {
+        // Updated to 200
+        // Process the blob response
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `student_${studentId}_credentials.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        return { status: response.status, data: response.data };
+      } else {
+        return {
+          status: response.status,
+          message: "Unexpected response status",
+        };
+      }
+    } catch (error) {
+      console.error("Error downloading credentials:", error);
+      throw error;
+    }
+  },
 };
 
 export default authService;

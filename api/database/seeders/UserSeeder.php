@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'phone_number' => '08074574512',
                 'state_of_origin' => 'Ogun',
                 'qualification_level' => 'Bsc',
-                'credentials' => 'hasCredentials.pdf',
+                'credentials' => 'storage/assets/uploads/credentials/Ahmed_Olusesi_1725870464.pdf',
                 'credentials_status' => 1,
                 'class_sessions' => 'Morning',
                 'course' => 'Digital Marketing',

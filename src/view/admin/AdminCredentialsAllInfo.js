@@ -4,7 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import AdminHeader from "../../components/molecule/admin/AdminHeader";
 //Custom component
 import Typography from "../../components/atom/typography/Typography";
+//React Bootstrap
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +14,6 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import authService from "../../api/authService";
 import getAuthAdminData from "./../../api/handleAuthAdminCookies";
 import axiosInstance from "./../../api/axiosInstance";
-
 //utils
 import { notify } from "../../utils/Notification";
 
@@ -20,7 +21,6 @@ function AdminCredentialsAllInfo() {
   const { id } = useParams();
   const { website_info } = getAuthAdminData();
   const navigate = useNavigate();
-
   const [fetchUserByCredentialsData, setFetchUserByCredentialsData] = useState(
     []
   );
@@ -33,6 +33,8 @@ function AdminCredentialsAllInfo() {
       fetchUserByCredentials(id); // Pass the id here
     }
   }, [id]);
+
+  const [show, setShow] = useState(false);
 
   async function fetchUserByCredentials(id) {
     try {
@@ -64,11 +66,12 @@ function AdminCredentialsAllInfo() {
         responseType: "blob",
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         const pdfUrl = URL.createObjectURL(
           new Blob([response.data], { type: "application/pdf" })
         );
         setPdfUrl(pdfUrl);
+        setShow(true);
       } else if (response.status === 404) {
         notify("error", "Error", "PDF not found");
       } else {
@@ -82,6 +85,36 @@ function AdminCredentialsAllInfo() {
       );
     }
   }
+
+  // async function downloadStudentCredentials(id) {
+  //   setIsDownloadingAcknowledgement(true); // Disable the button
+  //   try {
+  //     const response = await authService.downloadAcknowledgement();
+
+  //     if (response.status === 201) {
+  //       // Check for 200 status code
+  //       notify(
+  //         "success",
+  //         "Download Complete",
+  //         "Acknowledgement letter downloaded successfully."
+  //       );
+  //     } else {
+  //       notify(
+  //         "error",
+  //         "Error",
+  //         response.message || "An unexpected error occurred."
+  //       );
+  //     }
+  //   } catch (error) {
+  //     notify(
+  //       "error",
+  //       "Error",
+  //       "An unexpected error occurred. Please try again."
+  //     );
+  //   } finally {
+  //     setIsDownloadingAcknowledgement(false); // Re-enable the button
+  //   }
+  // }
 
   return (
     <div className="content">
@@ -340,17 +373,32 @@ function AdminCredentialsAllInfo() {
           </div>
         </div>
       </div>
-      {pdfUrl && (
-        <div className="pdf-viewer">
-          <iframe
-            src={pdfUrl}
-            title="PDF Viewer"
-            width="100%"
-            height="500px"
-            style={{ border: "none" }}
-          ></iframe>
-        </div>
-      )}
+
+      <Modal show={show} onHide={() => setShow(false)} fullscreen={true}>
+        <Modal.Header closeButton>
+          <Modal.Title id="example-custom-modal-styling-title">
+            {fetchUserByCredentialsStatus
+              ? fetchUserByCredentialsData.firstname +
+                " " +
+                fetchUserByCredentialsData.surname +
+                " Credentials"
+              : ""}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {pdfUrl && (
+            <div className="pdf-viewer">
+              <iframe
+                src={pdfUrl}
+                title="PDF Viewer"
+                width="100%"
+                height="500px"
+                style={{ border: "none" }}
+              ></iframe>
+            </div>
+          )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

@@ -22,9 +22,23 @@ function AdminCredentialsList() {
   const navigate = useNavigate();
 
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
+  const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
+  const [fetchDisapprovedUsersData, setFetchDisapprovedUsersData] = useState(
+    []
+  );
   const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
-  const [pagination, setPagination] = useState({});
+  const [fetchApprovedUserDataStatus, setFetchApprovedUserDataStatus] =
+    useState(false);
+  const [fetchDisapprovedUserDataStatus, setFetchDisapprovedUserDataStatus] =
+    useState(false);
 
+  const [pagination, setPagination] = useState({});
+  const [paginationApproved, setPaginationApproved] = useState({});
+  const [paginationDisapproved, setPaginationDisapproved] = useState({});
+
+  const [activeTab, setActiveTab] = useState("credentials");
+
+  // Fetch functions for all, approved, and disapproved users
   async function fetchAllUsers(page = 1) {
     try {
       const response = await authService.getAllUsers(page);
@@ -44,19 +58,72 @@ function AdminCredentialsList() {
     }
   }
 
-  // Fetch users when component mounts or when page changes
+  async function fetchApprovedUsers(page = 1) {
+    try {
+      const response = await authService.getApprovedCredentials(page);
+      if (response.status === 201) {
+        setFetchApprovedUsersData(response.result);
+        setPaginationApproved(response.pagination);
+        setFetchApprovedUserDataStatus(true);
+      } else if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+
+  async function fetchDisapprovedUsers(page = 1) {
+    try {
+      const response = await authService.getUnapprovedCredentials(page);
+      if (response.status === 201) {
+        setFetchDisapprovedUsersData(response.result);
+        setPaginationDisapproved(response.pagination);
+        setFetchDisapprovedUserDataStatus(true);
+      } else if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+
+  // Fetch all users when component mounts
   useEffect(() => {
     fetchAllUsers();
   }, []);
 
-  const handlePageChange = (page) => {
-    fetchAllUsers(page);
+  const handleTabSelect = (tabKey) => {
+    setActiveTab(tabKey);
+
+    if (tabKey === "approved" && !fetchApprovedUserDataStatus) {
+      fetchApprovedUsers();
+    }
+
+    if (tabKey === "disapproved" && !fetchDisapprovedUserDataStatus) {
+      fetchDisapprovedUsers();
+    }
   };
 
-  const renderPagination = () => {
-    const totalPages = pagination.last_page;
-    const currentPage = pagination.current_page;
-    const maxVisibleButtons = 5; // Max number of visible pagination buttons
+  const handlePageChange = (page, type) => {
+    if (type === "all") fetchAllUsers(page);
+    if (type === "approved") fetchApprovedUsers(page);
+    if (type === "disapproved") fetchDisapprovedUsers(page);
+  };
+
+  // Updated renderPagination function to accept parameters
+  const renderPagination = (paginationData, type) => {
+    const totalPages = paginationData.last_page;
+    const currentPage = paginationData.current_page;
+    const maxVisibleButtons = 10; // Max number of visible pagination buttons
 
     if (totalPages <= 1) return null;
 
@@ -80,7 +147,7 @@ function AdminCredentialsList() {
         <Button
           key={1}
           variant="outline-primary"
-          onClick={() => handlePageChange(1)}
+          onClick={() => handlePageChange(1, type)}
         >
           1
         </Button>
@@ -96,7 +163,7 @@ function AdminCredentialsList() {
         <Button
           key={i}
           variant="outline-primary"
-          onClick={() => handlePageChange(i)}
+          onClick={() => handlePageChange(i, type)}
           active={i === currentPage}
         >
           {i}
@@ -113,7 +180,7 @@ function AdminCredentialsList() {
         <Button
           key={totalPages}
           variant="outline-primary"
-          onClick={() => handlePageChange(totalPages)}
+          onClick={() => handlePageChange(totalPages, type)}
         >
           {totalPages}
         </Button>
@@ -158,7 +225,8 @@ function AdminCredentialsList() {
       <div className="credentials">
         <div className="credentials__table-box">
           <Tabs
-            defaultActiveKey="credentials"
+            activeKey={activeTab}
+            onSelect={handleTabSelect}
             id="fill-tab-example"
             className="mb-3"
             fill
@@ -198,7 +266,9 @@ function AdminCredentialsList() {
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
                           <td>
-                            {user.credentials ? "Available" : "Unavailable"}
+                            {user.credentials
+                              ? user.credentials
+                              : "No credentials"}
                           </td>
                           <td>{user.course}</td>
                           <td>
@@ -214,7 +284,7 @@ function AdminCredentialsList() {
                               size="sm"
                               onClick={() => handleViewUserDetails(user.id)}
                             >
-                              View user details
+                              View details
                             </Button>
                           </td>
                         </tr>
@@ -222,26 +292,121 @@ function AdminCredentialsList() {
                   </tbody>
                 </Table>
               </div>
-              <div className="pagination-controls">{renderPagination()}</div>
+              <div className="pagination-controls">
+                {renderPagination(pagination, "all")}
+              </div>
             </Tab>
+
             <Tab eventKey="approved" title="Approved">
-              Tab content for Home
+              {/* Approved Credentials Table */}
+              <div className="credentials__table-wrapper">
+                <Table>
+                  <thead>
+                    <tr className="credentials__table-head">
+                      <th>#</th>
+                      <th>Firstname</th>
+                      <th>Surname</th>
+                      <th>Email</th>
+                      <th>Gender</th>
+                      <th>Credentials</th>
+                      <th>Course</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fetchApprovedUserDataStatus &&
+                      fetchApprovedUsersData.map((user, index) => (
+                        <tr key={user.id}>
+                          <td>{index + 1}</td>
+                          <td>{user.firstname}</td>
+                          <td>{user.surname}</td>
+                          <td>{user.email}</td>
+                          <td>{user.gender}</td>
+                          <td>
+                            {user.credentials
+                              ? user.credentials
+                              : "No credentials"}
+                          </td>
+                          <td>{user.course}</td>
+                          <td>Approved</td>
+                          <td>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              onClick={() => handleViewUserDetails(user.id)}
+                            >
+                              View details
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </div>
+              <div className="pagination-controls">
+                {renderPagination(paginationApproved, "approved")}
+              </div>
             </Tab>
+
             <Tab eventKey="disapproved" title="Disapproved">
-              Tab content for Profile
-            </Tab>
-            <Tab eventKey="trashed" title="Trashed">
-              Tab content for Loooonger Tab
+              {/* Disapproved Credentials Table */}
+              <div className="credentials__table-wrapper">
+                <Table>
+                  <thead>
+                    <tr className="credentials__table-head">
+                      <th>#</th>
+                      <th>Firstname</th>
+                      <th>Surname</th>
+                      <th>Email</th>
+                      <th>Gender</th>
+                      <th>Credentials</th>
+                      <th>Course</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fetchDisapprovedUserDataStatus &&
+                      fetchDisapprovedUsersData.map((user, index) => (
+                        <tr key={user.id}>
+                          <td>{index + 1}</td>
+                          <td>{user.firstname}</td>
+                          <td>{user.surname}</td>
+                          <td>{user.email}</td>
+                          <td>{user.gender}</td>
+                          <td>
+                            {user.credentials
+                              ? user.credentials
+                              : "No credentials"}
+                          </td>
+                          <td>{user.course}</td>
+                          <td>Disapproved</td>
+                          <td>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              onClick={() => handleViewUserDetails(user.id)}
+                            >
+                              View details
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </div>
+              <div className="pagination-controls">
+                {renderPagination(paginationDisapproved, "disapproved")}
+              </div>
             </Tab>
           </Tabs>
         </div>
         <div className="credentials__infograph-box">
           <div className="credentials__table-box"></div>
-
           <div className="credentials__table-box"></div>
         </div>
       </div>
-
       <Footer />
     </div>
   );

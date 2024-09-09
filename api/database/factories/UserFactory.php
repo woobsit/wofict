@@ -19,6 +19,13 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
+        $fileName = Str::random(10) . '.pdf';
+        $filePath = storage_path('storage/assets/uploads/credentials/' . $fileName);
+
+        // Create a dummy file with random content
+        //file_put_contents($filePath, 'Dummy file content.');
+
         return [
             'active' => 1,
             'firstname' => $this->faker->firstName(),
@@ -32,7 +39,7 @@ class UserFactory extends Factory
             'phone_number' => '08074574512',
             'state_of_origin' => $this->faker->state(),
             'qualification_level' => $this->faker->randomElement(['Bsc', 'Msc', 'PhD']),
-            'credentials' => $this->faker->optional()->randomElement(['hasCredentials.pdf', null]),
+            'credentials' => $filePath,
             'class_sessions' => $this->faker->randomElement(['Morning', 'Evening']),
             'credentials_status' => $this->faker->randomElement([0, 1]),
             'forget_password' => '',

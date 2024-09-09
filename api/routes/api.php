@@ -72,13 +72,18 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::post('/admin-logout', [AdminAuthController::class, 'adminLogout']);
     //get admin
     Route::get('/get-admin', [AdminController::class, 'getAdmin']);
-    //get users
+    //get users with credentials
     Route::get('/get-all-users', [StudentController::class, 'getAllUsers']);
-    //get user
+    //get users with approved credentials
+    Route::get('/get-approved-credentials', [StudentController::class, 'getApprovedUsers']);
+    //get users with unapproved credentials
+    Route::get('/get-unapproved-credentials', [StudentController::class, 'getUnapprovedUsers']);
+    //get user with credentials id
     Route::get('/get-user-by-credentials/{id}', [StudentController::class, 'getUserByCredentials']);
-    //get credentials
+    //view credentials by id
     Route::get('/view-credentials/{id}', [StudentController::class, 'viewCredentials']);
-    
+    //download credentials by id
+    Route::get('/download-student-credentials/{id}', [StudentController::class, 'downloadStudentCredentials']);
 });
     // Endpoints that require admin scope
 
