@@ -82,8 +82,10 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/get-user-by-credentials/{id}', [StudentController::class, 'getUserByCredentials']);
     //view credentials by id
     Route::get('/view-credentials/{id}', [StudentController::class, 'viewCredentials']);
-    //download credentials by id
-    Route::get('/download-student-credentials/{id}', [StudentController::class, 'downloadStudentCredentials']);
+    //approve credential by id
+    Route::get('/approve-credential/{id}', [StudentController::class, 'approveCredential']);
+    //disapprove credential by id
+    Route::get('/disapprove-credential/{id}', [StudentController::class, 'disapproveCredential']);
 });
     // Endpoints that require admin scope
 

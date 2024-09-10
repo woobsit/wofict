@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import "./assets/styles/variables";
 @import "./assets/styles/base";
-
+user-name
 .landing-page-background {
   min-height: 100vh;
   background-image: url("./assets/images/background-login.jpg");
@@ -98,6 +98,7 @@
   height: 40px;
   padding-left: 7px;
   transition: border-color 0.3s;
+  background-color: white;
 }
 
 .landing-form__input-box:hover,
@@ -825,6 +826,17 @@
   border: 1px solid rgb(224, 224, 224);
   border-radius: 7px;
   background: white;
+}
+
+.image-name-button-wrapper{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.image-name-wrapper{
+  display:flex;
+  align-items: center;
 }
 
 .user-name {

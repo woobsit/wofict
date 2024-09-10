@@ -6,7 +6,8 @@ import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import Typography from "../../components/atom/typography/Typography";
 //React Bootstrap
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Dropdown from "react-bootstrap/Dropdown";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -26,15 +27,20 @@ function AdminCredentialsAllInfo() {
   );
   const [fetchUserByCredentialsStatus, setFetchUserByCredentialsStatus] =
     useState(false);
-  const [pdfUrl, setPdfUrl] = useState(null);
+
+  const [loadingViewCredentials, setLoadingViewCredentials] = useState(false);
+
+  const [loadingApprovedCredential, setLoadingApprovedCredential] =
+    useState(false);
+
+  const [loadingDisapprovedCredential, setLoadingDisapprovedCredential] =
+    useState(false);
 
   useEffect(() => {
     if (id) {
       fetchUserByCredentials(id); // Pass the id here
     }
   }, [id]);
-
-  const [show, setShow] = useState(false);
 
   async function fetchUserByCredentials(id) {
     try {
@@ -60,7 +66,8 @@ function AdminCredentialsAllInfo() {
     }
   }
 
-  async function fetchCredentials(id) {
+  async function fetchToViewCredentials(id) {
+    setLoadingViewCredentials(true);
     try {
       const response = await axiosInstance.get(`/view-credentials/${id}`, {
         responseType: "blob",
@@ -70,8 +77,8 @@ function AdminCredentialsAllInfo() {
         const pdfUrl = URL.createObjectURL(
           new Blob([response.data], { type: "application/pdf" })
         );
-        setPdfUrl(pdfUrl);
-        setShow(true);
+        // Open the PDF in a new tab
+        window.open(pdfUrl, "_blank");
       } else if (response.status === 404) {
         notify("error", "Error", "PDF not found");
       } else {
@@ -83,38 +90,54 @@ function AdminCredentialsAllInfo() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setLoadingViewCredentials(false);
     }
   }
 
-  // async function downloadStudentCredentials(id) {
-  //   setIsDownloadingAcknowledgement(true); // Disable the button
-  //   try {
-  //     const response = await authService.downloadAcknowledgement();
+  async function fetchApprovedCredential(id) {
+    setLoadingApprovedCredential(true);
+    try {
+      const response = await authService.getApprovedCredential(id);
+      if (response.status === 200) {
+        notify("success", "Approved", "Credentials is approved");
+      } else if (response.status === 404) {
+        notify("error", "Error", "User not found");
+      } else if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setLoadingApprovedCredential(false);
+    }
+  }
 
-  //     if (response.status === 201) {
-  //       // Check for 200 status code
-  //       notify(
-  //         "success",
-  //         "Download Complete",
-  //         "Acknowledgement letter downloaded successfully."
-  //       );
-  //     } else {
-  //       notify(
-  //         "error",
-  //         "Error",
-  //         response.message || "An unexpected error occurred."
-  //       );
-  //     }
-  //   } catch (error) {
-  //     notify(
-  //       "error",
-  //       "Error",
-  //       "An unexpected error occurred. Please try again."
-  //     );
-  //   } finally {
-  //     setIsDownloadingAcknowledgement(false); // Re-enable the button
-  //   }
-  // }
+  async function fetchDisapprovedCredential(id) {
+    setLoadingDisapprovedCredential(true);
+    try {
+      const response = await authService.getDisapprovedCredential(id);
+      if (response.status === 200) {
+        notify("success", "Disapproved", "Credentials is disapproved");
+      } else if (response.status === 404) {
+        notify("error", "Error", "User not found");
+      } else if (response.status === 500) {
+        notify("error", "System Error", response.message);
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setLoadingDisapprovedCredential(false);
+    }
+  }
 
   return (
     <div className="content">
@@ -144,37 +167,74 @@ function AdminCredentialsAllInfo() {
       </div>
       <div>
         <div className="card user-name">
-          {fetchUserByCredentialsStatus && (
-            <>
-              <img
-                src={
-                  website_info[2].value + "" + fetchUserByCredentialsData.photo
-                }
-                alt={
-                  fetchUserByCredentialsData.firstname +
-                  " " +
-                  fetchUserByCredentialsData.surname
-                }
-                title={
-                  fetchUserByCredentialsData.firstname +
-                  " " +
-                  fetchUserByCredentialsData.surname
-                }
-                className="user-image"
-              />
-              <div className="user-fullname-email">
-                <Typography variant="h4" className="user-fullname">
-                  {fetchUserByCredentialsData.firstname +
+          <div className="image-name-button-wrapper">
+            {fetchUserByCredentialsStatus && (
+              <div className="image-name-wrapper">
+                <img
+                  src={
+                    website_info[2].value +
+                    "" +
+                    fetchUserByCredentialsData.photo
+                  }
+                  alt={
+                    fetchUserByCredentialsData.firstname +
                     " " +
-                    fetchUserByCredentialsData.surname}
-                </Typography>
-                <Typography variant="span" className="user-email">
-                  {fetchUserByCredentialsData.email}
-                </Typography>
+                    fetchUserByCredentialsData.surname
+                  }
+                  title={
+                    fetchUserByCredentialsData.firstname +
+                    " " +
+                    fetchUserByCredentialsData.surname
+                  }
+                  className="user-image"
+                />
+                <div className="user-fullname-email">
+                  <Typography variant="h4" className="user-fullname">
+                    {fetchUserByCredentialsData.firstname +
+                      " " +
+                      fetchUserByCredentialsData.surname}
+                  </Typography>
+                  <Typography variant="span" className="user-email">
+                    {fetchUserByCredentialsData.email}
+                  </Typography>
+                </div>
               </div>
-            </>
-          )}
+            )}
+            <div>
+              <Dropdown as={ButtonGroup}>
+                <Dropdown.Toggle
+                  split
+                  variant="primary"
+                  id="dropdown-split-basic"
+                  size="sm"
+                />
+                <Dropdown.Menu>
+                  {fetchUserByCredentialsStatus &&
+                  fetchUserByCredentialsData.credentials_status === 0 ? (
+                    <Dropdown.Item
+                      onClick={() => fetchApprovedCredential(id)} // Pass id here
+                      disabled={loadingApprovedCredential}
+                    >
+                      {loadingApprovedCredential
+                        ? "Approving credentials..."
+                        : "Approve credentials"}
+                    </Dropdown.Item>
+                  ) : (
+                    <Dropdown.Item
+                      onClick={() => fetchDisapprovedCredential(id)} // Pass id here
+                      disabled={loadingDisapprovedCredential}
+                    >
+                      {loadingDisapprovedCredential
+                        ? "Disapproving credentials..."
+                        : "Disapprove credentials"}
+                    </Dropdown.Item>
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
         </div>
+
         <div className="user-info-wrapper">
           <div className="card user-info user-personal-info">
             <Typography variant="h4" className="user-text">
@@ -350,15 +410,13 @@ function AdminCredentialsAllInfo() {
           <div className="card user-button-groups">
             <div>
               <Button
-                variant="info"
+                variant="primary"
                 size="sm"
                 className="user__button--view"
-                onClick={() => fetchCredentials(id)} // Call fetchCredentials with id
+                onClick={() => fetchToViewCredentials(id)} // Call fetchToViewCredentials with id
+                disabled={loadingViewCredentials}
               >
-                View Credentials
-              </Button>
-              <Button variant="primary" size="sm">
-                Download Credentials
+                {loadingViewCredentials ? "Loading PDF..." : "View Credentials"}
               </Button>
             </div>
             <div>
@@ -373,32 +431,6 @@ function AdminCredentialsAllInfo() {
           </div>
         </div>
       </div>
-
-      <Modal show={show} onHide={() => setShow(false)} fullscreen={true}>
-        <Modal.Header closeButton>
-          <Modal.Title id="example-custom-modal-styling-title">
-            {fetchUserByCredentialsStatus
-              ? fetchUserByCredentialsData.firstname +
-                " " +
-                fetchUserByCredentialsData.surname +
-                " Credentials"
-              : ""}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {pdfUrl && (
-            <div className="pdf-viewer">
-              <iframe
-                src={pdfUrl}
-                title="PDF Viewer"
-                width="100%"
-                height="500px"
-                style={{ border: "none" }}
-              ></iframe>
-            </div>
-          )}
-        </Modal.Body>
-      </Modal>
     </div>
   );
 }

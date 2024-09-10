@@ -117,7 +117,7 @@ class StudentController extends Controller
             $user = User::where('active', 1)->where('id', $id)->whereNotNull('credentials')->first();
 
             if ($user && $user->credentials) {
-                $filePath = storage_path($user->credentials);
+                $filePath = storage_path('app/' . $user->credentials);
 
                 if (file_exists($filePath)) {
                     return response()->file($filePath, [
@@ -125,7 +125,7 @@ class StudentController extends Controller
                         'Content-Disposition' => 'inline; filename="' . $user->credentials . '"'
                     ])->setStatusCode(201);
                 } else {
-                    return response()->json(['status' => 404, 'message' => 'File not found']);
+                    return response()->json(['status' => 404, 'message' => $filePath]);
                 }
             } else {
                 return response()->json(['status' => 404, 'message' => 'User or file not found']);
@@ -136,30 +136,50 @@ class StudentController extends Controller
         }
     }
 
-    public function downloadStudentCredentials($studentId)
+    public function approveCredential($id)
     {
         try {
-            // Fetch student information and ensure they are active
-            $student = User::where('active', 1)->where('id', $studentId)->first();
+            $user = User::where('active', 1)->where('id', $id)->whereNotNull('credentials')->where('credentials_status', 0)->first();
 
-            if (!$student) {
-                return response()->json(['status' => 404, 'message' => 'Student not found'], 404);
+            if ($user && $user->credentials && $user->credentials_status == 0) {
+                $user->credentials_status = 1;
+                $user->save();
+
+                return response()->json(['status' => 200, 'message' => 'success']);
+            } else {
+                return response()->json(['status' => 404, 'message' => 'User is not found']);
             }
-
-            // Fetch student's credentials (assuming it's stored as a file path)
-            $credentialsPath = storage_path($student->credentials);
-
-            if (!file_exists($credentialsPath)) {
-                return response()->json(['status' => 404, 'message' => 'Credentials not found'], 404);
-            }
-
-            // Serve the PDF for download
-            return response()->download($credentialsPath, 'credentials_' . $student->firstname . '.pdf', [
-                'Content-Type' => 'application/pdf',
-            ])->setStatusCode(200);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occurred'], 500);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    public function disapproveCredential($id)
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)->whereNotNull('credentials')->where('credentials_status', 1)->first();
+
+            if ($user && $user->credentials && $user->credentials_status == 1) {
+
+                $filePath = storage_path('app/' . $user->credentials); // Assuming credentials are stored in 'storage/app/public'
+
+                // Delete the file if it exists
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+
+                $user->credentials_status = 0;
+                $user->credentials = null;
+                $user->save();
+
+                return response()->json(['status' => 200, 'message' => 'success']);
+            } else {
+                return response()->json(['status' => 404, 'message' => 'User is not found']);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 }

@@ -250,7 +250,6 @@ function AdminCredentialsList() {
                       <th>Surname</th>
                       <th>Email</th>
                       <th>Gender</th>
-                      <th>Credentials</th>
                       <th>Course</th>
                       <th>Status</th>
                       <th></th>
@@ -265,11 +264,6 @@ function AdminCredentialsList() {
                           <td>{user.surname}</td>
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
-                          <td>
-                            {user.credentials
-                              ? user.credentials
-                              : "No credentials"}
-                          </td>
                           <td>{user.course}</td>
                           <td>
                             <Typography variant="p" className="">
@@ -308,7 +302,6 @@ function AdminCredentialsList() {
                       <th>Surname</th>
                       <th>Email</th>
                       <th>Gender</th>
-                      <th>Credentials</th>
                       <th>Course</th>
                       <th>Status</th>
                       <th></th>
@@ -323,11 +316,6 @@ function AdminCredentialsList() {
                           <td>{user.surname}</td>
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
-                          <td>
-                            {user.credentials
-                              ? user.credentials
-                              : "No credentials"}
-                          </td>
                           <td>{user.course}</td>
                           <td>Approved</td>
                           <td>
@@ -360,7 +348,6 @@ function AdminCredentialsList() {
                       <th>Surname</th>
                       <th>Email</th>
                       <th>Gender</th>
-                      <th>Credentials</th>
                       <th>Course</th>
                       <th>Status</th>
                       <th></th>
@@ -375,11 +362,6 @@ function AdminCredentialsList() {
                           <td>{user.surname}</td>
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
-                          <td>
-                            {user.credentials
-                              ? user.credentials
-                              : "No credentials"}
-                          </td>
                           <td>{user.course}</td>
                           <td>Disapproved</td>
                           <td>

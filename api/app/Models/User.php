@@ -65,8 +65,8 @@ class User extends Authenticatable
 
     protected $dates = ['deleted_at'];
 
-    public function getCredentialsAttribute()
-    {
-        return basename($this->attributes['credentials']);
-    }
+    // public function getCredentialsAttribute()
+    // {
+    //     return basename($this->attributes['credentials']);
+    // }
 }
