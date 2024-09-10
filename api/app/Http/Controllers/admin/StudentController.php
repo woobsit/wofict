@@ -182,4 +182,42 @@ class StudentController extends Controller
             return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
+
+    public function searchCredentials(Request $request)
+    {
+        try {
+
+            $firstname = $request->query('firstname');
+            $surname = $request->query('surname');
+
+            if (!$firstname || !$surname) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => 'Please provide both firstname and surname for the search.'
+                ]);
+            }
+
+            // Search in the 'users' table for matching firstname and surname
+            $users = User::where('active', 1)->whereNotNull('credentials')->where('firstname', 'LIKE', "%$firstname%")
+                ->where('surname', 'LIKE', "%$surname%")
+                ->get();
+
+            // Check if any users were found
+            if ($users->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No users found with the given credentials.'
+                ]);
+            }
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
 }

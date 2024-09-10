@@ -86,6 +86,8 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/approve-credential/{id}', [StudentController::class, 'approveCredential']);
     //disapprove credential by id
     Route::get('/disapprove-credential/{id}', [StudentController::class, 'disapproveCredential']);
+    //search credentials by id
+    Route::get('/search-credentials', [StudentController::class, 'searchCredentials']);
 });
     // Endpoints that require admin scope
 
