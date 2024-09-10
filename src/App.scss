@@ -107,7 +107,7 @@ user-name
 }
 
 .landing-form__input-icon {
-  color: rgb(202, 202, 202);
+  color: rgb(237 23 23);
   width: 12px;
   margin-right: 5px;
 }
@@ -381,7 +381,7 @@ user-name
 }
 
 .nav__menu-icon {
-  color: rgb(189, 189, 189);
+  color: rgb(27 247 54);
 }
 
 .nav__menu-icon__wrapper {
@@ -461,6 +461,15 @@ user-name
   height: 50px;
   margin-top: 10px;
   padding: 5px 10px;
+  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));
+}
+
+.image-container .credential-text{
+  color:white;
+}
+
+.image-container .credential-span{
+  color:white;
 }
 
 .card-student-info-container {
@@ -832,6 +841,7 @@ user-name
   display:flex;
   align-items: center;
   justify-content: space-between;
+  width:100%;
 }
 
 .image-name-wrapper{

@@ -200,11 +200,15 @@ function AdminCredentialsList() {
 
       <div className="image-container">
         <div>
-          <Typography variant="h3">Credentials</Typography>
+          <Typography variant="h3" className="credential-text">
+            Credentials
+          </Typography>
         </div>
         <div>
-          <FontAwesomeIcon icon={faHome} className="nav__menu-icon" /> /
-          <Typography variant="span"> credentials</Typography>
+          <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
+          <Typography variant="span" className="credential-span">
+            / credentials
+          </Typography>
         </div>
       </div>
 
