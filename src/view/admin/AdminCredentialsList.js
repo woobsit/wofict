@@ -284,22 +284,22 @@ function AdminCredentialsList() {
         <div>
           <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
           <Typography variant="span" className="credential-span">
-            / credentials
+            /credentials
           </Typography>
         </div>
       </div>
 
       <div className="search-input-container">
         <div className="landing-form__input-box">
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="landing-form__input-icon"
-          />
           <input
             type="text"
             placeholder="Search student"
             className="landing-form__input"
             name="email"
+          />
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="landing-form__input-icon"
           />
         </div>
       </div>
@@ -324,7 +324,7 @@ function AdminCredentialsList() {
                 <form onSubmit={handleSubmit}>
                   <input
                     type="text"
-                    placeholder="Search prospective student"
+                    placeholder="Search credentials"
                     className="landing-form__input"
                     name="prospective_students"
                     value={prospectiveStudentsFields.prospective_students}

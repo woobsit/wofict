@@ -187,7 +187,7 @@ class StudentController extends Controller
     {
         try {
             // Get the search input from the query parameter
-            $searchTerm = $request->query('search');
+            $searchTerm = $request->query('prospective_students');
 
             // Ensure that a search term is provided
             if (!$searchTerm) {
@@ -197,13 +197,18 @@ class StudentController extends Controller
                 ]);
             }
 
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
             // Search in the 'users' table across 'firstname', 'surname', and 'email'
             $users = User::where('active', 1)
                 ->whereNotNull('credentials')
-                ->where(function ($query) use ($searchTerm) {
-                    $query->where('firstname', 'LIKE', "%$searchTerm%")
-                        ->orWhere('surname', 'LIKE', "%$searchTerm%")
-                        ->orWhere('email', 'LIKE', "%$searchTerm%");
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%")
+                            ->orWhere('email', 'LIKE', "%$part%");
+                    }
                 })
                 ->get();
 
@@ -216,7 +221,7 @@ class StudentController extends Controller
             }
 
             return response()->json([
-                'status' => 201,
+                'status' => 200,
                 'message' => 'success',
                 'result' => $users
             ]);

@@ -99,6 +99,7 @@ user-name
   padding-left: 7px;
   transition: border-color 0.3s;
   background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .landing-form__input-box:hover,
@@ -107,9 +108,10 @@ user-name
 }
 
 .landing-form__input-icon {
-  color: rgb(255 146 146);
+  color: rgb(131 131 131);
   width: 12px;
   margin-right: 5px;
+  margin-left:5px;
 }
 
 .landing-form__inputs-box .landing-form__span {
@@ -381,7 +383,7 @@ user-name
 }
 
 .nav__menu-icon {
-  color: rgb(27 247 54);
+  color: rgb(255, 13, 182);
 }
 
 .nav__menu-icon__wrapper {
@@ -775,7 +777,6 @@ user-name
 }
 
 .nav-link {
-  color: #ff4444;
   font-size: 15px;
 }
 
