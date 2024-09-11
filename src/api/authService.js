@@ -159,6 +159,8 @@ const authService = {
   getApprovedCredential: (id) => handleRequest(`/approve-credential/${id}`),
   getDisapprovedCredential: (id) =>
     handleRequest(`/disapprove-credential/${id}`),
+  getSearchedCredentials: (firstname) =>
+    handleRequest("/search-credentials", "get", { firstname }),
 };
 
 export default authService;

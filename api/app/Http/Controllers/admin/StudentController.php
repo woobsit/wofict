@@ -186,27 +186,32 @@ class StudentController extends Controller
     public function searchCredentials(Request $request)
     {
         try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('search');
 
-            $firstname = $request->query('firstname');
-            $surname = $request->query('surname');
-
-            if (!$firstname || !$surname) {
+            // Ensure that a search term is provided
+            if (!$searchTerm) {
                 return response()->json([
                     'status' => 400,
-                    'message' => 'Please provide both firstname and surname for the search.'
+                    'message' => 'Please provide a search term (firstname, surname, or email).'
                 ]);
             }
 
-            // Search in the 'users' table for matching firstname and surname
-            $users = User::where('active', 1)->whereNotNull('credentials')->where('firstname', 'LIKE', "%$firstname%")
-                ->where('surname', 'LIKE', "%$surname%")
+            // Search in the 'users' table across 'firstname', 'surname', and 'email'
+            $users = User::where('active', 1)
+                ->whereNotNull('credentials')
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('firstname', 'LIKE', "%$searchTerm%")
+                        ->orWhere('surname', 'LIKE', "%$searchTerm%")
+                        ->orWhere('email', 'LIKE', "%$searchTerm%");
+                })
                 ->get();
 
             // Check if any users were found
             if ($users->isEmpty()) {
                 return response()->json([
                     'status' => 404,
-                    'message' => 'No users found with the given credentials.'
+                    'message' => 'No users found with the given search term.'
                 ]);
             }
 
@@ -217,7 +222,7 @@ class StudentController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 }

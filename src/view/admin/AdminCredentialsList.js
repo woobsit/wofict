@@ -17,9 +17,19 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { notify } from "../../utils/Notification";
 //API service
 import authService from "../../api/authService";
+//Utility Spinner
+import Loader from "./../../components/atom/loader";
 
 function AdminCredentialsList() {
   const navigate = useNavigate();
+
+  const [prospectiveStudentsFields, setProspectiveStudentsFields] = useState({
+    prospective_students: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
   const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
@@ -37,6 +47,71 @@ function AdminCredentialsList() {
   const [paginationDisapproved, setPaginationDisapproved] = useState({});
 
   const [activeTab, setActiveTab] = useState("credentials");
+
+  //Set value of inputs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const newValue = value;
+    setProspectiveStudentsFields({
+      ...prospectiveStudentsFields,
+      [name]: newValue,
+    });
+  };
+
+  //Validate inputs
+  const validate = (inputValues) => {
+    let errors = {};
+    if (inputValues.prospective_students.length === "") {
+      errors.prospective_students = "Input is empty. Please enter a value";
+    }
+    return errors;
+  };
+
+  //Submit form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors(validate(prospectiveStudentsFields)); //object of errors
+    setSubmitting(true);
+  };
+
+  //When form values are valid
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && submitting) {
+      makeSearchRequest();
+    }
+  }, [errors]);
+
+  const makeSearchRequest = async () => {
+    try {
+      setLoading(true);
+      const response = await authService.getSearchedCredentials(
+        prospectiveStudentsFields.prospective_students
+      );
+
+      if (response.status === 201) {
+        setLoading(false);
+      } else if (response.status === 400) {
+        setLoading(false);
+        notify("error", "Wrong input", response.message);
+      } else if (response.status === 404) {
+        setLoading(false);
+        notify("error", "No User", response.message);
+      } else if (response.status === 500) {
+        setLoading(false);
+        notify("error", "System Error", response.message);
+      } else {
+        setLoading(false);
+        notify("error", "Error", "An unexpected error occurred");
+      }
+    } catch (error) {
+      setLoading(false);
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  };
 
   // Fetch functions for all, approved, and disapproved users
   async function fetchAllUsers(page = 1) {
@@ -196,6 +271,8 @@ function AdminCredentialsList() {
 
   return (
     <div className="content">
+      {loading && <Loader />}
+
       <AdminHeader />
 
       <div className="image-container">
@@ -242,8 +319,22 @@ function AdminCredentialsList() {
                 </Typography>
                 <FontAwesomeIcon
                   icon={faSearch}
-                  className="credentials__table-title-icon"
+                  className="landing-form__input-icon"
                 />
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    placeholder="Search prospective student"
+                    className="landing-form__input"
+                    name="prospective_students"
+                    value={prospectiveStudentsFields.prospective_students}
+                    onChange={handleChange}
+                  />
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="credentials__table-title-icon"
+                  />
+                </form>
               </div>
               <div className="credentials__table-wrapper">
                 <Table>

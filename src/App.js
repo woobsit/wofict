@@ -13,6 +13,7 @@ import AdminLogin from "./view/admin/AdminLogin";
 //import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminForgetPassword from "./view/admin/AdminForgetPassword";
 import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
+import AdminCredentialsSearch from "./view/admin/AdminCredentialsSearch";
 //React Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 //scss style
@@ -145,6 +146,11 @@ function App() {
               path="/admin/user-info-by-credentials/:id"
               element={<AdminCredentialsAllInfo />}
               key="admin-search-user-info-by-credentials"
+            />
+            <Route
+              path="/admin/search-by-credentials/:id"
+              element={<AdminCredentialsSearch />}
+              key="admin-search-credentials"
             />
           </Route>
         </Routes>
