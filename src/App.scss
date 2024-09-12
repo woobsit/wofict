@@ -111,7 +111,6 @@ user-name
   color: rgb(131 131 131);
   width: 12px;
   margin-right: 5px;
-  margin-left:5px;
 }
 
 .landing-form__inputs-box .landing-form__span {
@@ -455,6 +454,15 @@ user-name
   padding: 0 10px;
 }
 
+.landing-student-form__input-icon {
+  color: rgb(131 131 131);
+  width: 12px;
+  margin-left:5px;
+  padding:0 9px;
+  height:100%;
+  cursor: pointer;
+}
+
 .image-container {
   display: flex;
   align-items: center;
@@ -788,8 +796,6 @@ user-name
 
 .credentials__table-title {
   font-family: "roboto";
-  font-weight: 600;
-  font-size: 25px;
 }
 
 .credentials__table-title-icon {

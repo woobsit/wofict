@@ -299,7 +299,7 @@ function AdminCredentialsList() {
           />
           <FontAwesomeIcon
             icon={faSearch}
-            className="landing-form__input-icon"
+            className="landing-student-form__input-icon"
           />
         </div>
       </div>
@@ -314,13 +314,10 @@ function AdminCredentialsList() {
           >
             <Tab eventKey="credentials" title="All credentials">
               <div className="credentials__table-title-box">
-                <Typography variant="p" className="credentials__table-title">
+                <Typography variant="h4" className="credentials__table-title">
                   All credentials
                 </Typography>
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="landing-form__input-icon"
-                />
+
                 <form onSubmit={handleSubmit}>
                   <input
                     type="text"
@@ -332,7 +329,7 @@ function AdminCredentialsList() {
                   />
                   <FontAwesomeIcon
                     icon={faSearch}
-                    className="credentials__table-title-icon"
+                    className="landing-form__input-icon"
                   />
                 </form>
               </div>
