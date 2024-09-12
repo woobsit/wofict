@@ -17,8 +17,8 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { notify } from "../../utils/Notification";
 //API service
 import authService from "../../api/authService";
-//Utility Spinner
-import Loader from "./../../components/atom/loader";
+//React select
+import AsyncSelect from "react-select/async";
 
 function AdminCredentialsList() {
   const navigate = useNavigate();
@@ -27,9 +27,9 @@ function AdminCredentialsList() {
     prospective_students: "",
   });
 
-  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState({});
 
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
   const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
@@ -58,58 +58,44 @@ function AdminCredentialsList() {
     });
   };
 
-  //Validate inputs
-  const validate = (inputValues) => {
-    let errors = {};
-    if (inputValues.prospective_students.length === "") {
-      errors.prospective_students = "Input is empty. Please enter a value";
-    }
-    return errors;
-  };
-
   //Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(validate(prospectiveStudentsFields)); //object of errors
     setSubmitting(true);
   };
 
   //When form values are valid
   useEffect(() => {
-    if (Object.keys(errors).length === 0 && submitting) {
+    if (submitting) {
       makeSearchRequest();
     }
-  }, [errors]);
+  }, [submitting]);
 
   const makeSearchRequest = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await authService.getSearchedCredentials(
         prospectiveStudentsFields.prospective_students
       );
-
-      if (response.status === 201) {
-        setLoading(false);
-      } else if (response.status === 400) {
-        setLoading(false);
-        notify("error", "Wrong input", response.message);
+      console.log(response);
+      if (response.status === 201 && Array.isArray(response.data)) {
+        setResult(response);
+        console.log(response);
       } else if (response.status === 404) {
-        setLoading(false);
-        notify("error", "No User", response.message);
+        setResult("No such user");
       } else if (response.status === 500) {
-        setLoading(false);
         notify("error", "System Error", response.message);
       } else {
-        setLoading(false);
         notify("error", "Error", "An unexpected error occurred");
       }
     } catch (error) {
-      setLoading(false);
       notify(
         "error",
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -269,10 +255,25 @@ function AdminCredentialsList() {
     navigate(`/admin/user-info-by-credentials/${id}`);
   };
 
+  const loadOptions = async () => {
+    try {
+      // Ensure `result` is an array before attempting to map
+      if (Array.isArray(result)) {
+        return result.map((item) => ({
+          label: item.name, // Assuming the data contains a `name` property
+          value: item.id, // Assuming the data contains an `id` property
+        }));
+      } else {
+        throw new Error("Result is not an array");
+      }
+    } catch (error) {
+      console.error("Error loading options: ", error);
+      return [];
+    }
+  };
+
   return (
     <div className="content">
-      {loading && <Loader />}
-
       <AdminHeader />
 
       <div className="image-container">
@@ -293,7 +294,7 @@ function AdminCredentialsList() {
         <div className="landing-form__input-box">
           <input
             type="text"
-            placeholder="Search student"
+            placeholder="Search students"
             className="landing-form__input"
             name="email"
           />
@@ -334,7 +335,16 @@ function AdminCredentialsList() {
                       onClick={handleSubmit}
                     />
                   </div>
-                  <div className="credentials-table__search-form-dropdown">dfdf</div>
+                  <div className="credentials-table__search-form-dropdown"></div>
+                  {loading ? (
+                    <div className="spinner-container">Loading...</div> // Replace with your spinner component
+                  ) : (
+                    <AsyncSelect
+                      cacheOptions
+                      defaultOptions
+                      loadOptions={loadOptions} // Function to load options for the dropdown
+                    />
+                  )}
                 </form>
               </div>
               <div className="credentials__table-wrapper">
@@ -433,7 +443,7 @@ function AdminCredentialsList() {
               </div>
             </Tab>
 
-            <Tab eventKey="unapproved" title="Unapproved">
+            <Tab eventKey="pending" title="Pending approval">
               {/* Disapproved Credentials Table */}
               <div className="credentials__table-wrapper">
                 <Table>
@@ -459,7 +469,7 @@ function AdminCredentialsList() {
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
                           <td>{user.course}</td>
-                          <td>Unapproved</td>
+                          <td>Pending approval</td>
                           <td>
                             <Button
                               variant="primary"
@@ -475,7 +485,7 @@ function AdminCredentialsList() {
                 </Table>
               </div>
               <div className="pagination-controls">
-                {renderPagination(paginationDisapproved, "disapproved")}
+                {renderPagination(paginationDisapproved, "pending")}
               </div>
             </Tab>
           </Tabs>

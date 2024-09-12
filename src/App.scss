@@ -810,11 +810,20 @@ user-name
 .credentials-table__search-form{
   display:flex;
   flex-direction: column;
-  align-items:center;
 }
 
 .credentials-table__search-form-dropdown{
-  
+  // position:absolute;
+  z-index: 1000;
+  background-color: white;
+  border-radius:5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  height:50px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  margin-top:8px;
+  padding:8px 5px;
+  position:relative;
 }
 
 .credentials-table__input-icon-box{

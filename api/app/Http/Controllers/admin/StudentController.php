@@ -189,14 +189,6 @@ class StudentController extends Controller
             // Get the search input from the query parameter
             $searchTerm = $request->query('prospective_students');
 
-            // Ensure that a search term is provided
-            if (!$searchTerm) {
-                return response()->json([
-                    'status' => 400,
-                    'message' => 'Please provide a search term (firstname, surname, or email).'
-                ]);
-            }
-
             // Split the search term into multiple parts (words)
             $searchParts = explode(' ', $searchTerm);
 
