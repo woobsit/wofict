@@ -216,12 +216,12 @@ class StudentController extends Controller
             if ($users->isEmpty()) {
                 return response()->json([
                     'status' => 404,
-                    'message' => 'No users found with the given search term.'
+                    'message' => 'No user was found with the given search term.'
                 ]);
             }
 
             return response()->json([
-                'status' => 200,
+                'status' => 201,
                 'message' => 'success',
                 'result' => $users
             ]);

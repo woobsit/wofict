@@ -3,7 +3,15 @@ import axiosInstance from "./axiosInstance";
 const handleRequest = async (url, method = "get", data = null, config = {}) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    const response = await axiosInstance[method](url, data, config);
+    // For GET requests, pass data as query parameters
+    const finalConfig =
+      method === "get" && data ? { ...config, params: data } : config;
+
+    const response = await axiosInstance[method](
+      url,
+      method === "get" ? finalConfig : data,
+      finalConfig
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -159,8 +167,10 @@ const authService = {
   getApprovedCredential: (id) => handleRequest(`/approve-credential/${id}`),
   getDisapprovedCredential: (id) =>
     handleRequest(`/disapprove-credential/${id}`),
-  getSearchedCredentials: (firstname) =>
-    handleRequest("/search-credentials", "get", { firstname }),
+  getSearchedCredentials: (searchTerm) =>
+    handleRequest("/search-credentials", "get", {
+      prospective_students: searchTerm,
+    }),
 };
 
 export default authService;

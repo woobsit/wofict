@@ -318,19 +318,23 @@ function AdminCredentialsList() {
                   All credentials
                 </Typography>
 
-                <form onSubmit={handleSubmit}>
-                  <input
-                    type="text"
-                    placeholder="Search credentials"
-                    className="landing-form__input"
-                    name="prospective_students"
-                    value={prospectiveStudentsFields.prospective_students}
-                    onChange={handleChange}
-                  />
-                  <FontAwesomeIcon
-                    icon={faSearch}
-                    className="landing-form__input-icon"
-                  />
+                <form className="credentials-table__search-form">
+                  <div className="credentials-table__input-icon-box">
+                    <input
+                      type="text"
+                      placeholder="All credentials"
+                      className="credentials-table__input"
+                      name="prospective_students"
+                      value={prospectiveStudentsFields.prospective_students}
+                      onChange={handleChange}
+                    />
+                    <FontAwesomeIcon
+                      icon={faSearch}
+                      className="credentials-table__search-icon"
+                      onClick={handleSubmit}
+                    />
+                  </div>
+                  <div className="credentials-table__search-form-dropdown">dfdf</div>
                 </form>
               </div>
               <div className="credentials__table-wrapper">
@@ -429,7 +433,7 @@ function AdminCredentialsList() {
               </div>
             </Tab>
 
-            <Tab eventKey="disapproved" title="Disapproved">
+            <Tab eventKey="unapproved" title="Unapproved">
               {/* Disapproved Credentials Table */}
               <div className="credentials__table-wrapper">
                 <Table>
@@ -455,7 +459,7 @@ function AdminCredentialsList() {
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
                           <td>{user.course}</td>
-                          <td>Disapproved</td>
+                          <td>Unapproved</td>
                           <td>
                             <Button
                               variant="primary"

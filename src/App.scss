@@ -807,6 +807,47 @@ user-name
   cursor: pointer;
 }
 
+.credentials-table__search-form{
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+}
+
+.credentials-table__search-form-dropdown{
+  
+}
+
+.credentials-table__input-icon-box{
+  display: flex;
+    align-items: center;
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 5px;
+    height: 40px;
+    padding-left: 7px;
+    transition: border-color 0.3s;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.credentials-table__input{
+    height: 100%;
+    outline: none;
+    flex-grow: 1;
+    border: none;
+    background-color: inherit;
+    width: 100%;
+    color: #4b4b4b;
+}
+
+.credentials-table__search-icon{
+  color: rgb(131, 131, 131);
+    width: 12px;
+    margin-left: 5px;
+    padding: 0 9px;
+    height: 100%;
+    cursor: pointer;
+}
+
 .credentials__infograph-box {
   width: 100%;
   display: flex;
