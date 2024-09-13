@@ -168,9 +168,10 @@ const authService = {
   getDisapprovedCredential: (id) =>
     handleRequest(`/disapprove-credential/${id}`),
   getSearchedCredentials: (searchTerm) =>
-    handleRequest("/search-credentials", "get", {
-      prospective_students: searchTerm,
-    }),
+    handleRequest(
+      `/search-credentials?prospective_students=${searchTerm}`,
+      "get"
+    ),
 };
 
 export default authService;

@@ -42,7 +42,7 @@ li {
     color: #fff;
     background: linear-gradient(45deg, rgb(86, 201, 255), rgb(64, 64, 255));
     border:none;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .btn-primary:hover {
@@ -88,8 +88,12 @@ p{
   margin-bottom:0px;
 }
 
-.nav-link.active{
-  color:white  ;
+.nav-tabs .nav-link.active{
+  color:white;
   background: linear-gradient(45deg, #00b8ff, #00b8ff);
 
+}
+
+tr{
+  font-size:14px;
 }

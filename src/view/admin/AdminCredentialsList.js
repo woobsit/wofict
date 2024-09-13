@@ -5,6 +5,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Badge from "react-bootstrap/Badge";
 //Molecule
 import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import Footer from "../../components/molecule/Footer";
@@ -17,19 +18,15 @@ import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { notify } from "../../utils/Notification";
 //API service
 import authService from "../../api/authService";
-//React select
-import AsyncSelect from "react-select/async";
+//React search autocomplete
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+//React Apex chart
+import Chart from "react-apexcharts";
 
 function AdminCredentialsList() {
   const navigate = useNavigate();
 
-  const [prospectiveStudentsFields, setProspectiveStudentsFields] = useState({
-    prospective_students: "",
-  });
-
-  const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState({});
+  const [items, setItems] = useState([]);
 
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
   const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
@@ -48,41 +45,16 @@ function AdminCredentialsList() {
 
   const [activeTab, setActiveTab] = useState("credentials");
 
-  //Set value of inputs
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const newValue = value;
-    setProspectiveStudentsFields({
-      ...prospectiveStudentsFields,
-      [name]: newValue,
-    });
-  };
-
-  //Submit form
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-  };
-
-  //When form values are valid
-  useEffect(() => {
-    if (submitting) {
-      makeSearchRequest();
-    }
-  }, [submitting]);
-
-  const makeSearchRequest = async () => {
-    setLoading(true);
+  const handleSearch = async (query) => {
+    if (query.length < 1) return ""; // Prevent search for empty
     try {
-      const response = await authService.getSearchedCredentials(
-        prospectiveStudentsFields.prospective_students
-      );
-      console.log(response);
-      if (response.status === 201 && Array.isArray(response.data)) {
-        setResult(response);
-        console.log(response);
-      } else if (response.status === 404) {
-        setResult("No such user");
+      const response = await authService.getSearchedCredentials(query);
+      if (response.status === 201) {
+        const results = response.result.map((item) => ({
+          id: item.id,
+          name: item.firstname + " " + item.surname,
+        }));
+        setItems(results);
       } else if (response.status === 500) {
         notify("error", "System Error", response.message);
       } else {
@@ -94,8 +66,6 @@ function AdminCredentialsList() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -169,7 +139,7 @@ function AdminCredentialsList() {
       fetchApprovedUsers();
     }
 
-    if (tabKey === "disapproved" && !fetchDisapprovedUserDataStatus) {
+    if (tabKey === "pending-credentials" && !fetchDisapprovedUserDataStatus) {
       fetchDisapprovedUsers();
     }
   };
@@ -177,7 +147,7 @@ function AdminCredentialsList() {
   const handlePageChange = (page, type) => {
     if (type === "all") fetchAllUsers(page);
     if (type === "approved") fetchApprovedUsers(page);
-    if (type === "disapproved") fetchDisapprovedUsers(page);
+    if (type === "pending-credentials") fetchDisapprovedUsers(page);
   };
 
   // Updated renderPagination function to accept parameters
@@ -255,21 +225,23 @@ function AdminCredentialsList() {
     navigate(`/admin/user-info-by-credentials/${id}`);
   };
 
-  const loadOptions = async () => {
-    try {
-      // Ensure `result` is an array before attempting to map
-      if (Array.isArray(result)) {
-        return result.map((item) => ({
-          label: item.name, // Assuming the data contains a `name` property
-          value: item.id, // Assuming the data contains an `id` property
-        }));
-      } else {
-        throw new Error("Result is not an array");
-      }
-    } catch (error) {
-      console.error("Error loading options: ", error);
-      return [];
-    }
+  const handleOnSelect = (item) => {
+    navigate(`/admin/user-info-by-credentials/${item.id}`);
+    // Handle what happens when an item is selected (e.g., redirect to a page)
+  };
+
+  const styling = {
+    borderRadius: "5px",
+    height: "35px",
+    fontFamily: "Roboto",
+    searchIconMargin: "0 0 0 4px",
+  };
+
+  const options = {
+    series: [44, 55, 41],
+    chartOptions: {
+      labels: ["No credentials", "Pending approval", "Approved"],
+    },
   };
 
   return (
@@ -319,33 +291,14 @@ function AdminCredentialsList() {
                   All credentials
                 </Typography>
 
-                <form className="credentials-table__search-form">
-                  <div className="credentials-table__input-icon-box">
-                    <input
-                      type="text"
-                      placeholder="All credentials"
-                      className="credentials-table__input"
-                      name="prospective_students"
-                      value={prospectiveStudentsFields.prospective_students}
-                      onChange={handleChange}
-                    />
-                    <FontAwesomeIcon
-                      icon={faSearch}
-                      className="credentials-table__search-icon"
-                      onClick={handleSubmit}
-                    />
-                  </div>
-                  <div className="credentials-table__search-form-dropdown"></div>
-                  {loading ? (
-                    <div className="spinner-container">Loading...</div> // Replace with your spinner component
-                  ) : (
-                    <AsyncSelect
-                      cacheOptions
-                      defaultOptions
-                      loadOptions={loadOptions} // Function to load options for the dropdown
-                    />
-                  )}
-                </form>
+                <ReactSearchAutocomplete
+                  items={items}
+                  onSearch={handleSearch}
+                  onSelect={handleOnSelect}
+                  placeholder="All credentials..."
+                  className="credentials-autosearch"
+                  styling={styling}
+                />
               </div>
               <div className="credentials__table-wrapper">
                 <Table>
@@ -357,7 +310,7 @@ function AdminCredentialsList() {
                       <th>Email</th>
                       <th>Gender</th>
                       <th>Course</th>
-                      <th>Status</th>
+                      <th>Credential Status</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -373,9 +326,11 @@ function AdminCredentialsList() {
                           <td>{user.course}</td>
                           <td>
                             <Typography variant="p" className="">
-                              {user.credentials_status === 1
-                                ? "Approved"
-                                : "Unapproved"}
+                              {user.credentials_status === 1 ? (
+                                <Badge bg="success">approved</Badge>
+                              ) : (
+                                <Badge bg="info">pending</Badge>
+                              )}
                             </Typography>
                           </td>
                           <td>
@@ -409,7 +364,7 @@ function AdminCredentialsList() {
                       <th>Email</th>
                       <th>Gender</th>
                       <th>Course</th>
-                      <th>Status</th>
+                      <th>Credential Status</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -423,7 +378,15 @@ function AdminCredentialsList() {
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
                           <td>{user.course}</td>
-                          <td>Approved</td>
+                          <td>
+                            <Typography variant="p" className="">
+                              {user.credentials_status === 1 ? (
+                                <Badge bg="success">approved</Badge>
+                              ) : (
+                                <Badge bg="info">pending</Badge>
+                              )}
+                            </Typography>
+                          </td>
                           <td>
                             <Button
                               variant="primary"
@@ -455,7 +418,7 @@ function AdminCredentialsList() {
                       <th>Email</th>
                       <th>Gender</th>
                       <th>Course</th>
-                      <th>Status</th>
+                      <th>Credential Status</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -469,7 +432,15 @@ function AdminCredentialsList() {
                           <td>{user.email}</td>
                           <td>{user.gender}</td>
                           <td>{user.course}</td>
-                          <td>Pending approval</td>
+                          <td>
+                            <Typography variant="p" className="">
+                              {user.credentials_status === 1 ? (
+                                <Badge bg="success">approved</Badge>
+                              ) : (
+                                <Badge bg="info">pending</Badge>
+                              )}
+                            </Typography>
+                          </td>
                           <td>
                             <Button
                               variant="primary"
@@ -491,10 +462,18 @@ function AdminCredentialsList() {
           </Tabs>
         </div>
         <div className="credentials__infograph-box">
-          <div className="credentials__table-box"></div>
+          <div className="credentials__table-box">
+            <Chart
+              options={options}
+              series={options.series}
+              type="donut"
+              width="380"
+            />
+          </div>
           <div className="credentials__table-box"></div>
         </div>
       </div>
+
       <Footer />
     </div>
   );

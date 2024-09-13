@@ -36,6 +36,16 @@ class StudentController extends Controller
         }
     }
 
+    public function getAllApplication()
+    {
+        try {
+            $user = User::where('active', 1)->whereNotNull('credentials')->orderBy('created_at', 'desc')->paginate(10);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
     public function getApprovedUsers()
     {
         try {
@@ -125,7 +135,7 @@ class StudentController extends Controller
                         'Content-Disposition' => 'inline; filename="' . $user->credentials . '"'
                     ])->setStatusCode(201);
                 } else {
-                    return response()->json(['status' => 404, 'message' => $filePath]);
+                    return response()->json(['status' => 404, 'message' => 'file not found']);
                 }
             } else {
                 return response()->json(['status' => 404, 'message' => 'User or file not found']);
@@ -205,12 +215,6 @@ class StudentController extends Controller
                 ->get();
 
             // Check if any users were found
-            if ($users->isEmpty()) {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No user was found with the given search term.'
-                ]);
-            }
 
             return response()->json([
                 'status' => 201,
