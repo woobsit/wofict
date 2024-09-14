@@ -45,6 +45,15 @@ function AdminCredentialsList() {
 
   const [activeTab, setActiveTab] = useState("credentials");
 
+  //Pie chart data
+  const [fetchPieChartStatus, setFetchPieChartStatus] = useState(false);
+  const [chartData, setChartData] = useState({
+    series: [],
+    chartOptions: {
+      labels: [],
+    },
+  });
+
   const handleSearch = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
     try {
@@ -230,18 +239,46 @@ function AdminCredentialsList() {
     // Handle what happens when an item is selected (e.g., redirect to a page)
   };
 
+  //Pie chart data
+  useEffect(() => {
+    async function fetchGetAllAppliedUsers() {
+      setFetchPieChartStatus(true);
+      try {
+        const response = await authService.getAllAppliedUsers();
+        if (response.status === 201) {
+          const apiData = response.result;
+          // Transform data for the chart
+          const seriesData = apiData.map((item) => item.user_count); // Extract counts
+          const labelData = apiData.map((item) => item.group_name); // Extract group names
+
+          // Update chart data
+          setChartData({
+            series: seriesData,
+            chartOptions: {
+              labels: labelData,
+            },
+          });
+        } else if (response.status === 500) {
+          notify("error", "System Error", response.message);
+        }
+      } catch (error) {
+        notify(
+          "error",
+          "Error",
+          "An unexpected error occurred. Please try again."
+        );
+      } finally {
+        setFetchPieChartStatus(false);
+      }
+    }
+    fetchGetAllAppliedUsers();
+  }, []);
+
   const styling = {
     borderRadius: "5px",
     height: "35px",
     fontFamily: "Roboto",
     searchIconMargin: "0 0 0 4px",
-  };
-
-  const options = {
-    series: [44, 55, 41],
-    chartOptions: {
-      labels: ["No credentials", "Pending approval", "Approved"],
-    },
   };
 
   return (
@@ -329,7 +366,7 @@ function AdminCredentialsList() {
                               {user.credentials_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
-                                <Badge bg="info">pending</Badge>
+                                <Badge bg="secondary">pending</Badge>
                               )}
                             </Typography>
                           </td>
@@ -383,7 +420,7 @@ function AdminCredentialsList() {
                               {user.credentials_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
-                                <Badge bg="info">pending</Badge>
+                                <Badge bg="secondary">pending</Badge>
                               )}
                             </Typography>
                           </td>
@@ -437,7 +474,7 @@ function AdminCredentialsList() {
                               {user.credentials_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
-                                <Badge bg="info">pending</Badge>
+                                <Badge bg="secondary">pending</Badge>
                               )}
                             </Typography>
                           </td>
@@ -463,12 +500,16 @@ function AdminCredentialsList() {
         </div>
         <div className="credentials__infograph-box">
           <div className="credentials__table-box">
-            <Chart
-              options={options}
-              series={options.series}
-              type="donut"
-              width="380"
-            />
+            {fetchPieChartStatus ? (
+              "Loading"
+            ) : (
+              <Chart
+                options={chartData}
+                series={chartData.series}
+                type="donut"
+                width="380"
+              />
+            )}
           </div>
           <div className="credentials__table-box"></div>
         </div>

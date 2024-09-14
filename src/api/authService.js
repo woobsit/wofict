@@ -172,6 +172,7 @@ const authService = {
       `/search-credentials?prospective_students=${searchTerm}`,
       "get"
     ),
+  getAllAppliedUsers: () => handleRequest("get-all-applied-users"),
 };
 
 export default authService;

@@ -74,6 +74,8 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/get-admin', [AdminController::class, 'getAdmin']);
     //get users with credentials
     Route::get('/get-all-users', [StudentController::class, 'getAllUsers']);
+    //get all applied users
+    Route::get('/get-all-applied-users', [StudentController::class, 'getAllAppliedUsers']);
     //get users with approved credentials
     Route::get('/get-approved-credentials', [StudentController::class, 'getApprovedUsers']);
     //get users with unapproved credentials

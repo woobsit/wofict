@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -36,10 +36,21 @@ class StudentController extends Controller
         }
     }
 
-    public function getAllApplication()
+    public function getAllAppliedUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('credentials')->orderBy('created_at', 'desc')->paginate(10);
+            $results = DB::table('users')
+                ->select(DB::raw("
+                CASE 
+                    WHEN credentials IS NULL THEN 'No Credentials' 
+                WHEN credentials_status = 1 THEN 'Credentials Verified'
+                WHEN credentials IS NOT NULL THEN 'Has Credentials'
+                END AS group_name, COUNT(*) AS user_count
+            "))
+                ->groupBy('group_name')
+                ->get();
+
+            return response()->json(['status' => 201, 'message' => 'successfull', 'result' => $results]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occured']);
