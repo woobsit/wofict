@@ -6,6 +6,8 @@ import Tabs from "react-bootstrap/Tabs";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
+import Placeholder from "react-bootstrap/Placeholder";
+import Pagination from "react-bootstrap/Pagination";
 //Molecule
 import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import Footer from "../../components/molecule/Footer";
@@ -29,6 +31,7 @@ function AdminCredentialsList() {
   const [items, setItems] = useState([]);
 
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
+  const [fetchAllUsersDataStatus, setFetchAllUsersDataStatus] = useState(false);
   const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
   const [fetchDisapprovedUsersData, setFetchDisapprovedUsersData] = useState(
     []
@@ -64,10 +67,12 @@ function AdminCredentialsList() {
           name: item.firstname + " " + item.surname,
         }));
         setItems(results);
-      } else if (response.status === 500) {
-        notify("error", "System Error", response.message);
       } else {
-        notify("error", "Error", "An unexpected error occurred");
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
       }
     } catch (error) {
       notify(
@@ -80,14 +85,19 @@ function AdminCredentialsList() {
 
   // Fetch functions for all, approved, and disapproved users
   async function fetchAllUsers(page = 1) {
+    setFetchAllUsersDataStatus(true);
     try {
       const response = await authService.getAllUsers(page);
       if (response.status === 201) {
         setFetchAllUsersData(response.result);
         setPagination(response.pagination);
         setFetchAllUserDataStatus(true);
-      } else if (response.status === 500) {
-        notify("error", "System Error", response.message);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
       }
     } catch (error) {
       notify(
@@ -95,6 +105,8 @@ function AdminCredentialsList() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setFetchAllUsersDataStatus(false);
     }
   }
 
@@ -105,8 +117,12 @@ function AdminCredentialsList() {
         setFetchApprovedUsersData(response.result);
         setPaginationApproved(response.pagination);
         setFetchApprovedUserDataStatus(true);
-      } else if (response.status === 500) {
-        notify("error", "System Error", response.message);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
       }
     } catch (error) {
       notify(
@@ -124,8 +140,12 @@ function AdminCredentialsList() {
         setFetchDisapprovedUsersData(response.result);
         setPaginationDisapproved(response.pagination);
         setFetchDisapprovedUserDataStatus(true);
-      } else if (response.status === 500) {
-        notify("error", "System Error", response.message);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
       }
     } catch (error) {
       notify(
@@ -163,71 +183,61 @@ function AdminCredentialsList() {
   const renderPagination = (paginationData, type) => {
     const totalPages = paginationData.last_page;
     const currentPage = paginationData.current_page;
-    const maxVisibleButtons = 10; // Max number of visible pagination buttons
 
     if (totalPages <= 1) return null;
 
-    const paginationButtons = [];
+    const items = [];
 
-    // Calculate which buttons to show
-    let startPage = Math.max(
-      1,
-      currentPage - Math.floor(maxVisibleButtons / 2)
+    // First and previous buttons
+    items.push(
+      <Pagination.First
+        key="first"
+        onClick={() => handlePageChange(1, type)}
+        disabled={currentPage === 1}
+      />
     );
-    let endPage = startPage + maxVisibleButtons - 1;
+    items.push(
+      <Pagination.Prev
+        key="prev"
+        onClick={() => handlePageChange(currentPage - 1, type)}
+        disabled={currentPage === 1}
+      />
+    );
 
-    if (endPage > totalPages) {
-      endPage = totalPages;
-      startPage = Math.max(1, endPage - maxVisibleButtons + 1);
-    }
-
-    // Add first page and ellipsis if needed
-    if (startPage > 1) {
-      paginationButtons.push(
-        <Button
-          key={1}
-          variant="outline-primary"
-          onClick={() => handlePageChange(1, type)}
-        >
-          1
-        </Button>
-      );
-      if (startPage > 2) {
-        paginationButtons.push(<span key="start-ellipsis">...</span>);
+    // Add page numbers
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === currentPage) {
+        items.push(
+          <Pagination.Item key={i} active>
+            {i}
+          </Pagination.Item>
+        );
+      } else {
+        items.push(
+          <Pagination.Item key={i} onClick={() => handlePageChange(i, type)}>
+            {i}
+          </Pagination.Item>
+        );
       }
     }
 
-    // Add the page buttons
-    for (let i = startPage; i <= endPage; i++) {
-      paginationButtons.push(
-        <Button
-          key={i}
-          variant="outline-primary"
-          onClick={() => handlePageChange(i, type)}
-          active={i === currentPage}
-        >
-          {i}
-        </Button>
-      );
-    }
+    // Next and last buttons
+    items.push(
+      <Pagination.Next
+        key="next"
+        onClick={() => handlePageChange(currentPage + 1, type)}
+        disabled={currentPage === totalPages}
+      />
+    );
+    items.push(
+      <Pagination.Last
+        key="last"
+        onClick={() => handlePageChange(totalPages, type)}
+        disabled={currentPage === totalPages}
+      />
+    );
 
-    // Add last page and ellipsis if needed
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        paginationButtons.push(<span key="end-ellipsis">...</span>);
-      }
-      paginationButtons.push(
-        <Button
-          key={totalPages}
-          variant="outline-primary"
-          onClick={() => handlePageChange(totalPages, type)}
-        >
-          {totalPages}
-        </Button>
-      );
-    }
-
-    return paginationButtons;
+    return <Pagination className="pagination-controls">{items}</Pagination>;
   };
 
   const handleViewUserDetails = (id) => {
@@ -337,62 +347,109 @@ function AdminCredentialsList() {
                   styling={styling}
                 />
               </div>
-              <div className="credentials__table-wrapper">
-                <Table>
-                  <thead>
-                    <tr className="credentials__table-head">
-                      <th>#</th>
-                      <th>Firstname</th>
-                      <th>Surname</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Course</th>
-                      <th>Credential Status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {fetchAllUserDataStatus &&
-                      fetchAllUsersData.map((user, index) => (
-                        <tr key={user.id}>
-                          <td>{index + 1}</td>
-                          <td>{user.firstname}</td>
-                          <td>{user.surname}</td>
-                          <td>{user.email}</td>
-                          <td>{user.gender}</td>
-                          <td>{user.course}</td>
-                          <td>
-                            <Typography variant="p" className="">
-                              {user.credentials_status === 1 ? (
-                                <Badge bg="success">approved</Badge>
-                              ) : (
-                                <Badge bg="secondary">pending</Badge>
-                              )}
-                            </Typography>
-                          </td>
-                          <td>
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleViewUserDetails(user.id)}
-                            >
-                              View details
-                            </Button>
-                          </td>
+              {fetchAllUsersDataStatus ? (
+                <>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="lg" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="lg" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                </>
+              ) : (
+                <>
+                  <div className="credentials__table-wrapper">
+                    <Table striped bordered hover responsive>
+                      <thead>
+                        <tr className="credentials__table-head">
+                          <th>#</th>
+                          <th>Firstname</th>
+                          <th>Surname</th>
+                          <th>Email</th>
+                          <th>Gender</th>
+                          <th>Course</th>
+                          <th>Credential Status</th>
+                          <th></th>
                         </tr>
-                      ))}
-                  </tbody>
-                </Table>
-              </div>
-              <div className="pagination-controls">
-                {renderPagination(pagination, "all")}
-              </div>
+                      </thead>
+                      <tbody>
+                        {fetchAllUserDataStatus &&
+                          fetchAllUsersData.map((user, index) => (
+                            <tr key={user.id}>
+                              <td>{index + 1}</td>
+                              <td>{user.firstname}</td>
+                              <td>{user.surname}</td>
+                              <td>{user.email}</td>
+                              <td>{user.gender}</td>
+                              <td>{user.course}</td>
+                              <td>
+                                <Typography variant="p" className="">
+                                  {user.credentials_status === 1 ? (
+                                    <Badge bg="success">approved</Badge>
+                                  ) : (
+                                    <Badge bg="secondary">pending</Badge>
+                                  )}
+                                </Typography>
+                              </td>
+                              <td>
+                                <Button
+                                  variant="primary"
+                                  size="sm"
+                                  onClick={() => handleViewUserDetails(user.id)}
+                                >
+                                  View details
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                  {renderPagination(pagination, "all")}
+                </>
+              )}
             </Tab>
 
             <Tab eventKey="approved" title="Approved">
               {/* Approved Credentials Table */}
               <div className="credentials__table-wrapper">
-                <Table>
+                <Table striped bordered hover responsive>
                   <thead>
                     <tr className="credentials__table-head">
                       <th>#</th>
@@ -446,7 +503,7 @@ function AdminCredentialsList() {
             <Tab eventKey="pending" title="Pending approval">
               {/* Disapproved Credentials Table */}
               <div className="credentials__table-wrapper">
-                <Table>
+                <Table striped bordered hover responsive>
                   <thead>
                     <tr className="credentials__table-head">
                       <th>#</th>
