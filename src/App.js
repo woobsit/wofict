@@ -14,6 +14,8 @@ import AdminLogin from "./view/admin/AdminLogin";
 import AdminForgetPassword from "./view/admin/AdminForgetPassword";
 import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 import AdminCredentialsSearch from "./view/admin/AdminCredentialsSearch";
+import AdminCredentialsAllInfo from "./view/admin/AdminCredentialsAllInfo";
+import AdminGuarantorsAllInfo from "./view/admin/AdminGuarantorsAllInfo";
 //React Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 //scss style
@@ -27,7 +29,6 @@ import CanAccessAuthenticated from "./middlewares/CanAccessAuthenticated";
 //Molecule
 import AdminSidebar from "./components/molecule/admin/adminsidebar/AdminSidebar";
 import Sidebar from "./components/molecule/Sidebar";
-import AdminCredentialsAllInfo from "./view/admin/AdminCredentialsAllInfo";
 //api
 import getAuthAdminData from "./api/handleAuthAdminCookies";
 import getAuthUserData from "./api/handleAuthUserCookies";
@@ -142,15 +143,23 @@ function App() {
           {/* Admin protected route */}
           <Route element={<IsStudentOrAdminRoute userType="admin" />}>
             {getAdminRoutes(adminRoutes)}
+            {/* route for users with credentials by id  */}
             <Route
               path="/admin/user-info-by-credentials/:id"
               element={<AdminCredentialsAllInfo />}
-              key="admin-search-user-info-by-credentials"
+              key="admin-user-info-by-credentials"
             />
+            {/* search users with credentials by id */}
             <Route
               path="/admin/search-by-credentials/:id"
               element={<AdminCredentialsSearch />}
               key="admin-search-credentials"
+            />
+            {/* route for users with guarantors by id  */}
+            <Route
+              path="/admin/user-info-by-guarantors/:id"
+              element={<AdminGuarantorsAllInfo />}
+              key="admin-user-info-by-guarantors"
             />
           </Route>
         </Routes>

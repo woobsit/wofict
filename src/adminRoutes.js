@@ -14,7 +14,7 @@ import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminAdmins from "./view/admin/AdminAdmins";
 import AdminSettings from "./view/admin/AdminSettings";
 import AdminCredentialsList from "./view/admin/AdminCredentialsList";
-import AdminGuarantors from "./view/admin/AdminGuarantors";
+import AdminGuarantorsList from "./view/admin/AdminGuarantorsList";
 
 const adminRoutes = [
   {
@@ -47,7 +47,7 @@ const adminRoutes = [
     key: "admin/admission/guarantors",
     icon: <FontAwesomeIcon icon={faUsers} />,
     route: "/admin/admission/guarantors",
-    component: <AdminGuarantors />,
+    component: <AdminGuarantorsList />,
   },
   {
     type: "collapse",

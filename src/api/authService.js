@@ -153,26 +153,53 @@ const authService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
+  //Users with credentials
   getAllUsers: (page = 1) => handleRequest(`/get-all-users?page=${page}`),
+
   getApprovedCredentials: (page = 1) =>
     handleRequest(`/get-approved-credentials?page=${page}`),
-  getUnapprovedCredentials: (page = 1) =>
-    handleRequest(`/get-unapproved-credentials?page=${page}`),
+
+  getPendingApprovalCredentials: (page = 1) =>
+    handleRequest(`/get-pending-approval-credentials?page=${page}`),
+
   getUserByCredentials: (id) => handleRequest(`/get-user-by-credentials/${id}`),
 
   viewCredentials: (id) =>
     handleRequest(`/view-credentials/${id}`, "get", null, {
       responseType: "blob",
     }),
+
   getApprovedCredential: (id) => handleRequest(`/approve-credential/${id}`),
-  getDisapprovedCredential: (id) =>
-    handleRequest(`/disapprove-credential/${id}`),
+
+  getPendCredential: (id) => handleRequest(`/pend-credential/${id}`),
+
   getSearchedCredentials: (searchTerm) =>
     handleRequest(
-      `/search-credentials?prospective_students=${searchTerm}`,
+      `/search-credentials?prospective-students=${searchTerm}`,
       "get"
     ),
+
+  getSearchedApprovedCredentials: (searchTerm) =>
+    handleRequest(
+      `/search-approved-credentials?approved-credentials-students=${searchTerm}`,
+      "get"
+    ),
+
+  getSearchedPendingCredentials: (searchTerm) =>
+    handleRequest(
+      `/search-pending-credentials?pending-credentials-students=${searchTerm}`,
+      "get"
+    ),
+
   getAllAppliedUsers: () => handleRequest("get-all-applied-users"),
+
+  getUsersWithGuarantors: (page = 1) =>
+    handleRequest(`/users-with-guarantors?page=${page}`),
+
+  getPendingApprovalGuarantors: (page = 1) =>
+    handleRequest(`/pending-approval-guarantors?page=${page}`),
+  getUsersWithApprovedGuarantors: (page = 1) =>
+    handleRequest(`/users-with-approved-guarantors?page=${page}`),
 };
 
 export default authService;

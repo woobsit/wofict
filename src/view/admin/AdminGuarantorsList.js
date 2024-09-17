@@ -25,7 +25,7 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 //React Apex chart
 import Chart from "react-apexcharts";
 
-function AdminCredentialsList() {
+function AdminGuarantorsList() {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
@@ -60,11 +60,11 @@ function AdminCredentialsList() {
     },
   });
 
-  // Fetch functions for all, approved, and disapproved users
-  async function fetchAllUsers(page = 1) {
+  // Fetch functions for all, pending, and approved users
+  async function fetchAllUsersWithGuarantors(page = 1) {
     setFetchAllUsersDataStatus(true);
     try {
-      const response = await authService.getAllUsers(page);
+      const response = await authService.getUsersWithGuarantors(page);
       if (response.status === 201) {
         setFetchAllUsersData(response.result);
         setPagination(response.pagination);
@@ -87,32 +87,9 @@ function AdminCredentialsList() {
     }
   }
 
-  async function fetchApprovedUsers(page = 1) {
-    try {
-      const response = await authService.getApprovedCredentials(page);
-      if (response.status === 201) {
-        setFetchApprovedUsersData(response.result);
-        setPaginationApproved(response.pagination);
-        setFetchApprovedUserDataStatus(true);
-      } else {
-        notify(
-          "error",
-          "Error",
-          response.message || "An unexpected error occurred"
-        );
-      }
-    } catch (error) {
-      notify(
-        "error",
-        "Error",
-        "An unexpected error occurred. Please try again."
-      );
-    }
-  }
-
   async function fetchPendingApprovalUsers(page = 1) {
     try {
-      const response = await authService.getPendingApprovalCredentials(page);
+      const response = await authService.getPendingApprovalGuarantors(page);
       if (response.status === 201) {
         setFetchPendingApprovalUsersData(response.result);
         setPaginationPendingApproval(response.pagination);
@@ -133,9 +110,32 @@ function AdminCredentialsList() {
     }
   }
 
+  async function fetchApprovedUsers(page = 1) {
+    try {
+      const response = await authService.getUsersWithApprovedGuarantors(page);
+      if (response.status === 201) {
+        setFetchApprovedUsersData(response.result);
+        setPaginationApproved(response.pagination);
+        setFetchApprovedUserDataStatus(true);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+
   // Fetch all users when component mounts
   useEffect(() => {
-    fetchAllUsers();
+    fetchAllUsersWithGuarantors();
   }, []);
 
   const handleTabSelect = (tabKey) => {
@@ -146,7 +146,7 @@ function AdminCredentialsList() {
     }
 
     if (
-      tabKey === "pending-credentials" &&
+      tabKey === "pending-guarantors" &&
       !fetchPendingApprovalUserDataStatus
     ) {
       fetchPendingApprovalUsers();
@@ -154,9 +154,9 @@ function AdminCredentialsList() {
   };
 
   const handlePageChange = (page, type) => {
-    if (type === "all") fetchAllUsers(page);
+    if (type === "all") fetchAllUsersWithGuarantors(page);
     if (type === "approved") fetchApprovedUsers(page);
-    if (type === "pending-credentials") fetchPendingApprovalUsers(page);
+    if (type === "pending-guarantors") fetchPendingApprovalUsers(page);
   };
 
   // Updated renderPagination function to accept parameters
@@ -221,11 +221,11 @@ function AdminCredentialsList() {
   };
 
   const handleViewUserDetails = (id) => {
-    navigate(`/admin/user-info-by-credentials/${id}`);
+    navigate(`/admin/user-info-by-guarantors/${id}`);
   };
 
   const handleOnSelect = (item) => {
-    navigate(`/admin/user-info-by-credentials/${item.id}`);
+    navigate(`/admin/user-info-by-guarantors/${item.id}`);
     // Handle what happens when an item is selected (e.g., redirect to a page)
   };
 
@@ -356,13 +356,13 @@ function AdminCredentialsList() {
       <div className="image-container">
         <div>
           <Typography variant="h3" className="credential-text">
-            Credentials
+            Guarantors
           </Typography>
         </div>
         <div>
           <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
           <Typography variant="span" className="credential-span">
-            /credentials
+            /guarantors
           </Typography>
         </div>
       </div>
@@ -390,17 +390,17 @@ function AdminCredentialsList() {
             className="mb-3"
             fill
           >
-            <Tab eventKey="credentials" title="All credentials">
+            <Tab eventKey="credentials" title="All Guarantors">
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
-                  All credentials
+                  All Guarantors
                 </Typography>
 
                 <ReactSearchAutocomplete
                   items={items}
                   onSearch={handleSearch}
                   onSelect={handleOnSelect}
-                  placeholder="All credentials..."
+                  placeholder="All guarantors..."
                   className="credentials-autosearch"
                   styling={styling}
                 />
@@ -462,7 +462,7 @@ function AdminCredentialsList() {
                           <th>Email</th>
                           <th>Gender</th>
                           <th>Course</th>
-                          <th>Credential Status</th>
+                          <th>Guarantors Status</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -478,7 +478,7 @@ function AdminCredentialsList() {
                               <td>{user.course}</td>
                               <td>
                                 <Typography variant="p" className="">
-                                  {user.credentials_status === 1 ? (
+                                  {user.guarantors_status === 1 ? (
                                     <Badge bg="success">approved</Badge>
                                   ) : (
                                     <Badge bg="secondary">pending</Badge>
@@ -504,7 +504,7 @@ function AdminCredentialsList() {
               )}
             </Tab>
 
-            <Tab eventKey="pending-credentials" title="Pending approval">
+            <Tab eventKey="pending-guarantors" title="Pending approval">
               {/* Pending approval Credentials Table */}
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
@@ -530,7 +530,7 @@ function AdminCredentialsList() {
                       <th>Email</th>
                       <th>Gender</th>
                       <th>Course</th>
-                      <th>Credential Status</th>
+                      <th>Guarantors Status</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -546,7 +546,7 @@ function AdminCredentialsList() {
                           <td>{user.course}</td>
                           <td>
                             <Typography variant="p" className="">
-                              {user.credentials_status === 1 ? (
+                              {user.guarantors_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
                                 <Badge bg="secondary">pending</Badge>
@@ -570,7 +570,7 @@ function AdminCredentialsList() {
               <div className="pagination-controls">
                 {renderPagination(
                   paginationPendingApproval,
-                  "pending-credentials"
+                  "pending-guarantors"
                 )}
               </div>
             </Tab>
@@ -579,14 +579,14 @@ function AdminCredentialsList() {
               {/* Approved Credentials Table */}
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
-                  Approved credentials
+                  Approved Guarantors
                 </Typography>
 
                 <ReactSearchAutocomplete
                   items={items}
                   onSearch={handleSearchApproved}
                   onSelect={handleOnSelect}
-                  placeholder="Approved credentials..."
+                  placeholder="Approved guarantors..."
                   className="credentials-autosearch"
                   styling={styling}
                 />
@@ -601,7 +601,7 @@ function AdminCredentialsList() {
                       <th>Email</th>
                       <th>Gender</th>
                       <th>Course</th>
-                      <th>Credential Status</th>
+                      <th>Guarantors Status</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -666,4 +666,4 @@ function AdminCredentialsList() {
   );
 }
 
-export default AdminCredentialsList;
+export default AdminGuarantorsList;

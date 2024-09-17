@@ -78,19 +78,33 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/get-all-applied-users', [StudentController::class, 'getAllAppliedUsers']);
     //get users with approved credentials
     Route::get('/get-approved-credentials', [StudentController::class, 'getApprovedUsers']);
-    //get users with unapproved credentials
-    Route::get('/get-unapproved-credentials', [StudentController::class, 'getUnapprovedUsers']);
+    //get users with pending credentials status
+    Route::get('/get-pending-approval-credentials', [StudentController::class, 'getPendingApprovalUsers']);
     //get user with credentials id
     Route::get('/get-user-by-credentials/{id}', [StudentController::class, 'getUserByCredentials']);
     //view credentials by id
     Route::get('/view-credentials/{id}', [StudentController::class, 'viewCredentials']);
     //approve credential by id
     Route::get('/approve-credential/{id}', [StudentController::class, 'approveCredential']);
-    //disapprove credential by id
-    Route::get('/disapprove-credential/{id}', [StudentController::class, 'disapproveCredential']);
-    //search credentials by id
+    //pend credential by id
+    Route::get('/pend-credential/{id}', [StudentController::class, 'pendCredential']);
+    //search all credentials
     Route::get('/search-credentials', [StudentController::class, 'searchCredentials']);
+    //search proved credentials
+    Route::get('/search-approved-credentials', [StudentController::class, 'searchApprovedCredentials']);
+    //search proved credentials
+    Route::get('/search-pending-credentials', [StudentController::class, 'searchPendingCredentials']);
+    //get users with guarantors
+    Route::get('/users-with-guarantors', [StudentController::class, 'getAllUsersWithGuarantors']);
+    //get users with guarantors pending approval 
+    Route::get('/pending-approval-guarantors', [StudentController::class, 'getPendingApprovalGuarantorUsers']);
+    //get users with approved guarantors 
+    Route::get('/users-with-approved-guarantors', [StudentController::class, 'getApprovedGuarantorsUsers']);
+    //search users with guarantors
+    Route::get('/search-users-with-guarantors', [StudentController::class, 'searchGuarantors']);
 });
-    // Endpoints that require admin scope
 
+
+    // Endpoints that require admin scope
+    //
     // Other admin routes

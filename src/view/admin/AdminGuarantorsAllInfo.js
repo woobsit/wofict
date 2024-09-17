@@ -18,7 +18,7 @@ import axiosInstance from "./../../api/axiosInstance";
 //utils
 import { notify } from "../../utils/Notification";
 
-function AdminCredentialsAllInfo() {
+function AdminGuarantorsAllInfo() {
   const { id } = useParams();
   const { website_info } = getAuthAdminData();
   const navigate = useNavigate();
@@ -434,4 +434,4 @@ function AdminCredentialsAllInfo() {
   );
 }
 
-export default AdminCredentialsAllInfo;
+export default AdminGuarantorsAllInfo;

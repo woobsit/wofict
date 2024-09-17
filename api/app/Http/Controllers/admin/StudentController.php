@@ -82,7 +82,7 @@ class StudentController extends Controller
         }
     }
 
-    public function getUnapprovedUsers()
+    public function getPendingApprovalUsers()
     {
         try {
             $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 0)->orderBy('created_at', 'desc')->paginate(10);
@@ -176,22 +176,22 @@ class StudentController extends Controller
         }
     }
 
-    public function disapproveCredential($id)
+    public function pendCredential($id)
     {
         try {
             $user = User::where('active', 1)->where('id', $id)->whereNotNull('credentials')->where('credentials_status', 1)->first();
 
             if ($user && $user->credentials && $user->credentials_status == 1) {
 
-                $filePath = storage_path('app/' . $user->credentials); // Assuming credentials are stored in 'storage/app/public'
+                // $filePath = storage_path('app/' . $user->credentials); // Assuming credentials are stored in 'storage/app/public'
 
                 // Delete the file if it exists
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
+                // if (file_exists($filePath)) {
+                //     unlink($filePath);
+                // }
 
                 $user->credentials_status = 0;
-                $user->credentials = null;
+                //$user->credentials = null;
                 $user->save();
 
                 return response()->json(['status' => 200, 'message' => 'success']);
@@ -208,7 +208,7 @@ class StudentController extends Controller
     {
         try {
             // Get the search input from the query parameter
-            $searchTerm = $request->query('prospective_students');
+            $searchTerm = $request->query('prospective-students');
 
             // Split the search term into multiple parts (words)
             $searchParts = explode(' ', $searchTerm);
@@ -216,6 +216,187 @@ class StudentController extends Controller
             // Search in the 'users' table across 'firstname', 'surname', and 'email'
             $users = User::where('active', 1)
                 ->whereNotNull('credentials')
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%")
+                            ->orWhere('email', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    public function searchApprovedCredentials(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('approved-credentials-students');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname', and 'email'
+            $users = User::where('active', 1)
+                ->whereNotNull('credentials')
+                ->where('credentials_status', 1)
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%")
+                            ->orWhere('email', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    public function searchPendingCredentials(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('pending-credentials-students');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname', and 'email'
+            $users = User::where('active', 1)
+                ->whereNotNull('credentials')
+                ->where('credentials_status', 0)
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%")
+                            ->orWhere('email', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    public function getAllUsersWithGuarantors()
+    {
+        try {
+            $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->orderBy('created_at', 'desc')->paginate(10);
+            if ($user) {
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'success',
+                    'result' => $user->items(),
+                    'pagination' => [
+                        'total' => $user->total(),
+                        'per_page' => $user->perPage(),
+                        'current_page' => $user->currentPage(),
+                        'last_page' => $user->lastPage(),
+                        'from' => $user->firstItem(),
+                        'to' => $user->lastItem(),
+                    ],
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    public function getPendingApprovalGuarantorUsers()
+    {
+        try {
+            $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->where('guarantors_status', 0)->orderBy('created_at', 'desc')->paginate(10);
+            if ($user) {
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'success',
+                    'result' => $user->items(),
+                    'pagination' => [
+                        'total' => $user->total(),
+                        'per_page' => $user->perPage(),
+                        'current_page' => $user->currentPage(),
+                        'last_page' => $user->lastPage(),
+                        'from' => $user->firstItem(),
+                        'to' => $user->lastItem(),
+                    ],
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    public function getApprovedGuarantorsUsers()
+    {
+        try {
+            $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->where('guarantors_status', 1)->orderBy('created_at', 'desc')->paginate(10);
+            if ($user) {
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'success',
+                    'result' => $user->items(),
+                    'pagination' => [
+                        'total' => $user->total(),
+                        'per_page' => $user->perPage(),
+                        'current_page' => $user->currentPage(),
+                        'last_page' => $user->lastPage(),
+                        'from' => $user->firstItem(),
+                        'to' => $user->lastItem(),
+                    ],
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //search users with guarantors
+    public function searchGuarantors(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('prospective-students');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname', and 'email'
+            $users = User::where('active', 1)
+                ->whereNotNull('guarantors_1')
+                ->whereNotNull('guarantors_2')
                 ->where(function ($query) use ($searchParts) {
                     foreach ($searchParts as $part) {
                         $query->orWhere('firstname', 'LIKE', "%$part%")
