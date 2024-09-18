@@ -22,31 +22,32 @@ function AdminGuarantorsAllInfo() {
   const { id } = useParams();
   const { website_info } = getAuthAdminData();
   const navigate = useNavigate();
-  const [fetchUserByCredentialsData, setFetchUserByCredentialsData] = useState(
+  const [fetchUserByGuarantorsData, setFetchUserByGuarantorsData] = useState(
     []
   );
-  const [fetchUserByCredentialsStatus, setFetchUserByCredentialsStatus] =
+  const [fetchUserByGuarantorsStatus, setFetchUserByGuarantorsStatus] =
     useState(false);
 
-  const [loadingViewCredentials, setLoadingViewCredentials] = useState(false);
+  const [loadingViewGuarantors, setLoadingViewGuarantors] = useState(false);
 
-  const [loadingApprovedCredential, setLoadingApprovedCredential] =
+  const [loadingApprovedGuarantor, setLoadingApprovedGuarantor] =
     useState(false);
 
-  const [loadingPendedCredential, setLoadingPendedCredential] = useState(false);
+  const [loadingPendedGuarantor, setLoadingPendedGuarantor] = useState(false);
 
   useEffect(() => {
     if (id) {
-      fetchUserByCredentials(id); // Pass the id here
+      fetchUserWithGuarantors(id); // Pass the id here
     }
   }, [id]);
 
-  async function fetchUserByCredentials(id) {
+  //fetch user with the id that has guarantors
+  async function fetchUserWithGuarantors(id) {
     try {
-      const response = await authService.getUserByCredentials(id);
+      const response = await authService.getUserWithGuarantors(id);
       if (response.status === 201) {
-        setFetchUserByCredentialsData(response.result);
-        setFetchUserByCredentialsStatus(true);
+        setFetchUserByGuarantorsData(response.result);
+        setFetchUserByGuarantorsStatus(true);
       } else if (response.status === 404) {
         notify(
           "error",
@@ -65,10 +66,11 @@ function AdminGuarantorsAllInfo() {
     }
   }
 
-  async function fetchToViewCredentials(id) {
-    setLoadingViewCredentials(true);
+  //view user guarantor form
+  async function fetchToViewGuarantors(id) {
+    setLoadingViewGuarantors(true);
     try {
-      const response = await axiosInstance.get(`/view-credentials/${id}`, {
+      const response = await axiosInstance.get(`/view-guarantor-forms/${id}`, {
         responseType: "blob",
       });
 
@@ -90,16 +92,17 @@ function AdminGuarantorsAllInfo() {
         "An unexpected error occurred. Please try again."
       );
     } finally {
-      setLoadingViewCredentials(false);
+      setLoadingViewGuarantors(false);
     }
   }
 
-  async function fetchApprovedCredential(id) {
-    setLoadingApprovedCredential(true);
+  //Approve guarantors status
+  async function fetchApprovedGuarantor(id) {
+    setLoadingApprovedGuarantor(true);
     try {
-      const response = await authService.getApprovedCredential(id);
+      const response = await authService.getApproveGuarantor(id);
       if (response.status === 200) {
-        notify("success", "Approved", "Credentials is approved");
+        notify("success", "Approved", "Guarantors has been approved");
       } else if (response.status === 404) {
         notify("error", "Error", "User not found");
       } else if (response.status === 500) {
@@ -112,16 +115,21 @@ function AdminGuarantorsAllInfo() {
         "An unexpected error occurred. Please try again."
       );
     } finally {
-      setLoadingApprovedCredential(false);
+      setLoadingApprovedGuarantor(false);
     }
   }
 
-  async function fetchPendedCredential(id) {
-    setLoadingPendedCredential(true);
+  //Disapprove/pend guarantors status
+  async function fetchPendGuarantor(id) {
+    setLoadingPendedGuarantor(true);
     try {
-      const response = await authService.getPendCredential(id);
+      const response = await authService.getDisapproveGuarantor(id);
       if (response.status === 200) {
-        notify("success", "Pended", "Credentials is pended");
+        notify(
+          "success",
+          "Disapproved",
+          "Guarantors has now been disapproved "
+        );
       } else if (response.status === 404) {
         notify("error", "Error", "User not found");
       } else if (response.status === 500) {
@@ -134,7 +142,7 @@ function AdminGuarantorsAllInfo() {
         "An unexpected error occurred. Please try again."
       );
     } finally {
-      setLoadingPendedCredential(false);
+      setLoadingPendedGuarantor(false);
     }
   }
 
@@ -167,34 +175,32 @@ function AdminGuarantorsAllInfo() {
       <div>
         <div className="card user-name">
           <div className="image-name-button-wrapper">
-            {fetchUserByCredentialsStatus && (
+            {fetchUserByGuarantorsStatus && (
               <div className="image-name-wrapper">
                 <img
                   src={
-                    website_info[2].value +
-                    "" +
-                    fetchUserByCredentialsData.photo
+                    website_info[2].value + "" + fetchUserByGuarantorsData.photo
                   }
                   alt={
-                    fetchUserByCredentialsData.firstname +
+                    fetchUserByGuarantorsData.firstname +
                     " " +
-                    fetchUserByCredentialsData.surname
+                    fetchUserByGuarantorsData.surname
                   }
                   title={
-                    fetchUserByCredentialsData.firstname +
+                    fetchUserByGuarantorsData.firstname +
                     " " +
-                    fetchUserByCredentialsData.surname
+                    fetchUserByGuarantorsData.surname
                   }
                   className="user-image"
                 />
                 <div className="user-fullname-email">
                   <Typography variant="h4" className="user-fullname">
-                    {fetchUserByCredentialsData.firstname +
+                    {fetchUserByGuarantorsData.firstname +
                       " " +
-                      fetchUserByCredentialsData.surname}
+                      fetchUserByGuarantorsData.surname}
                   </Typography>
                   <Typography variant="span" className="user-email">
-                    {fetchUserByCredentialsData.email}
+                    {fetchUserByGuarantorsData.email}
                   </Typography>
                 </div>
               </div>
@@ -208,24 +214,24 @@ function AdminGuarantorsAllInfo() {
                   size="sm"
                 />
                 <Dropdown.Menu>
-                  {fetchUserByCredentialsStatus &&
-                  fetchUserByCredentialsData.credentials_status === 0 ? (
+                  {fetchUserByGuarantorsStatus &&
+                  fetchUserByGuarantorsData.guarantors_status === 0 ? (
                     <Dropdown.Item
-                      onClick={() => fetchApprovedCredential(id)} // Pass id here
-                      disabled={loadingApprovedCredential}
+                      onClick={() => fetchApprovedGuarantor(id)} // Pass id here
+                      disabled={loadingApprovedGuarantor}
                     >
-                      {loadingApprovedCredential
-                        ? "Approving credentials..."
-                        : "Approve credentials"}
+                      {loadingApprovedGuarantor
+                        ? "Approving guarantors..."
+                        : "Approve guarantors"}
                     </Dropdown.Item>
                   ) : (
                     <Dropdown.Item
-                      onClick={() => fetchPendedCredential(id)} // Pass id here
-                      disabled={loadingPendedCredential}
+                      onClick={() => fetchPendGuarantor(id)} // Pass id here
+                      disabled={loadingPendedGuarantor}
                     >
-                      {loadingPendedCredential
-                        ? "Pending credentials..."
-                        : "Pend credentials"}
+                      {loadingPendedGuarantor
+                        ? "Disapprove guarantors..."
+                        : "Disapprove guarantors"}
                     </Dropdown.Item>
                   )}
                 </Dropdown.Menu>
@@ -245,8 +251,8 @@ function AdminGuarantorsAllInfo() {
                   Firstname:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.firstname}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.firstname}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -254,8 +260,8 @@ function AdminGuarantorsAllInfo() {
                   Surname:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.surname}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.surname}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -263,8 +269,8 @@ function AdminGuarantorsAllInfo() {
                   Other names:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.other_names}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.other_names}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -272,8 +278,8 @@ function AdminGuarantorsAllInfo() {
                   Gender:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.gender}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.gender}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -281,8 +287,8 @@ function AdminGuarantorsAllInfo() {
                   Date of Birth:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.date_of_birth}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.date_of_birth}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -290,8 +296,8 @@ function AdminGuarantorsAllInfo() {
                   Contact address:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.contact_address}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.contact_address}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -299,8 +305,8 @@ function AdminGuarantorsAllInfo() {
                   Phone number:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.phone_number}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.phone_number}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -308,8 +314,8 @@ function AdminGuarantorsAllInfo() {
                   State of Origin:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.state_of_origin}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.state_of_origin}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -317,10 +323,10 @@ function AdminGuarantorsAllInfo() {
                   Credentials status:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                  fetchUserByCredentialsData.credentials_status === 1
-                    ? "Verified"
-                    : "Unverified"}
+                  {fetchUserByGuarantorsStatus &&
+                  fetchUserByGuarantorsData.credentials_status === 1
+                    ? "Approved"
+                    : "Unapproved"}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -328,10 +334,10 @@ function AdminGuarantorsAllInfo() {
                   Guarantor status:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                  fetchUserByCredentialsData.guarantors_status === 1
-                    ? "Verified"
-                    : "Unverified"}
+                  {fetchUserByGuarantorsStatus &&
+                  fetchUserByGuarantorsData.guarantors_status === 1
+                    ? "Approved"
+                    : "Unapproved"}
                 </Typography>
               </div>
             </div>
@@ -354,8 +360,8 @@ function AdminGuarantorsAllInfo() {
                   Session:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.class_sessions}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.class_sessions}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -363,8 +369,8 @@ function AdminGuarantorsAllInfo() {
                   Qualification Level:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.qualification_level}
+                  {fetchUserByGuarantorsStatus &&
+                    fetchUserByGuarantorsData.qualification_level}
                 </Typography>
               </div>
               <div className="user-heading-name">
@@ -412,10 +418,10 @@ function AdminGuarantorsAllInfo() {
                 variant="primary"
                 size="sm"
                 className="user__button--view"
-                onClick={() => fetchToViewCredentials(id)} // Call fetchToViewCredentials with id
-                disabled={loadingViewCredentials}
+                onClick={() => fetchToViewGuarantors(id)} // Call fetchToViewGuarantors with id
+                disabled={loadingViewGuarantors}
               >
-                {loadingViewCredentials ? "Loading PDF..." : "View Credentials"}
+                {loadingViewGuarantors ? "Loading PDF..." : "View Guarantors"}
               </Button>
             </div>
             <div>

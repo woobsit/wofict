@@ -153,7 +153,7 @@ const authService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  //Users with credentials
+
   getAllUsers: (page = 1) => handleRequest(`/get-all-users?page=${page}`),
 
   getApprovedCredentials: (page = 1) =>
@@ -161,16 +161,17 @@ const authService = {
 
   getPendingApprovalCredentials: (page = 1) =>
     handleRequest(`/get-pending-approval-credentials?page=${page}`),
-
+  //Users with credentials
   getUserByCredentials: (id) => handleRequest(`/get-user-by-credentials/${id}`),
-
-  viewCredentials: (id) =>
-    handleRequest(`/view-credentials/${id}`, "get", null, {
-      responseType: "blob",
-    }),
-
+  // //view credentials of user
+  // viewCredentials: (id) =>
+  //   handleRequest(`/view-credentials/${id}`, "get", null, {
+  //     responseType: "blob",
+  //   }),
+  //Approve credentials
   getApprovedCredential: (id) => handleRequest(`/approve-credential/${id}`),
 
+  //Disapprove/pend credentials
   getPendCredential: (id) => handleRequest(`/pend-credential/${id}`),
 
   getSearchedCredentials: (searchTerm) =>
@@ -200,6 +201,36 @@ const authService = {
     handleRequest(`/pending-approval-guarantors?page=${page}`),
   getUsersWithApprovedGuarantors: (page = 1) =>
     handleRequest(`/users-with-approved-guarantors?page=${page}`),
+  //Search users with guarantors
+  getAllSearchedUsersWithGuarantors: (searchTerm) =>
+    handleRequest(
+      `/search-all-users-with-guarantors?all-guarantors-students=${searchTerm}`,
+      "get"
+    ),
+  //Search users with guarantors pending/not approved
+  getSearchGuarantorsNotApproved: (searchTerm) =>
+    handleRequest(
+      `/search-users-not-approved-guarantors?guarantors-not-approved-students=${searchTerm}`,
+      "get"
+    ),
+  //Search users with approved guarantors
+  getSearchedApprovedGuarantors: (searchTerm) =>
+    handleRequest(
+      `/search-users-with-approved-guarantors?approved-guarantors-students=${searchTerm}`,
+      "get"
+    ),
+  //Approve guarantors status
+  getApproveGuarantor: (id) => handleRequest(`/approve-guarantor/${id}`),
+  //Disapprove/pend guarantors status
+  getDisapproveGuarantor: (id) => handleRequest(`/disapprove-guarantor/${id}`),
+  //Users with guarantors
+  getUserWithGuarantors: (id) =>
+    handleRequest(`/get-user-with-guarantors-by-id/${id}`),
+  //view guarantor forms of user
+  // viewUserGuarantorForms: (id) =>
+  //   handleRequest(`/view-guarantor-forms/${id}`, "get", null, {
+  //     responseType: "blob",
+  //   }),
 };
 
 export default authService;

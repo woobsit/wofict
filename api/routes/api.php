@@ -100,8 +100,20 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/pending-approval-guarantors', [StudentController::class, 'getPendingApprovalGuarantorUsers']);
     //get users with approved guarantors 
     Route::get('/users-with-approved-guarantors', [StudentController::class, 'getApprovedGuarantorsUsers']);
-    //search users with guarantors
-    Route::get('/search-users-with-guarantors', [StudentController::class, 'searchGuarantors']);
+    //search all users with guarantors
+    Route::get('/search-all-users-with-guarantors', [StudentController::class, 'searchAllGuarantors']);
+    //search users with not approved/pending guarantors
+    Route::get('/search-users-not-approved-guarantors', [StudentController::class, 'searchGuarantorsNotApproved']);
+    //search users with approved guarantors
+    Route::get('/search-users-with-approved-guarantors', [StudentController::class, 'searchApprovedGuarantors']);
+    //approve guarantor by id
+    Route::get('/approve-guarantor/{id}', [StudentController::class, 'approveGuarantor']);
+    //pend/disapprove guarantor by id
+    Route::get('/disapprove-guarantor/{id}', [StudentController::class, 'disapproveGuarantor']);
+    //get user with guarantors id
+    Route::get('/get-user-with-guarantors-by-id/{id}', [StudentController::class, 'getUserByIdWithGuarantors']);
+    //view user guarantor form
+    Route::get('/view-guarantor-forms/{id}', [StudentController::class, 'viewUserGuarantorForms']);
 });
 
 

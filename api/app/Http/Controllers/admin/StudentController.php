@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfReader;
 
 class StudentController extends Controller
 {
@@ -107,7 +109,7 @@ class StudentController extends Controller
         }
     }
 
-
+    //get user with id that has credentials
     public function getUserByCredentials($id)
     {
         try {
@@ -132,6 +134,7 @@ class StudentController extends Controller
         }
     }
 
+    //view user credentials
     public function viewCredentials($id)
     {
         try {
@@ -162,7 +165,7 @@ class StudentController extends Controller
         try {
             $user = User::where('active', 1)->where('id', $id)->whereNotNull('credentials')->where('credentials_status', 0)->first();
 
-            if ($user && $user->credentials && $user->credentials_status == 0) {
+            if ($user) {
                 $user->credentials_status = 1;
                 $user->save();
 
@@ -181,7 +184,7 @@ class StudentController extends Controller
         try {
             $user = User::where('active', 1)->where('id', $id)->whereNotNull('credentials')->where('credentials_status', 1)->first();
 
-            if ($user && $user->credentials && $user->credentials_status == 1) {
+            if ($user) {
 
                 // $filePath = storage_path('app/' . $user->credentials); // Assuming credentials are stored in 'storage/app/public'
 
@@ -384,11 +387,11 @@ class StudentController extends Controller
     }
 
     //search users with guarantors
-    public function searchGuarantors(Request $request)
+    public function searchAllGuarantors(Request $request)
     {
         try {
             // Get the search input from the query parameter
-            $searchTerm = $request->query('prospective-students');
+            $searchTerm = $request->query('all-guarantors-students');
 
             // Split the search term into multiple parts (words)
             $searchParts = explode(' ', $searchTerm);
@@ -413,6 +416,209 @@ class StudentController extends Controller
                 'message' => 'success',
                 'result' => $users
             ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    //search users with guarantors status that are not approved/pending
+    public function searchGuarantorsNotApproved(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('guarantors-not-approved-students');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname', and 'email'
+            $users = User::where('active', 1)
+                ->whereNotNull('guarantors_1')
+                ->whereNotNull('guarantors_2')
+                ->where('guarantors_status', 0)
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%")
+                            ->orWhere('email', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    //search users with approved guarantors status
+    public function searchApprovedGuarantors(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('approved-guarantors-students');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname', and 'email'
+            $users = User::where('active', 1)
+                ->whereNotNull('guarantors_1')
+                ->whereNotNull('guarantors_2')
+                ->where('guarantors_status', 1)
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%")
+                            ->orWhere('email', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    //approve guarantors status
+    public function approveGuarantor($id)
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)->whereNotNull('guarantors_1')
+                ->whereNotNull('guarantors_2')
+                ->where('guarantors_status', 0)->first();
+
+            if ($user) {
+                $user->guarantors_status = 1;
+                $user->save();
+
+                return response()->json(['status' => 200, 'message' => 'success']);
+            } else {
+                return response()->json(['status' => 404, 'message' => 'User is not found']);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    //disapprove/ignore guarantors status
+    public function disapproveGuarantor($id)
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)->whereNotNull('guarantors_1')
+                ->whereNotNull('guarantors_2')
+                ->where('guarantors_status', 1)->first();
+
+            if ($user) {
+
+                // $filePath = storage_path('app/' . $user->credentials); // Assuming credentials are stored in 'storage/app/public'
+
+                // Delete the file if it exists
+                // if (file_exists($filePath)) {
+                //     unlink($filePath);
+                // }
+
+                $user->guarantors_status = 0;
+                //$user->credentials = null;
+                $user->save();
+
+                return response()->json(['status' => 200, 'message' => 'success']);
+            } else {
+                return response()->json(['status' => 404, 'message' => 'User is not found']);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    //get user with id that has guarantors
+    public function getUserByIdWithGuarantors($id)
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->first();
+            if ($user) {
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'success',
+                    'result' => $user
+                ]);
+            } else {
+                // If the user with the provided ID does not exist
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'User not found',
+                    'result' => null
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //view user guarantor forms
+    public function viewUserGuarantorForms($id)
+    {
+        try {
+            $user = User::where('active', 1)
+                ->where('id', $id)
+                ->whereNotNull('guarantors_1')
+                ->whereNotNull('guarantors_2')
+                ->first();
+
+            if ($user) {
+                $filePath1 = storage_path('app/' . $user->guarantors_1);
+                $filePath2 = storage_path('app/' . $user->guarantors_2);
+
+                if (file_exists($filePath1) && file_exists($filePath2)) {
+                    // Create a new FPDI object
+                    $pdf = new Fpdi();
+
+                    // Add first guarantor form
+                    $pageCount1 = $pdf->setSourceFile($filePath1);
+                    for ($i = 1; $i <= $pageCount1; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $pdf->AddPage();
+                        $pdf->useTemplate($templateId);
+                    }
+
+                    // Add second guarantor form
+                    $pageCount2 = $pdf->setSourceFile($filePath2);
+                    for ($i = 1; $i <= $pageCount2; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $pdf->AddPage();
+                        $pdf->useTemplate($templateId);
+                    }
+
+                    // Output the combined PDF to the browser
+                    return response($pdf->Output('S'), 201)
+                        ->header('Content-Type', 'application/pdf')
+                        ->header('Content-Disposition', 'inline; filename="' . $user->firstname . " " . $user->surname .
+                            '_guarantor_form.pdf"');
+                } else {
+                    return response()->json(['status' => 404, 'message' => 'File not found']);
+                }
+            } else {
+                return response()->json(['status' => 404, 'message' => 'User or file not found']);
+            }
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occurred']);

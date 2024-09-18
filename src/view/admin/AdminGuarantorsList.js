@@ -49,7 +49,7 @@ function AdminGuarantorsList() {
     {}
   );
 
-  const [activeTab, setActiveTab] = useState("credentials");
+  const [activeTab, setActiveTab] = useState("guarantors");
 
   //Pie chart data
   const [fetchPieChartStatus, setFetchPieChartStatus] = useState(false);
@@ -145,10 +145,7 @@ function AdminGuarantorsList() {
       fetchApprovedUsers();
     }
 
-    if (
-      tabKey === "pending-guarantors" &&
-      !fetchPendingApprovalUserDataStatus
-    ) {
+    if (tabKey === "unapproved" && !fetchPendingApprovalUserDataStatus) {
       fetchPendingApprovalUsers();
     }
   };
@@ -156,7 +153,7 @@ function AdminGuarantorsList() {
   const handlePageChange = (page, type) => {
     if (type === "all") fetchAllUsersWithGuarantors(page);
     if (type === "approved") fetchApprovedUsers(page);
-    if (type === "pending-guarantors") fetchPendingApprovalUsers(page);
+    if (type === "unapproved") fetchPendingApprovalUsers(page);
   };
 
   // Updated renderPagination function to accept parameters
@@ -264,10 +261,12 @@ function AdminGuarantorsList() {
     fetchGetAllAppliedUsers();
   }, []);
 
-  const handleSearch = async (query) => {
+  //Search users with guarantors
+  const handleSearchAllGuarantors = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
     try {
-      const response = await authService.getSearchedCredentials(query);
+      const response =
+        await authService.getAllSearchedUsersWithGuarantors(query);
       if (response.status === 201) {
         const results = response.result.map((item) => ({
           id: item.id,
@@ -290,10 +289,11 @@ function AdminGuarantorsList() {
     }
   };
 
-  const handleSearchApproved = async (query) => {
+  //Search users with guarantors pending/not approved
+  const handleSearchGuarantorsNotApproved = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
     try {
-      const response = await authService.getSearchedApprovedCredentials(query);
+      const response = await authService.getSearchGuarantorsNotApproved(query);
       if (response.status === 201) {
         const results = response.result.map((item) => ({
           id: item.id,
@@ -316,10 +316,11 @@ function AdminGuarantorsList() {
     }
   };
 
-  const handleSearchPending = async (query) => {
+  //Search users with approved guarantors
+  const handleSearchedApprovedGuarantors = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
     try {
-      const response = await authService.getSearchedPendingCredentials(query);
+      const response = await authService.getSearchedApprovedGuarantors(query);
       if (response.status === 201) {
         const results = response.result.map((item) => ({
           id: item.id,
@@ -390,7 +391,7 @@ function AdminGuarantorsList() {
             className="mb-3"
             fill
           >
-            <Tab eventKey="credentials" title="All Guarantors">
+            <Tab eventKey="guarantors" title="All Guarantors">
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
                   All Guarantors
@@ -398,7 +399,7 @@ function AdminGuarantorsList() {
 
                 <ReactSearchAutocomplete
                   items={items}
-                  onSearch={handleSearch}
+                  onSearch={handleSearchAllGuarantors}
                   onSelect={handleOnSelect}
                   placeholder="All guarantors..."
                   className="credentials-autosearch"
@@ -481,7 +482,7 @@ function AdminGuarantorsList() {
                                   {user.guarantors_status === 1 ? (
                                     <Badge bg="success">approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">pending</Badge>
+                                    <Badge bg="secondary">unapproved</Badge>
                                   )}
                                 </Typography>
                               </td>
@@ -504,7 +505,7 @@ function AdminGuarantorsList() {
               )}
             </Tab>
 
-            <Tab eventKey="pending-guarantors" title="Pending approval">
+            <Tab eventKey="unapproved" title="Pending approval">
               {/* Pending approval Credentials Table */}
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
@@ -513,7 +514,7 @@ function AdminGuarantorsList() {
 
                 <ReactSearchAutocomplete
                   items={items}
-                  onSearch={handleSearchPending}
+                  onSearch={handleSearchGuarantorsNotApproved}
                   onSelect={handleOnSelect}
                   placeholder="Pending approval..."
                   className="credentials-autosearch"
@@ -549,7 +550,7 @@ function AdminGuarantorsList() {
                               {user.guarantors_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
-                                <Badge bg="secondary">pending</Badge>
+                                <Badge bg="secondary">unapproved</Badge>
                               )}
                             </Typography>
                           </td>
@@ -568,10 +569,7 @@ function AdminGuarantorsList() {
                 </Table>
               </div>
               <div className="pagination-controls">
-                {renderPagination(
-                  paginationPendingApproval,
-                  "pending-guarantors"
-                )}
+                {renderPagination(paginationPendingApproval, "unapproved")}
               </div>
             </Tab>
 
@@ -584,7 +582,7 @@ function AdminGuarantorsList() {
 
                 <ReactSearchAutocomplete
                   items={items}
-                  onSearch={handleSearchApproved}
+                  onSearch={handleSearchedApprovedGuarantors}
                   onSelect={handleOnSelect}
                   placeholder="Approved guarantors..."
                   className="credentials-autosearch"
@@ -617,10 +615,10 @@ function AdminGuarantorsList() {
                           <td>{user.course}</td>
                           <td>
                             <Typography variant="p" className="">
-                              {user.credentials_status === 1 ? (
+                              {user.guarantors_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
-                                <Badge bg="secondary">pending</Badge>
+                                <Badge bg="secondary">unapproved</Badge>
                               )}
                             </Typography>
                           </td>
