@@ -237,7 +237,6 @@ function AdminGuarantorsList() {
           // Transform data for the chart
           const seriesData = apiData.map((item) => item.user_count); // Extract counts
           const labelData = apiData.map((item) => item.group_name); // Extract group names
-
           // Update chart data
           setChartData({
             series: seriesData,

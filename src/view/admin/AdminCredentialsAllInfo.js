@@ -8,9 +8,19 @@ import Typography from "../../components/atom/typography/Typography";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
+import Badge from "react-bootstrap/Badge";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faSearch,
+  faUser,
+  faVenusMars,
+  faCalendar,
+  faLocationDot,
+  faPhone,
+  faSignal,
+} from "@fortawesome/free-solid-svg-icons";
 //API service
 import authService from "../../api/authService";
 import getAuthAdminData from "./../../api/handleAuthAdminCookies";
@@ -143,11 +153,15 @@ function AdminCredentialsAllInfo() {
       <AdminHeader />
       <div className="image-container">
         <div>
-          <Typography variant="h3">User Info</Typography>
+          <Typography variant="h3" className="credential-text">
+            User Info
+          </Typography>
         </div>
         <div>
-          <FontAwesomeIcon icon={faHome} className="nav__menu-icon" /> /
-          <Typography variant="span"> user-info</Typography>
+          <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
+          <Typography variant="span" className="credential-text">
+            /user-info
+          </Typography>
         </div>
       </div>
       <div className="search-input-container">
@@ -214,18 +228,14 @@ function AdminCredentialsAllInfo() {
                       onClick={() => fetchApprovedCredential(id)} // Pass id here
                       disabled={loadingApprovedCredential}
                     >
-                      {loadingApprovedCredential
-                        ? "Approving credentials..."
-                        : "Approve credentials"}
+                      {loadingApprovedCredential ? "Approving..." : "Approve"}
                     </Dropdown.Item>
                   ) : (
                     <Dropdown.Item
                       onClick={() => fetchPendedCredential(id)} // Pass id here
                       disabled={loadingPendedCredential}
                     >
-                      {loadingPendedCredential
-                        ? "Pending credentials..."
-                        : "Pend credentials"}
+                      {loadingPendedCredential ? "Disapprove..." : "Disapprove"}
                     </Dropdown.Item>
                   )}
                 </Dropdown.Menu>
@@ -235,115 +245,226 @@ function AdminCredentialsAllInfo() {
         </div>
 
         <div className="user-info-wrapper">
-          <div className="card user-info user-personal-info">
-            <Typography variant="h4" className="user-text">
-              Personal Info
-            </Typography>
-            <div className="">
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Firstname:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.firstname}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Surname:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.surname}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Other names:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.other_names}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Gender:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.gender}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Date of Birth:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.date_of_birth}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Contact address:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.contact_address}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Phone number:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.phone_number}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  State of Origin:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.state_of_origin}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Credentials status:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                  fetchUserByCredentialsData.credentials_status === 1
-                    ? "Verified"
-                    : "Unverified"}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Guarantor status:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                  fetchUserByCredentialsData.guarantors_status === 1
-                    ? "Verified"
-                    : "Unverified"}
-                </Typography>
+          <div className="user-info-wrapper-inner">
+            <div className="card user-info user-personal-info">
+              <Typography
+                variant="h4"
+                className="user-text user-text--personal"
+              >
+                Personal Info
+              </Typography>
+              <div className="">
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Firstname:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.firstname}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Surname:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.surname}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Other names:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.other_names}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faVenusMars}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Gender:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.gender}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faCalendar}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Date of Birth:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.date_of_birth}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faLocationDot}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Address:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.contact_address}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faPhone}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Phone:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.phone_number}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faLocationDot}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      State of Origin:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.state_of_origin}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faSignal}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Credentials status:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                    fetchUserByCredentialsData.credentials_status === 1 ? (
+                      <Badge bg="success">approved</Badge>
+                    ) : (
+                      <Badge bg="secondary">disapproved</Badge>
+                    )}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <div className="user__firstname-icon">
+                    <FontAwesomeIcon
+                      icon={faSignal}
+                      className="user__user-icon"
+                    />
+                    <Typography variant="h6" className="user-heading">
+                      Guarantor status:
+                    </Typography>
+                  </div>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                    fetchUserByCredentialsData.guarantors_status === 1 ? (
+                      <Badge bg="success">approved</Badge>
+                    ) : (
+                      <Badge bg="secondary">disapproved</Badge>
+                    )}
+                  </Typography>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="card user-info user-education-info">
-            <Typography variant="h4" className="user-text">
-              Educational Background
-            </Typography>
-            <div className="">
+            <div className="card user-info user-education-info">
+              <Typography
+                variant="h4"
+                className="user-text user-text--educational"
+              >
+                Education
+              </Typography>
+              <div className="">
+                <div className="user-heading-name">
+                  <Typography variant="h6" className="user-heading">
+                    Course:
+                  </Typography>
+                  <Typography variant="span" className="user-name-value">
+                    To be set later
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <Typography variant="h6" className="user-heading">
+                    Session:
+                  </Typography>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.class_sessions}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <Typography variant="h6" className="user-heading">
+                    Qualification Level:
+                  </Typography>
+                  <Typography variant="span" className="user-name-value">
+                    {fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.qualification_level}
+                  </Typography>
+                </div>
+                <div className="user-heading-name">
+                  <Typography variant="h6" className="user-heading">
+                    English Language Fluency:
+                  </Typography>
+                  <Typography variant="span" className="user-name-value">
+                    To be set later
+                  </Typography>
+                </div>
+              </div>
+            </div>
+            <div className="card user-info user-other-info">
+              <Typography variant="h4" className="user-text user-text--other">
+                Other Info
+              </Typography>
               <div className="user-heading-name">
                 <Typography variant="h6" className="user-heading">
-                  Course:
+                  Conversation Strenght:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
                   To be set later
@@ -351,59 +472,20 @@ function AdminCredentialsAllInfo() {
               </div>
               <div className="user-heading-name">
                 <Typography variant="h6" className="user-heading">
-                  Session:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.class_sessions}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  Qualification Level:
-                </Typography>
-                <Typography variant="span" className="user-name-value">
-                  {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.qualification_level}
-                </Typography>
-              </div>
-              <div className="user-heading-name">
-                <Typography variant="h6" className="user-heading">
-                  English Language Fluency:
+                  Computer Literacy:
                 </Typography>
                 <Typography variant="span" className="user-name-value">
                   To be set later
                 </Typography>
               </div>
-            </div>
-          </div>
-          <div className="card user-info user-other-info">
-            <Typography variant="h4" className="user-text">
-              Other Info
-            </Typography>
-            <div className="user-heading-name">
-              <Typography variant="h6" className="user-heading">
-                Conversation Strenght:
-              </Typography>
-              <Typography variant="span" className="user-name-value">
-                To be set later
-              </Typography>
-            </div>
-            <div className="user-heading-name">
-              <Typography variant="h6" className="user-heading">
-                Computer Literacy:
-              </Typography>
-              <Typography variant="span" className="user-name-value">
-                To be set later
-              </Typography>
-            </div>
-            <div className="user-heading-name">
-              <Typography variant="h6" className="user-heading">
-                ICT Referral:
-              </Typography>
-              <Typography variant="span" className="user-name-value">
-                To be set later
-              </Typography>
+              <div className="user-heading-name">
+                <Typography variant="h6" className="user-heading">
+                  ICT Referral:
+                </Typography>
+                <Typography variant="span" className="user-name-value">
+                  To be set later
+                </Typography>
+              </div>
             </div>
           </div>
           <div className="card user-button-groups">

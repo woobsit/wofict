@@ -549,7 +549,7 @@ function AdminCredentialsList() {
                               {user.credentials_status === 1 ? (
                                 <Badge bg="success">approved</Badge>
                               ) : (
-                                <Badge bg="secondary">pending</Badge>
+                                <Badge bg="secondary">disapproved</Badge>
                               )}
                             </Typography>
                           </td>

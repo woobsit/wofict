@@ -938,7 +938,20 @@ pagination-controls
   margin: $card-margin;
   display: flex;
   align-items: center;
-  flex-direction: row;
+  background-image: url("./assets/images/user-info-back.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.user__firstname-icon{
+  display:flex;
+  align-items: center;
+}
+
+.user__user-icon{
+  margin-right: 7px;
+  color: rgb(191 191 191);
 }
 
 .user-image {
@@ -947,11 +960,23 @@ pagination-controls
   width: 70px;
   margin-right: 12px;
   box-shadow: 0 0.3125rem 0.625rem 0 rgba(0, 0, 0, 0.12);
+  color:white;
+
 }
 
 .user-fullname-email {
   display: flex;
   flex-direction: column;
+}
+
+.user-fullname{
+  color:white;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
+}
+
+.user-email{
+  color:white;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
 }
 
 .user-info-wrapper {
@@ -962,16 +987,34 @@ pagination-controls
 
 .user-info {
   margin: 0 $card-padding $card-padding $card-padding;
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.2);
 }
 
 .user-text {
-  margin-bottom: 10px;
+  margin-bottom:20px;
+  padding: 10px;
+  color: white;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.user-text--personal{
+  background-color: #0089ff;
+}
+
+.user-text--educational{
+  background-color: #43c388;;
+}
+
+.user-text--other{
+  background-color: #f13d3d;
 }
 
 .user-heading-name {
   display: flex;
   align-items: center;
-  margin-bottom: 2px;
+  border-bottom:1px solid rgb(231, 231, 231);
+  margin-bottom: 15px;
 }
 
 .user-name-value {
@@ -997,9 +1040,16 @@ pagination-controls
   margin-bottom: 5px;
 }
 
-
 @media only screen and (min-width: 375px) {
   .user__button--view {
     margin-bottom: 0;
   }
+}
+
+@media only screen and (min-width: 1024px) {
+ .user-info-wrapper-inner{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+ }
 }
