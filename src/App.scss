@@ -912,13 +912,8 @@ pagination-controls
   background-color: #555;
 }
 
-.credentials__chart-donut{
-  border:2px solid red;
-  height:500px;
-}
-
 /******************************/
-/*     Credentials All Info    */
+/*     Credentials All Info   */
 /******************************/
 .card {
   padding: $card-padding;
@@ -957,6 +952,7 @@ pagination-controls
 .user__user-icon{
   margin-right: 7px;
   color: rgb(191 191 191);
+  font-size: 13px;
 }
 
 .user-image {

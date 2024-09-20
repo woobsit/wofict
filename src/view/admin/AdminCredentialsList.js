@@ -57,6 +57,25 @@ function AdminCredentialsList() {
     series: [],
     chartOptions: {
       labels: [],
+      chart: {
+        type: "donut",
+      },
+      legend: {
+        position: "bottom", // Set legend to appear at the bottom
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 300,
+            },
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
     },
   });
 
@@ -242,12 +261,14 @@ function AdminCredentialsList() {
           const labelData = apiData.map((item) => item.group_name); // Extract group names
 
           // Update chart data
-          setChartData({
+          setChartData((prevData) => ({
+            ...prevData,
             series: seriesData,
             chartOptions: {
+              ...prevData.chartOptions,
               labels: labelData,
             },
-          });
+          }));
         } else if (response.status === 500) {
           notify("error", "System Error", response.message);
         }
@@ -650,7 +671,7 @@ function AdminCredentialsList() {
               "Loading"
             ) : (
               <Chart
-                options={chartData}
+                options={chartData.chartOptions}
                 series={chartData.series}
                 type="donut"
                 width="380"
