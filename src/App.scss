@@ -1046,10 +1046,20 @@ pagination-controls
   }
 }
 
+@media only screen and (min-width: 768px) {
+.user-button-groups {
+ justify-content: start; 
+}
+}
+
 @media only screen and (min-width: 1024px) {
  .user-info-wrapper-inner{
   display:flex;
   justify-content: space-between;
   align-items: center;
  }
+
+ .user-info {
+  min-height: 470px;
+}
 }

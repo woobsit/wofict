@@ -45,6 +45,20 @@ function AdminCredentialsAllInfo() {
 
   const [loadingPendedCredential, setLoadingPendedCredential] = useState(false);
 
+  //Display button text
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768); // Update on window resize
+    };
+    window.addEventListener("resize", handleResize);
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     if (id) {
       fetchUserByCredentials(id); // Pass the id here
@@ -109,7 +123,12 @@ function AdminCredentialsAllInfo() {
     try {
       const response = await authService.getApprovedCredential(id);
       if (response.status === 200) {
-        notify("success", "Approved", "Credentials is approved");
+        notify("success", "Approved", "Credentials are approved");
+        // Update the status in the state
+        setFetchUserByCredentialsData((prevData) => ({
+          ...prevData,
+          credentials_status: 1, // Assuming 1 indicates approved
+        }));
       } else if (response.status === 404) {
         notify("error", "Error", "User not found");
       } else if (response.status === 500) {
@@ -131,7 +150,12 @@ function AdminCredentialsAllInfo() {
     try {
       const response = await authService.getPendCredential(id);
       if (response.status === 200) {
-        notify("success", "Pended", "Credentials is pended");
+        notify("success", "Disapproved", "Credentials are disapproved");
+        // Update the status in the state
+        setFetchUserByCredentialsData((prevData) => ({
+          ...prevData,
+          credentials_status: 0, // Assuming 0 indicates pending/disapproved
+        }));
       } else if (response.status === 404) {
         notify("error", "Error", "User not found");
       } else if (response.status === 500) {
@@ -217,10 +241,12 @@ function AdminCredentialsAllInfo() {
               <Dropdown as={ButtonGroup}>
                 <Dropdown.Toggle
                   split
-                  variant="primary"
+                  variant="warning"
                   id="dropdown-split-basic"
                   size="sm"
-                />
+                >
+                  {isMobileView ? null : "Action "}
+                </Dropdown.Toggle>
                 <Dropdown.Menu>
                   {fetchUserByCredentialsStatus &&
                   fetchUserByCredentialsData.credentials_status === 0 ? (
@@ -388,8 +414,11 @@ function AdminCredentialsAllInfo() {
                     {fetchUserByCredentialsStatus &&
                     fetchUserByCredentialsData.credentials_status === 1 ? (
                       <Badge bg="success">approved</Badge>
-                    ) : (
+                    ) : fetchUserByCredentialsStatus &&
+                      fetchUserByCredentialsData.credentials_status === 0 ? (
                       <Badge bg="secondary">disapproved</Badge>
+                    ) : (
+                      ""
                     )}
                   </Typography>
                 </div>
