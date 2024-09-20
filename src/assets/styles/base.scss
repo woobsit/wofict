@@ -1,0 +1,108 @@
+/* Default styles for common elements */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto", sans-serif;
+  background-color: #fbfbfb;
+  color: #333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+/* Links */
+a {
+  color: #292929;
+  text-decoration: none;
+}
+
+/* Lists */
+ul {
+  padding-left: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+/* overide bootstrap */
+.btn-primary {
+    color: #fff;
+    background: linear-gradient(45deg, rgb(86, 201, 255), rgb(64, 64, 255));
+    border:none;
+    font-size: 12px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, rgb(0, 162, 255), rgb(55, 0, 255));
+  }
+
+.btn-secondary{
+  border:none;
+  font-size: 12px;
+  background: linear-gradient(45deg, rgb(209, 209, 209), rgb(39, 39, 39));
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(45deg, rgb(139, 139, 139), rgb(29, 29, 29));
+}
+
+.btn-info{
+  color:white;
+  border:none;
+  font-size: 12px;
+  background: linear-gradient(45deg, rgb(255, 176, 87), rgb(64, 64, 255));
+}
+
+.btn-info:hover {
+  background: linear-gradient(45deg, rgb(241, 141, 26), rgb(55, 0, 255));
+}
+
+.h5{
+  font-size:18px;
+  margin-bottom:0px;
+}
+
+p{
+  font-size:14px;
+}
+
+.modal-header{
+  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));
+}
+
+.form-label{
+  font-size:14px;
+  margin-bottom:0px;
+}
+
+.nav-tabs .nav-link.active{
+  color:white;
+  background: linear-gradient(45deg, #00b8ff, #00b8ff);
+
+}
+
+tr{
+  font-size:14px;
+}
+
+.dropdown-item {
+  font-size: 14px;
+ }
+
+ .btn-group>.btn.dropdown-toggle-split:first-child{
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+ }

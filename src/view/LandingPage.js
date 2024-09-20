@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
-//app.css style
-import "./../App.css";
 
 //images
 import LogoImage from "./../assets/images/logo.png";
 
-//Custom component
+//Atom component
 import Button from "./../components/atom/button/Button";
 import Typography from "./../components/atom/typography/Typography";
 
@@ -91,15 +89,35 @@ function LandingPage() {
       );
 
       if (response.status === 200) {
-        //Here I used the remember me value in the checkbox as the condition of the lenght of the token. With this I do not have to create a remember me cookie which would be different from the token cookie.
+        // Combine token, user info, and any other data
+        const userInfo = {
+          token: response.token,
+          user_info: {
+            firstname: response.user_info.firstname,
+            surname: response.user_info.surname,
+            other_names: response.user_info.other_names,
+            email: response.user_info.email,
+            photo: response.user_info.photo,
+            // Add any other essential user info here
+          },
+          website_info: response.website_info, // If you need to store website info as well
+        };
+        // Stringify the combined data
+        const cookieData = JSON.stringify(userInfo);
+        //Here I used the remember me value in the checkbox as the condition of the lenght of the token.
         const expirationTime = response.remember_me ? 30 : 1;
-        Cookies.set("auth_user_token", response.token, {
+        Cookies.set("auth_user_data", cookieData, {
           expires: expirationTime,
           secure: true,
           sameSite: "lax",
         });
         setLoading(false);
-        navigate("/home");
+
+        if (response.admission_status === "admitted") {
+          navigate("/home");
+        } else {
+          navigate("/admission");
+        }
       } else if (response.status === 422) {
         setLoading(false);
         notify("error", "Input Validation", response.message);

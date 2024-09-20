@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
-import "./../../App.css";
 import LogoImage from "./../../assets/images/logo.png";
 
 //Custom component
@@ -88,15 +87,33 @@ function AdminLogin() {
       );
 
       if (response.status === 200) {
-        //Here I used the remember me value in the checkbox as the condition of the lenght of the token. With this I do not have to create a remember me cookie which would be different from the token cookie.
+        // Combine token, user info, and any other data
+        const userInfo = {
+          token: response.token,
+          admin_user: {
+            firstname: response.admin_info.firstname,
+            surname: response.admin_info.surname,
+            email: response.admin_info.email,
+            photo: response.admin_info.photo,
+            admin_type: response.admin_info.admin_type_id,
+            // Add any other essential user info here
+          },
+          website_info: response.website_info, // If you need to store website info as well
+        };
+
+        // Stringify the combined data
+        const cookieData = JSON.stringify(userInfo);
+
+        // Set the cookie with the combined data
         const expirationTime = response.remember_me ? 30 : 1;
-        Cookies.set("auth_admin_token", response.token, {
+        Cookies.set("auth_admin_data", cookieData, {
           expires: expirationTime,
           secure: true,
           sameSite: "lax",
         });
+
         setLoading(false);
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } else if (response.status === 422) {
         setLoading(false);
         notify("error", "Input Validation", response.message);

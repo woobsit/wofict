@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useNavigate } from "react-router-dom";
-//app.css style
-import "./../App.css";
 
 //images
 import LogoImage from "./../assets/images/logo.png";

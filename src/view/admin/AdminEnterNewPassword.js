@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 //React route dom
 import { Link, useParams, useNavigate } from "react-router-dom";
-import "./../../App.css";
+//App scss
 import LogoImage from "./../../assets/images/logo.png";
 
 //Custom component
