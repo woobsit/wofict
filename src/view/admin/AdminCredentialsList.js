@@ -654,6 +654,7 @@ function AdminCredentialsList() {
                 series={chartData.series}
                 type="donut"
                 width="380"
+                className="credentials__chart-donut"
               />
             )}
           </div>
