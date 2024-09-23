@@ -25,7 +25,7 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 //React Apex chart
 import Chart from "react-apexcharts";
 
-function AdminCredentialsList() {
+function AdminAllUsers() {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
@@ -387,7 +387,7 @@ function AdminCredentialsList() {
       <div className="image-container">
         <div>
           <Typography variant="h3" className="credential-text">
-            Credentials
+            Admission
           </Typography>
         </div>
         <div>
@@ -706,4 +706,4 @@ function AdminCredentialsList() {
   );
 }
 
-export default AdminCredentialsList;
+export default AdminAllUsers;

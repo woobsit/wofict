@@ -709,6 +709,15 @@ function Register() {
               </div>
             </div>
           </div>
+          <div className="landing-form__text-link-box">
+            <Typography variant="span">Already registered?</Typography>{" "}
+            <Typography
+              variant="span"
+              className="landing-form__typography-link"
+            >
+              <Link to="/">Login now</Link>
+            </Typography>
+          </div>
         </form>
       </div>
     </>

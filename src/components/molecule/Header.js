@@ -14,7 +14,9 @@ import { faCog, faBell, faBars } from "@fortawesome/free-solid-svg-icons";
 //Spinner loader
 import Loader from "./../../components/atom/loader";
 //Atom component
-import Card from "./../atom/card/Card";
+//import Card from "./../atom/card/Card";
+// React Bootstrap
+import { Dropdown, DropdownButton } from "react-bootstrap";
 
 function Header() {
   const navigate = useNavigate();
@@ -92,16 +94,14 @@ function Header() {
               />
             </div>
             {menuStatus && (
-              <Card
-                className="header-hamburger"
-                onClick={userLogout}
-                disabled={loading}
+              <DropdownButton
+                id="dropdown-basic-button"
+                title="Menu"
+                align="end"
               >
-                <ul>
-                  <li>list one</li>
-                  <li>Log out</li>
-                </ul>
-              </Card>
+                <Dropdown.Item href="#/action-1">List One</Dropdown.Item>
+                <Dropdown.Item onClick={userLogout}>Log out</Dropdown.Item>
+              </DropdownButton>
             )}
           </div>
         </nav>

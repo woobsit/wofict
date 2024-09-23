@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
-//React route dom
 import { useLocation, Link } from "react-router-dom";
-//API service
 import authService from "../../../../api/authService";
-//utils
 import { notify } from "../../../../utils/Notification";
-//prop types
 import PropTypes from "prop-types";
-//Atom component
 import Typography from "../../../atom/typography/Typography";
-//Molecule
 import SidenavCollapse from "./SidenavCollapse";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 function AdminSidebar({ routes }) {
   const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
   const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
+  const [openCollapse, setOpenCollapse] = useState(null); // Track the currently opened collapse
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
+
   useEffect(() => {
     async function displayWebsiteInfo() {
       try {
@@ -38,21 +36,40 @@ function AdminSidebar({ routes }) {
     displayWebsiteInfo();
   }, []);
 
-  // Render all the routes from the AmdinSidebar.js
+  const toggleCollapse = (name) => {
+    setOpenCollapse(openCollapse === name ? null : name); // Toggle open or close
+  };
+
   const renderRoutes = routes.map(
-    ({ type, name, icon, title, noCollapse, key, href, route }) => {
+    ({ type, name, icon, title, noCollapse, key, route, children }) => {
       let returnValue;
 
       if (type === "collapse") {
-        returnValue = href ? (
-          <a href={href} key={key} target="_blank" rel="noreferrer">
-            <SidenavCollapse
-              name={name}
-              icon={icon}
-              active={key === collapseName}
-              noCollapse={noCollapse}
-            />
-          </a>
+        const isOpen = openCollapse === name; // Check if this collapse is open
+        returnValue = children ? (
+          <div key={key}>
+            <button
+              className="parent-menu"
+              onClick={() => toggleCollapse(name)}
+            >
+              <SidenavCollapse name={name} icon={icon} />
+              <FontAwesomeIcon icon={isOpen ? faCaretDown : faCaretRight} />
+            </button>
+            {isOpen && (
+              <div className="child-menu">
+                {children.map((child, index) => (
+                  <Link to={child.route} key={index}>
+                    <SidenavCollapse
+                      name={child.name}
+                      icon={child.icon}
+                      active={child.key === collapseName}
+                      noCollapse={child.noCollapse}
+                    />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         ) : (
           <Link key={key} to={route}>
             <SidenavCollapse
@@ -66,16 +83,7 @@ function AdminSidebar({ routes }) {
       } else if (type === "title") {
         returnValue = <Typography variant="p">{title}</Typography>;
       } else if (type === "divider") {
-        returnValue = (
-          // <Divider
-          //   key={key}
-          //   light={
-          //     (!darkMode && !whiteSidenav && !transparentSidenav) ||
-          //     (darkMode && !transparentSidenav && whiteSidenav)
-          //   }
-          // />
-          <hr />
-        );
+        returnValue = <hr />;
       }
 
       return returnValue;
@@ -103,7 +111,6 @@ function AdminSidebar({ routes }) {
   );
 }
 
-// Typechecking props for the Sidenav
 AdminSidebar.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

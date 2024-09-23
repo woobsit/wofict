@@ -47,13 +47,20 @@ function App() {
         return "home-background";
     }
   };
-
   const backgroundClass = getBackgroundClass(location.pathname);
 
+  //Fetch admin routes and student users
   const getAdminRoutes = (allRoutes) =>
     allRoutes.map((route) => {
-      if (route.collapse) {
-        return getAdminRoutes(route.collapse);
+      if (route.children) {
+        return route.children.map((child) => (
+          <Route
+            exact
+            path={child.route}
+            element={child.component}
+            key={child.key}
+          />
+        ));
       }
 
       if (route.route) {
@@ -69,7 +76,6 @@ function App() {
 
       return null;
     });
-
   const getStudentRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {

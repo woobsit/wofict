@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import "./assets/styles/variables";
 @import "./assets/styles/base";
-pagination-controls
+
 .landing-page-background {
   min-height: 100vh;
   background-image: url("./assets/images/background-login.jpg");
@@ -38,6 +38,10 @@ pagination-controls
   background-color: rgb(255, 255, 255);
   padding: 20px 12px 40px 12px;
   border-radius: 12px;
+}
+
+.landing-form__box{
+  margin-bottom:30px;
 }
 
 .landing-form__logo-container {
@@ -156,6 +160,14 @@ pagination-controls
 
 .landing-form__button:hover {
   background: linear-gradient(45deg, rgb(255, 0, 0), rgb(55, 0, 255));
+}
+
+.landing-form__text-link-box{
+  text-align: center;
+}
+
+.landing-form__typography-link{
+  font-weight:600;
 }
 
 .landing-form__radio-container {

@@ -14,7 +14,9 @@ import { faCog, faBell, faBars } from "@fortawesome/free-solid-svg-icons";
 //Spinner loader
 import Loader from "./../../../components/atom/loader";
 //Atom component
-import Card from "./../../atom/card/Card";
+//import Card from "./../../atom/card/Card";
+// React Bootstrap
+import { Dropdown } from "react-bootstrap";
 
 function AdminHeader() {
   const navigate = useNavigate();
@@ -94,16 +96,20 @@ function AdminHeader() {
               />
             </div>
             {menuStatus && (
-              <Card
-                className="header-hamburger"
-                onClick={adminLogout}
-                disabled={loading}
-              >
-                <ul>
-                  <li>list one</li>
-                  {<li>Log out</li>}
-                </ul>
-              </Card>
+              <Dropdown show={menuStatus} className="dropdown-menu-end">
+                <Dropdown.Toggle
+                  variant="secondary"
+                  id="dropdown-basic"
+                  as="div" // Needed to avoid a button being rendered
+                >
+                  {/* The icon button will be used to trigger the dropdown */}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu align="end">
+                  <Dropdown.Item href="#/action-1">List One</Dropdown.Item>
+                  <Dropdown.Item onClick={adminLogout}>Log out</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </div>
         </nav>

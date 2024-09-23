@@ -9,7 +9,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 //views
-import AdminAdmission from "./view/admin/AdminAdmission";
+import AdminAllUsers from "./view/admin/AdminAllUsers";
 import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminAdmins from "./view/admin/AdminAdmins";
 import AdminSettings from "./view/admin/AdminSettings";
@@ -28,27 +28,37 @@ const adminRoutes = [
   {
     type: "collapse",
     name: "Admission",
-    key: "admin/admission",
+    key: "admission",
     icon: <FontAwesomeIcon icon={faUniversity} />,
-    route: "/admin/admission",
-    component: <AdminAdmission />,
+    route: "/admission",
+    children: [
+      {
+        type: "collapse",
+        name: "All Users",
+        key: "all-users",
+        icon: <FontAwesomeIcon icon={faUniversity} />,
+        route: "/all-users",
+        component: <AdminAllUsers />,
+      },
+      {
+        type: "collapse",
+        name: "Credentials",
+        key: "admin/admission/credentials",
+        icon: <FontAwesomeIcon icon={faFileText} />,
+        route: "/admin/admission/credentials",
+        component: <AdminCredentialsList />,
+      },
+      {
+        type: "collapse",
+        name: "Guarantors",
+        key: "admin/admission/guarantors",
+        icon: <FontAwesomeIcon icon={faUsers} />,
+        route: "/admin/admission/guarantors",
+        component: <AdminGuarantorsList />,
+      },
+    ],
   },
-  {
-    type: "collapse",
-    name: "Credentials",
-    key: "admin/admission/credentials",
-    icon: <FontAwesomeIcon icon={faFileText} />,
-    route: "/admin/admission/credentials",
-    component: <AdminCredentialsList />,
-  },
-  {
-    type: "collapse",
-    name: "Guarantors",
-    key: "admin/admission/guarantors",
-    icon: <FontAwesomeIcon icon={faUsers} />,
-    route: "/admin/admission/guarantors",
-    component: <AdminGuarantorsList />,
-  },
+
   {
     type: "collapse",
     name: "Admins",
