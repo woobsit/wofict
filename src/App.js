@@ -16,6 +16,7 @@ import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 import AdminCredentialsSearch from "./view/admin/AdminCredentialsSearch";
 import AdminCredentialsAllInfo from "./view/admin/AdminCredentialsAllInfo";
 import AdminGuarantorsAllInfo from "./view/admin/AdminGuarantorsAllInfo";
+import AdminAllRegisteredUserAllInfo from "./view/admin/AdminAllRegisteredUserAllInfo";
 //React Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 //scss style
@@ -155,17 +156,23 @@ function App() {
               element={<AdminCredentialsAllInfo />}
               key="admin-user-info-by-credentials"
             />
-            {/* search users with credentials by id */}
+            {/* search user with credentials by id */}
             <Route
               path="/admin/search-by-credentials/:id"
               element={<AdminCredentialsSearch />}
               key="admin-search-credentials"
             />
-            {/* route for users with guarantors by id  */}
+            {/* route for user with guarantors by id  */}
             <Route
               path="/admin/user-info-by-guarantors/:id"
               element={<AdminGuarantorsAllInfo />}
               key="admin-user-info-by-guarantors"
+            />
+            {/* route for a registered user */}
+            <Route
+              path="/admin/registered-user-info/:id"
+              element={<AdminAllRegisteredUserAllInfo />}
+              key="admin-registered-user-info"
             />
           </Route>
         </Routes>

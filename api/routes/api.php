@@ -114,6 +114,12 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/get-user-with-guarantors-by-id/{id}', [StudentController::class, 'getUserByIdWithGuarantors']);
     //view user guarantor form
     Route::get('/view-guarantor-forms/{id}', [StudentController::class, 'viewUserGuarantorForms']);
+    //All registered users
+    Route::get('/get-all-registered-users', [StudentController::class, 'getAllRegisteredUsers']);
+    //search all registered users
+    Route::get('/search-all-registered-users', [StudentController::class, 'searchAllRegisteredUsers']);
+    //get a registered user
+    Route::get('/get-registered-user/{id}', [StudentController::class, 'getRegisteredUser']);
 });
 
 

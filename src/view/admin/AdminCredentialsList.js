@@ -22,8 +22,6 @@ import { notify } from "../../utils/Notification";
 import authService from "../../api/authService";
 //React search autocomplete
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
-//React Apex chart
-import Chart from "react-apexcharts";
 
 function AdminCredentialsList() {
   const navigate = useNavigate();
@@ -54,34 +52,6 @@ function AdminCredentialsList() {
   );
 
   const [activeTab, setActiveTab] = useState("credentials");
-
-  //Pie chart data
-  const [fetchPieChartStatus, setFetchPieChartStatus] = useState(false);
-  const [chartData, setChartData] = useState({
-    series: [],
-    chartOptions: {
-      labels: [],
-      chart: {
-        type: "donut",
-      },
-      legend: {
-        position: "bottom", // Set legend to appear at the bottom
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 300,
-            },
-            legend: {
-              position: "bottom",
-            },
-          },
-        },
-      ],
-    },
-  });
 
   // Fetch functions for all, approved, and disapproved users
   async function fetchAllUsers(page = 1) {
@@ -257,43 +227,6 @@ function AdminCredentialsList() {
     navigate(`/admin/user-info-by-credentials/${item.id}`);
     // Handle what happens when an item is selected (e.g., redirect to a page)
   };
-
-  //Pie chart data
-  useEffect(() => {
-    async function fetchGetAllAppliedUsers() {
-      setFetchPieChartStatus(true);
-      try {
-        const response = await authService.getAllAppliedUsers();
-        if (response.status === 201) {
-          const apiData = response.result;
-          // Transform data for the chart
-          const seriesData = apiData.map((item) => item.user_count); // Extract counts
-          const labelData = apiData.map((item) => item.group_name); // Extract group names
-
-          // Update chart data
-          setChartData((prevData) => ({
-            ...prevData,
-            series: seriesData,
-            chartOptions: {
-              ...prevData.chartOptions,
-              labels: labelData,
-            },
-          }));
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
-        notify(
-          "error",
-          "Error",
-          "An unexpected error occurred. Please try again."
-        );
-      } finally {
-        setFetchPieChartStatus(false);
-      }
-    }
-    fetchGetAllAppliedUsers();
-  }, []);
 
   const handleSearch = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
@@ -682,22 +615,6 @@ function AdminCredentialsList() {
               )}
             </Tab>
           </Tabs>
-        </div>
-        <div className="credentials__infograph-box">
-          <div className="credentials__table-box">
-            {fetchPieChartStatus ? (
-              "Loading"
-            ) : (
-              <Chart
-                options={chartData.chartOptions}
-                series={chartData.series}
-                type="donut"
-                width="380"
-                className="credentials__chart-donut"
-              />
-            )}
-          </div>
-          <div className="credentials__table-box"></div>
         </div>
       </div>
 

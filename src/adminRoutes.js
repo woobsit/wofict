@@ -34,7 +34,7 @@ const adminRoutes = [
     children: [
       {
         type: "collapse",
-        name: "All Users",
+        name: "Registered Users",
         key: "all-users",
         icon: <FontAwesomeIcon icon={faUniversity} />,
         route: "/all-users",
@@ -42,7 +42,7 @@ const adminRoutes = [
       },
       {
         type: "collapse",
-        name: "Credentials",
+        name: "Users With Credentials",
         key: "admin/admission/credentials",
         icon: <FontAwesomeIcon icon={faFileText} />,
         route: "/admin/admission/credentials",
@@ -50,7 +50,7 @@ const adminRoutes = [
       },
       {
         type: "collapse",
-        name: "Guarantors",
+        name: "Users With Guarantors",
         key: "admin/admission/guarantors",
         icon: <FontAwesomeIcon icon={faUsers} />,
         route: "/admin/admission/guarantors",

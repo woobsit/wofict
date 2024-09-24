@@ -22,76 +22,31 @@ import { notify } from "../../utils/Notification";
 import authService from "../../api/authService";
 //React search autocomplete
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
-//React Apex chart
-import Chart from "react-apexcharts";
 
 function AdminAllUsers() {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
 
-  const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
-  const [fetchAllUsersDataStatus, setFetchAllUsersDataStatus] = useState(false);
-  const [fetchAllPendingUsersDataStatus, setFetchAllPendingUsersDataStatus] =
-    useState(false);
-  const [fetchAllApprovedUsersDataStatus, setFetchAllApprovedUsersDataStatus] =
-    useState(false);
-  const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
-  const [fetchPendingApprovalUsersData, setFetchPendingApprovalUsersData] =
-    useState([]);
-  const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
-  const [fetchApprovedUserDataStatus, setFetchApprovedUserDataStatus] =
-    useState(false);
+  const [fetchAllUsersData, setFetchAllRegisteredUsersData] = useState([]);
   const [
-    fetchPendingApprovalUserDataStatus,
-    setFetchPendingApprovalUserDataStatus,
+    fetchAllRegisteredUsersDataStatus,
+    setFetchAllRegisteredUsersDataStatus,
   ] = useState(false);
-
+  const [fetchAllUserDataStatus, setFetchAllRegisteredUserDataStatus] =
+    useState(false);
   const [pagination, setPagination] = useState({});
-  const [paginationApproved, setPaginationApproved] = useState({});
-  const [paginationPendingApproval, setPaginationPendingApproval] = useState(
-    {}
-  );
-
-  const [activeTab, setActiveTab] = useState("credentials");
-
-  //Pie chart data
-  const [fetchPieChartStatus, setFetchPieChartStatus] = useState(false);
-  const [chartData, setChartData] = useState({
-    series: [],
-    chartOptions: {
-      labels: [],
-      chart: {
-        type: "donut",
-      },
-      legend: {
-        position: "bottom", // Set legend to appear at the bottom
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 300,
-            },
-            legend: {
-              position: "bottom",
-            },
-          },
-        },
-      ],
-    },
-  });
+  const [activeTab, setActiveTab] = useState("all-registered-users");
 
   // Fetch functions for all, approved, and disapproved users
-  async function fetchAllUsers(page = 1) {
-    setFetchAllUsersDataStatus(true);
+  async function fetchAllRegisteredUsers(page = 1) {
+    setFetchAllRegisteredUsersDataStatus(true);
     try {
-      const response = await authService.getAllUsers(page);
+      const response = await authService.getAllRegisteredUsers(page);
       if (response.status === 201) {
-        setFetchAllUsersData(response.result);
+        setFetchAllRegisteredUsersData(response.result);
         setPagination(response.pagination);
-        setFetchAllUserDataStatus(true);
+        setFetchAllRegisteredUserDataStatus(true);
       } else {
         notify(
           "error",
@@ -106,86 +61,28 @@ function AdminAllUsers() {
         "An unexpected error occurred. Please try again."
       );
     } finally {
-      setFetchAllUsersDataStatus(false);
-    }
-  }
-
-  async function fetchApprovedUsers(page = 1) {
-    setFetchAllApprovedUsersDataStatus(true);
-    try {
-      const response = await authService.getApprovedCredentials(page);
-      if (response.status === 201) {
-        setFetchApprovedUsersData(response.result);
-        setPaginationApproved(response.pagination);
-        setFetchApprovedUserDataStatus(true);
-      } else {
-        notify(
-          "error",
-          "Error",
-          response.message || "An unexpected error occurred"
-        );
-      }
-    } catch (error) {
-      notify(
-        "error",
-        "Error",
-        "An unexpected error occurred. Please try again."
-      );
-    } finally {
-      setFetchAllApprovedUsersDataStatus(false);
-    }
-  }
-
-  async function fetchPendingApprovalUsers(page = 1) {
-    setFetchAllPendingUsersDataStatus(true);
-    try {
-      const response = await authService.getPendingApprovalCredentials(page);
-      if (response.status === 201) {
-        setFetchPendingApprovalUsersData(response.result);
-        setPaginationPendingApproval(response.pagination);
-        setFetchPendingApprovalUserDataStatus(true);
-      } else {
-        notify(
-          "error",
-          "Error",
-          response.message || "An unexpected error occurred"
-        );
-      }
-    } catch (error) {
-      notify(
-        "error",
-        "Error",
-        "An unexpected error occurred. Please try again."
-      );
-    } finally {
-      setFetchAllPendingUsersDataStatus(false);
+      setFetchAllRegisteredUsersDataStatus(false);
     }
   }
 
   // Fetch all users when component mounts
   useEffect(() => {
-    fetchAllUsers();
+    fetchAllRegisteredUsers();
   }, []);
 
   const handleTabSelect = (tabKey) => {
     setActiveTab(tabKey);
 
-    if (tabKey === "approved" && !fetchApprovedUserDataStatus) {
-      fetchApprovedUsers();
-    }
-
     if (
-      tabKey === "pending-credentials" &&
-      !fetchPendingApprovalUserDataStatus
+      tabKey === "all-registered-users" &&
+      !fetchAllRegisteredUsersDataStatus
     ) {
-      fetchPendingApprovalUsers();
+      fetchAllRegisteredUsers();
     }
   };
 
   const handlePageChange = (page, type) => {
-    if (type === "all") fetchAllUsers(page);
-    if (type === "approved") fetchApprovedUsers(page);
-    if (type === "pending-credentials") fetchPendingApprovalUsers(page);
+    if (type === "all-registered-users") fetchAllRegisteredUsers(page);
   };
 
   // Updated renderPagination function to accept parameters
@@ -250,107 +147,18 @@ function AdminAllUsers() {
   };
 
   const handleViewUserDetails = (id) => {
-    navigate(`/admin/user-info-by-credentials/${id}`);
+    navigate(`/admin/registered-user-info/${id}`);
   };
 
   const handleOnSelect = (item) => {
-    navigate(`/admin/user-info-by-credentials/${item.id}`);
+    navigate(`/admin/registered-user-info/${item.id}`);
     // Handle what happens when an item is selected (e.g., redirect to a page)
   };
-
-  //Pie chart data
-  useEffect(() => {
-    async function fetchGetAllAppliedUsers() {
-      setFetchPieChartStatus(true);
-      try {
-        const response = await authService.getAllAppliedUsers();
-        if (response.status === 201) {
-          const apiData = response.result;
-          // Transform data for the chart
-          const seriesData = apiData.map((item) => item.user_count); // Extract counts
-          const labelData = apiData.map((item) => item.group_name); // Extract group names
-
-          // Update chart data
-          setChartData((prevData) => ({
-            ...prevData,
-            series: seriesData,
-            chartOptions: {
-              ...prevData.chartOptions,
-              labels: labelData,
-            },
-          }));
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
-        notify(
-          "error",
-          "Error",
-          "An unexpected error occurred. Please try again."
-        );
-      } finally {
-        setFetchPieChartStatus(false);
-      }
-    }
-    fetchGetAllAppliedUsers();
-  }, []);
 
   const handleSearch = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
     try {
       const response = await authService.getSearchedCredentials(query);
-      if (response.status === 201) {
-        const results = response.result.map((item) => ({
-          id: item.id,
-          name: item.firstname + " " + item.surname,
-        }));
-        setItems(results);
-      } else {
-        notify(
-          "error",
-          "Error",
-          response.message || "An unexpected error occurred"
-        );
-      }
-    } catch (error) {
-      notify(
-        "error",
-        "Error",
-        "An unexpected error occurred. Please try again."
-      );
-    }
-  };
-
-  const handleSearchApproved = async (query) => {
-    if (query.length < 1) return ""; // Prevent search for empty
-    try {
-      const response = await authService.getSearchedApprovedCredentials(query);
-      if (response.status === 201) {
-        const results = response.result.map((item) => ({
-          id: item.id,
-          name: item.firstname + " " + item.surname,
-        }));
-        setItems(results);
-      } else {
-        notify(
-          "error",
-          "Error",
-          response.message || "An unexpected error occurred"
-        );
-      }
-    } catch (error) {
-      notify(
-        "error",
-        "Error",
-        "An unexpected error occurred. Please try again."
-      );
-    }
-  };
-
-  const handleSearchPending = async (query) => {
-    if (query.length < 1) return ""; // Prevent search for empty
-    try {
-      const response = await authService.getSearchedPendingCredentials(query);
       if (response.status === 201) {
         const results = response.result.map((item) => ({
           id: item.id,
@@ -387,13 +195,13 @@ function AdminAllUsers() {
       <div className="image-container">
         <div>
           <Typography variant="h3" className="credential-text">
-            Admission
+            All Registered Users
           </Typography>
         </div>
         <div>
           <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
           <Typography variant="span" className="credential-span">
-            /credentials
+            /all users
           </Typography>
         </div>
       </div>
@@ -421,22 +229,22 @@ function AdminAllUsers() {
             className="mb-3"
             fill
           >
-            <Tab eventKey="credentials" title="All credentials">
+            <Tab eventKey="all-registered-users" title="All registered users">
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
-                  All credentials
+                  All registered users
                 </Typography>
 
                 <ReactSearchAutocomplete
                   items={items}
                   onSearch={handleSearch}
                   onSelect={handleOnSelect}
-                  placeholder="All credentials..."
+                  placeholder="All registered users..."
                   className="credentials-autosearch"
                   styling={styling}
                 />
               </div>
-              {fetchAllUsersDataStatus ? (
+              {fetchAllRegisteredUsersDataStatus ? (
                 <>
                   <Placeholder as="p" animation="glow">
                     <Placeholder xs={12} size="lg" />
@@ -500,204 +308,11 @@ function AdminAllUsers() {
                       </tbody>
                     </Table>
                   </div>
-                  {renderPagination(pagination, "all")}
-                </>
-              )}
-            </Tab>
-
-            <Tab eventKey="pending-credentials" title="Pending approval">
-              {/* Pending approval Credentials Table */}
-              <div className="credentials__table-title-box">
-                <Typography variant="h4" className="credentials__table-title">
-                  Pending approval
-                </Typography>
-
-                <ReactSearchAutocomplete
-                  items={items}
-                  onSearch={handleSearchPending}
-                  onSelect={handleOnSelect}
-                  placeholder="Pending approval..."
-                  className="credentials-autosearch"
-                  styling={styling}
-                />
-              </div>
-              {fetchAllPendingUsersDataStatus ? (
-                <>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                </>
-              ) : (
-                <>
-                  <div className="credentials__table-wrapper">
-                    <Table striped bordered hover responsive>
-                      <thead>
-                        <tr className="credentials__table-head">
-                          <th>#</th>
-                          <th>Firstname</th>
-                          <th>Surname</th>
-                          <th>Email</th>
-                          <th>Gender</th>
-                          <th>Course</th>
-                          <th>Credential Status</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {fetchPendingApprovalUserDataStatus &&
-                          fetchPendingApprovalUsersData.map((user, index) => (
-                            <tr key={user.id}>
-                              <td>{index + 1}</td>
-                              <td>{user.firstname}</td>
-                              <td>{user.surname}</td>
-                              <td>{user.email}</td>
-                              <td>{user.gender}</td>
-                              <td>{user.course}</td>
-                              <td>
-                                <Typography variant="p" className="">
-                                  {user.credentials_status === 1 ? (
-                                    <Badge bg="success">approved</Badge>
-                                  ) : (
-                                    <Badge bg="secondary">disapproved</Badge>
-                                  )}
-                                </Typography>
-                              </td>
-                              <td>
-                                <Button
-                                  variant="primary"
-                                  size="sm"
-                                  onClick={() => handleViewUserDetails(user.id)}
-                                >
-                                  View details
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                  <div className="pagination-controls">
-                    {renderPagination(
-                      paginationPendingApproval,
-                      "pending-credentials"
-                    )}
-                  </div>
-                </>
-              )}
-            </Tab>
-
-            <Tab eventKey="approved" title="Approved">
-              {/* Approved Credentials Table */}
-              <div className="credentials__table-title-box">
-                <Typography variant="h4" className="credentials__table-title">
-                  Approved credentials
-                </Typography>
-
-                <ReactSearchAutocomplete
-                  items={items}
-                  onSearch={handleSearchApproved}
-                  onSelect={handleOnSelect}
-                  placeholder="Approved credentials..."
-                  className="credentials-autosearch"
-                  styling={styling}
-                />
-              </div>
-              {fetchAllApprovedUsersDataStatus ? (
-                <>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                </>
-              ) : (
-                <>
-                  <div className="credentials__table-wrapper">
-                    <Table striped bordered hover responsive>
-                      <thead>
-                        <tr className="credentials__table-head">
-                          <th>#</th>
-                          <th>Firstname</th>
-                          <th>Surname</th>
-                          <th>Email</th>
-                          <th>Gender</th>
-                          <th>Course</th>
-                          <th>Credential Status</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {fetchApprovedUserDataStatus &&
-                          fetchApprovedUsersData.map((user, index) => (
-                            <tr key={user.id}>
-                              <td>{index + 1}</td>
-                              <td>{user.firstname}</td>
-                              <td>{user.surname}</td>
-                              <td>{user.email}</td>
-                              <td>{user.gender}</td>
-                              <td>{user.course}</td>
-                              <td>
-                                <Typography variant="p" className="">
-                                  {user.credentials_status === 1 ? (
-                                    <Badge bg="success">approved</Badge>
-                                  ) : (
-                                    <Badge bg="secondary">pending</Badge>
-                                  )}
-                                </Typography>
-                              </td>
-                              <td>
-                                <Button
-                                  variant="primary"
-                                  size="sm"
-                                  onClick={() => handleViewUserDetails(user.id)}
-                                >
-                                  View details
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                  <div className="pagination-controls">
-                    {renderPagination(paginationApproved, "approved")}
-                  </div>
+                  {renderPagination(pagination, "all-registered-users")}
                 </>
               )}
             </Tab>
           </Tabs>
-        </div>
-        <div className="credentials__infograph-box">
-          <div className="credentials__table-box">
-            {fetchPieChartStatus ? (
-              "Loading"
-            ) : (
-              <Chart
-                options={chartData.chartOptions}
-                series={chartData.series}
-                type="donut"
-                width="380"
-                className="credentials__chart-donut"
-              />
-            )}
-          </div>
-          <div className="credentials__table-box"></div>
         </div>
       </div>
 
