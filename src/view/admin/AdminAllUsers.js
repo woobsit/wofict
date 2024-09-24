@@ -272,6 +272,8 @@ function AdminAllUsers() {
                           <th>Gender</th>
                           <th>Course</th>
                           <th>Credential Status</th>
+                          <th>Guarantor Status</th>
+
                           <th></th>
                         </tr>
                       </thead>
@@ -287,10 +289,28 @@ function AdminAllUsers() {
                               <td>{user.course}</td>
                               <td>
                                 <Typography variant="p" className="">
-                                  {user.credentials_status === 1 ? (
-                                    <Badge bg="success">approved</Badge>
+                                  {user.credentials === null ? (
+                                    <Badge bg="danger">
+                                      No credentials uploaded
+                                    </Badge>
+                                  ) : user.credentials_status === 1 ? (
+                                    <Badge bg="success">Approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">pending</Badge>
+                                    <Badge bg="secondary">Pending</Badge>
+                                  )}
+                                </Typography>
+                              </td>
+                              <td>
+                                <Typography variant="p" className="">
+                                  {user.guarantors_1 === null ||
+                                  user.guarantors_2 === null ? (
+                                    <Badge bg="danger">
+                                      No guarantors uploaded
+                                    </Badge>
+                                  ) : user.guarantors_status === 1 ? (
+                                    <Badge bg="success">Approved</Badge>
+                                  ) : (
+                                    <Badge bg="secondary">Pending</Badge>
                                   )}
                                 </Typography>
                               </td>

@@ -150,7 +150,7 @@ function AdminCredentialsAllInfo() {
     try {
       const response = await authService.getPendCredential(id);
       if (response.status === 200) {
-        notify("success", "Disapproved", "Credentials are disapproved");
+        notify("success", "Disapproved", "Credentials are now pending");
         // Update the status in the state
         setFetchUserByCredentialsData((prevData) => ({
           ...prevData,
@@ -416,7 +416,7 @@ function AdminCredentialsAllInfo() {
                       <Badge bg="success">approved</Badge>
                     ) : fetchUserByCredentialsStatus &&
                       fetchUserByCredentialsData.credentials_status === 0 ? (
-                      <Badge bg="secondary">disapproved</Badge>
+                      <Badge bg="secondary">pending</Badge>
                     ) : (
                       ""
                     )}
@@ -433,11 +433,16 @@ function AdminCredentialsAllInfo() {
                     </Typography>
                   </div>
                   <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.guarantors_status === 1 ? (
-                      <Badge bg="success">approved</Badge>
+                    {fetchUserByCredentialsStatus ? (
+                      fetchUserByCredentialsData.guarantors_status === 1 ? (
+                        <Badge bg="success">approved</Badge>
+                      ) : fetchUserByCredentialsData.guarantors_status === 0 ? (
+                        <Badge bg="secondary">pending</Badge>
+                      ) : (
+                        ""
+                      )
                     ) : (
-                      <Badge bg="secondary">disapproved</Badge>
+                      "" // Display nothing while the API is fetching
                     )}
                   </Typography>
                 </div>
