@@ -13,31 +13,45 @@ use setasign\Fpdi\PdfReader;
 
 class StudentController extends Controller
 {
+    //for all users with credentials 
     public function getAllUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('credentials')->orderBy('created_at', 'desc')->paginate(10);
-            if ($user) {
+            $user = User::where('active', 1)
+                ->whereNotNull('credentials')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
                 return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
+                    'status' => 404,
+                    'message' => 'No records found',
                 ]);
             }
+
+            // If users are found, return the result with pagination data
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $user->items(),
+                'pagination' => [
+                    'total' => $user->total(),
+                    'per_page' => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page' => $user->lastPage(),
+                    'from' => $user->firstItem(),
+                    'to' => $user->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 
+
+    //For pie chart
     public function getAllAppliedUsers()
     {
         try {
@@ -59,10 +73,20 @@ class StudentController extends Controller
         }
     }
 
-    public function getApprovedUsers()
+    //For users with credentials that are pending or disapproved
+    public function getPendingApprovalUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 1)->orderBy('created_at', 'desc')->paginate(10);
+            $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 0)->orderBy('created_at', 'desc')->paginate(10);
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+
             if ($user) {
                 return response()->json([
                     'status' => 201,
@@ -84,10 +108,20 @@ class StudentController extends Controller
         }
     }
 
-    public function getPendingApprovalUsers()
+    //For approved users
+    public function getApprovedUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 0)->orderBy('created_at', 'desc')->paginate(10);
+            $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 1)->orderBy('created_at', 'desc')->paginate(10);
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+
             if ($user) {
                 return response()->json([
                     'status' => 201,
@@ -308,10 +342,20 @@ class StudentController extends Controller
         }
     }
 
+    //All users with guarantors
     public function getAllUsersWithGuarantors()
     {
         try {
             $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->orderBy('created_at', 'desc')->paginate(10);
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+
             if ($user) {
                 return response()->json([
                     'status' => 201,
@@ -333,10 +377,20 @@ class StudentController extends Controller
         }
     }
 
+    //All users with guarantors form that are pending/disapproved
     public function getPendingApprovalGuarantorUsers()
     {
         try {
             $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->where('guarantors_status', 0)->orderBy('created_at', 'desc')->paginate(10);
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+
             if ($user) {
                 return response()->json([
                     'status' => 201,
@@ -358,10 +412,20 @@ class StudentController extends Controller
         }
     }
 
+    //All users with approved guarantors forms
     public function getApprovedGuarantorsUsers()
     {
         try {
             $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->where('guarantors_status', 1)->orderBy('created_at', 'desc')->paginate(10);
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+
             if ($user) {
                 return response()->json([
                     'status' => 201,

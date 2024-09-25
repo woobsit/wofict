@@ -956,6 +956,10 @@
   background-size: cover;
 }
 
+.image-name__loader{
+  color:white;
+}
+
 .user__firstname-icon{
   display:flex;
   align-items: center;
@@ -965,6 +969,7 @@
   margin-right: 7px;
   color: rgb(191 191 191);
   font-size: 13px;
+  width: 15px;
 }
 
 .user-image {
@@ -1074,6 +1079,6 @@
  }
 
  .user-info {
-  min-height: 470px;
+  min-height: 485px;
 }
 }

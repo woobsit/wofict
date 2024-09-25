@@ -28,40 +28,59 @@ function AdminCredentialsList() {
 
   const [items, setItems] = useState([]);
 
+  //For all users with credentials
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
   const [fetchAllUsersDataStatus, setFetchAllUsersDataStatus] = useState(false);
+  const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
+  const [fetchAllUsersDataNoRecords, setFetchAllUsersDataNoRecords] =
+    useState("");
+
+  //For users with pending approval/disapproval credentials
   const [fetchAllPendingUsersDataStatus, setFetchAllPendingUsersDataStatus] =
     useState(false);
-  const [fetchAllApprovedUsersDataStatus, setFetchAllApprovedUsersDataStatus] =
-    useState(false);
-  const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
   const [fetchPendingApprovalUsersData, setFetchPendingApprovalUsersData] =
     useState([]);
-  const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
-  const [fetchApprovedUserDataStatus, setFetchApprovedUserDataStatus] =
-    useState(false);
   const [
     fetchPendingApprovalUserDataStatus,
     setFetchPendingApprovalUserDataStatus,
   ] = useState(false);
+  const [
+    fetchPendingApprovalUsersNoRecords,
+    setFetchPendingApprovalUsersNoRecords,
+  ] = useState("");
 
+  //For users with approved credentials
+  const [fetchAllApprovedUsersDataStatus, setFetchAllApprovedUsersDataStatus] =
+    useState(false);
+  const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
+  const [fetchApprovedUserDataStatus, setFetchApprovedUserDataStatus] =
+    useState(false);
+  const [fetchApprovedUserDataNoRecords, setFetchApprovedUserDataNoRecords] =
+    useState("");
+
+  //Paginations
   const [pagination, setPagination] = useState({});
   const [paginationApproved, setPaginationApproved] = useState({});
   const [paginationPendingApproval, setPaginationPendingApproval] = useState(
     {}
   );
-
+  //tabs
   const [activeTab, setActiveTab] = useState("credentials");
 
-  // Fetch functions for all, approved, and disapproved users
+  // Fetch users that have credentials
   async function fetchAllUsers(page = 1) {
     setFetchAllUsersDataStatus(true);
     try {
       const response = await authService.getAllUsers(page);
-      if (response.status === 201) {
+      if (response.status === 201 && response.result.length > 0) {
         setFetchAllUsersData(response.result);
         setPagination(response.pagination);
         setFetchAllUserDataStatus(true);
+        setFetchAllUsersDataNoRecords(""); // Clear the 'no records' message
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchAllUsersData([]); // Set empty data
+        setPagination(null); // Reset pagination
+        setFetchAllUsersDataNoRecords("No records found");
       } else {
         notify(
           "error",
@@ -80,40 +99,20 @@ function AdminCredentialsList() {
     }
   }
 
-  async function fetchApprovedUsers(page = 1) {
-    setFetchAllApprovedUsersDataStatus(true);
-    try {
-      const response = await authService.getApprovedCredentials(page);
-      if (response.status === 201) {
-        setFetchApprovedUsersData(response.result);
-        setPaginationApproved(response.pagination);
-        setFetchApprovedUserDataStatus(true);
-      } else {
-        notify(
-          "error",
-          "Error",
-          response.message || "An unexpected error occurred"
-        );
-      }
-    } catch (error) {
-      notify(
-        "error",
-        "Error",
-        "An unexpected error occurred. Please try again."
-      );
-    } finally {
-      setFetchAllApprovedUsersDataStatus(false);
-    }
-  }
-
+  // Fetch users that have credentials that are pending approval or disapproval
   async function fetchPendingApprovalUsers(page = 1) {
     setFetchAllPendingUsersDataStatus(true);
     try {
       const response = await authService.getPendingApprovalCredentials(page);
-      if (response.status === 201) {
+      if (response.status === 201 && response.result.length > 0) {
         setFetchPendingApprovalUsersData(response.result);
         setPaginationPendingApproval(response.pagination);
         setFetchPendingApprovalUserDataStatus(true);
+        setFetchPendingApprovalUsersNoRecords("");
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchPendingApprovalUsersData([]);
+        setPaginationPendingApproval(null);
+        setFetchPendingApprovalUsersNoRecords("No records found");
       } else {
         notify(
           "error",
@@ -129,6 +128,38 @@ function AdminCredentialsList() {
       );
     } finally {
       setFetchAllPendingUsersDataStatus(false);
+    }
+  }
+
+  // Fetch users that have credentials that are approved
+  async function fetchApprovedUsers(page = 1) {
+    setFetchAllApprovedUsersDataStatus(true);
+    try {
+      const response = await authService.getApprovedCredentials(page);
+      if (response.status === 201 && response.result.length > 0) {
+        setFetchApprovedUsersData(response.result);
+        setPaginationApproved(response.pagination);
+        setFetchApprovedUserDataStatus(true);
+        setFetchApprovedUserDataNoRecords("");
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchApprovedUsersData([]);
+        setPaginationApproved(null);
+        setFetchApprovedUserDataNoRecords("No records found");
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setFetchAllApprovedUsersDataStatus(false);
     }
   }
 
@@ -402,6 +433,7 @@ function AdminCredentialsList() {
                       </thead>
                       <tbody>
                         {fetchAllUserDataStatus &&
+                        fetchAllUsersData.length > 0 ? (
                           fetchAllUsersData.map((user, index) => (
                             <tr key={user.id}>
                               <td>{index + 1}</td>
@@ -415,7 +447,9 @@ function AdminCredentialsList() {
                                   {user.credentials_status === 1 ? (
                                     <Badge bg="success">approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">pending</Badge>
+                                    <Badge bg="secondary">
+                                      pending/disapproved
+                                    </Badge>
                                   )}
                                 </Typography>
                               </td>
@@ -429,11 +463,18 @@ function AdminCredentialsList() {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          ))
+                        ) : fetchAllUsersDataNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchAllUsersDataNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
                       </tbody>
                     </Table>
                   </div>
-                  {renderPagination(pagination, "all")}
+                  {pagination && renderPagination(pagination, "all")}
                 </>
               )}
             </Tab>
@@ -487,6 +528,7 @@ function AdminCredentialsList() {
                       </thead>
                       <tbody>
                         {fetchPendingApprovalUserDataStatus &&
+                        fetchPendingApprovalUsersData.length > 0 ? (
                           fetchPendingApprovalUsersData.map((user, index) => (
                             <tr key={user.id}>
                               <td>{index + 1}</td>
@@ -500,7 +542,9 @@ function AdminCredentialsList() {
                                   {user.credentials_status === 1 ? (
                                     <Badge bg="success">approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">disapproved</Badge>
+                                    <Badge bg="secondary">
+                                      pending/disapproved
+                                    </Badge>
                                   )}
                                 </Typography>
                               </td>
@@ -514,15 +558,23 @@ function AdminCredentialsList() {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          ))
+                        ) : fetchPendingApprovalUsersNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchPendingApprovalUsersNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
                       </tbody>
                     </Table>
                   </div>
                   <div className="pagination-controls">
-                    {renderPagination(
-                      paginationPendingApproval,
-                      "pending-credentials"
-                    )}
+                    {paginationApproved &&
+                      renderPagination(
+                        paginationPendingApproval,
+                        "pending-credentials"
+                      )}
                   </div>
                 </>
               )}
@@ -577,6 +629,7 @@ function AdminCredentialsList() {
                       </thead>
                       <tbody>
                         {fetchApprovedUserDataStatus &&
+                        fetchApprovedUsersData.length > 0 ? (
                           fetchApprovedUsersData.map((user, index) => (
                             <tr key={user.id}>
                               <td>{index + 1}</td>
@@ -590,7 +643,9 @@ function AdminCredentialsList() {
                                   {user.credentials_status === 1 ? (
                                     <Badge bg="success">approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">pending</Badge>
+                                    <Badge bg="secondary">
+                                      pending/disapproved
+                                    </Badge>
                                   )}
                                 </Typography>
                               </td>
@@ -604,12 +659,20 @@ function AdminCredentialsList() {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          ))
+                        ) : fetchApprovedUserDataNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchApprovedUserDataNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
                       </tbody>
                     </Table>
                   </div>
                   <div className="pagination-controls">
-                    {renderPagination(paginationApproved, "approved")}
+                    {paginationPendingApproval &&
+                      renderPagination(paginationApproved, "approved")}
                   </div>
                 </>
               )}
