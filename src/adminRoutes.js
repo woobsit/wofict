@@ -9,7 +9,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 //views
-import AdminAllUsers from "./view/admin/AdminAllUsers";
+import AdminAllRegisteredUsersList from "./view/admin/AdminAllRegisteredUsersList";
 import AdminDashboard from "./view/admin/AdminDashboard";
 import AdminAdmins from "./view/admin/AdminAdmins";
 import AdminSettings from "./view/admin/AdminSettings";
@@ -38,7 +38,7 @@ const adminRoutes = [
         key: "all-users",
         icon: <FontAwesomeIcon icon={faUniversity} />,
         route: "/all-users",
-        component: <AdminAllUsers />,
+        component: <AdminAllRegisteredUsersList />,
       },
       {
         type: "collapse",

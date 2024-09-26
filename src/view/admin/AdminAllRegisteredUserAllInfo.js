@@ -18,6 +18,12 @@ import {
   faLocationDot,
   faPhone,
   faSignal,
+  faUniversity,
+  faClock,
+  faBookJournalWhills,
+  faCheck,
+  faMicrophone,
+  faComputer,
 } from "@fortawesome/free-solid-svg-icons";
 //API service
 import authService from "../../api/authService";
@@ -29,21 +35,25 @@ function AdminAllRegisteredUserAllInfo() {
   const { id } = useParams();
   const { website_info } = getAuthAdminData();
   const navigate = useNavigate();
+
+  //Fetch registered user by id.
   const [registeredUserData, setRegisteredUserData] = useState([]);
   const [registeredUserStatus, setRegisteredUserStatus] = useState(false);
 
+  //fetch user details by id.
   useEffect(() => {
     if (id) {
       fetchRegisteredUser(id); // Pass the id here
     }
   }, [id]);
 
+  //fetch user with the id that has registered
   async function fetchRegisteredUser(id) {
+    setRegisteredUserStatus(true);
     try {
       const response = await authService.getRegisteredUser(id);
       if (response.status === 201) {
         setRegisteredUserData(response.result);
-        setRegisteredUserStatus(true);
       } else if (response.status === 404) {
         notify(
           "error",
@@ -59,6 +69,8 @@ function AdminAllRegisteredUserAllInfo() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setRegisteredUserStatus(false);
     }
   }
 
@@ -95,7 +107,11 @@ function AdminAllRegisteredUserAllInfo() {
       <div>
         <div className="card user-name">
           <div className="image-name-button-wrapper">
-            {registeredUserStatus && (
+            {registeredUserStatus ? (
+              <Typography variant="h4" className="image-name__loader">
+                loading...
+              </Typography>
+            ) : (
               <div className="image-name-wrapper">
                 <img
                   src={website_info[2].value + "" + registeredUserData.photo}
@@ -146,9 +162,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Firstname:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.firstname}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.firstname}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -160,9 +178,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Surname:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.surname}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.surname}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -174,9 +194,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Other names:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.other_names}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.other_names}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -188,9 +210,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Gender:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.gender}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.gender}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -202,9 +226,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Date of Birth:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.date_of_birth}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.date_of_birth}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -216,9 +242,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Address:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.contact_address}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.contact_address}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -230,9 +258,11 @@ function AdminAllRegisteredUserAllInfo() {
                       Phone:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.phone_number}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.phone_number}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -244,9 +274,11 @@ function AdminAllRegisteredUserAllInfo() {
                       State of Origin:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus && registeredUserData.state_of_origin}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.state_of_origin}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -258,17 +290,17 @@ function AdminAllRegisteredUserAllInfo() {
                       Credentials status:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus &&
-                    registeredUserData.credentials_status === 1 ? (
-                      <Badge bg="success">approved</Badge>
-                    ) : registeredUserStatus &&
-                      registeredUserData.credentials_status === 0 ? (
-                      <Badge bg="secondary">disapproved</Badge>
-                    ) : (
-                      ""
-                    )}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.credentials === null ? (
+                        <Badge bg="danger">no credentials uploaded</Badge>
+                      ) : registeredUserData.credentials_status === 1 ? (
+                        <Badge bg="success">approved</Badge>
+                      ) : (
+                        <Badge bg="secondary">pending/disapproved</Badge>
+                      )}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -280,14 +312,18 @@ function AdminAllRegisteredUserAllInfo() {
                       Guarantor status:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {registeredUserStatus &&
-                    registeredUserData.guarantors_status === 1 ? (
-                      <Badge bg="success">approved</Badge>
-                    ) : (
-                      <Badge bg="secondary">disapproved</Badge>
-                    )}
-                  </Typography>
+                  {registeredUserStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {registeredUserData.guarantors_1 === null ||
+                      registeredUserData.guarantors_2 === null ? (
+                        <Badge bg="danger">No guarantors uploaded</Badge>
+                      ) : registeredUserData.guarantors_status === 1 ? (
+                        <Badge bg="success">Approved</Badge>
+                      ) : (
+                        <Badge bg="secondary">Pending</Badge>
+                      )}
+                    </Typography>
+                  )}
                 </div>
               </div>
             </div>
@@ -300,6 +336,10 @@ function AdminAllRegisteredUserAllInfo() {
               </Typography>
               <div className="">
                 <div className="user-heading-name">
+                  <FontAwesomeIcon
+                    icon={faUniversity}
+                    className="user__user-icon"
+                  />
                   <Typography variant="h6" className="user-heading">
                     Course:
                   </Typography>
@@ -308,6 +348,7 @@ function AdminAllRegisteredUserAllInfo() {
                   </Typography>
                 </div>
                 <div className="user-heading-name">
+                  <FontAwesomeIcon icon={faClock} className="user__user-icon" />
                   <Typography variant="h6" className="user-heading">
                     Session:
                   </Typography>
@@ -316,6 +357,10 @@ function AdminAllRegisteredUserAllInfo() {
                   </Typography>
                 </div>
                 <div className="user-heading-name">
+                  <FontAwesomeIcon
+                    icon={faBookJournalWhills}
+                    className="user__user-icon"
+                  />
                   <Typography variant="h6" className="user-heading">
                     Qualification Level:
                   </Typography>
@@ -325,6 +370,7 @@ function AdminAllRegisteredUserAllInfo() {
                   </Typography>
                 </div>
                 <div className="user-heading-name">
+                  <FontAwesomeIcon icon={faCheck} className="user__user-icon" />
                   <Typography variant="h6" className="user-heading">
                     English Language Fluency:
                   </Typography>
@@ -339,6 +385,10 @@ function AdminAllRegisteredUserAllInfo() {
                 Other Info
               </Typography>
               <div className="user-heading-name">
+                <FontAwesomeIcon
+                  icon={faMicrophone}
+                  className="user__user-icon"
+                />
                 <Typography variant="h6" className="user-heading">
                   Conversation Strenght:
                 </Typography>
@@ -347,6 +397,10 @@ function AdminAllRegisteredUserAllInfo() {
                 </Typography>
               </div>
               <div className="user-heading-name">
+                <FontAwesomeIcon
+                  icon={faComputer}
+                  className="user__user-icon"
+                />
                 <Typography variant="h6" className="user-heading">
                   Computer Literacy:
                 </Typography>
@@ -355,6 +409,7 @@ function AdminAllRegisteredUserAllInfo() {
                 </Typography>
               </div>
               <div className="user-heading-name">
+                <FontAwesomeIcon icon={faPhone} className="user__user-icon" />
                 <Typography variant="h6" className="user-heading">
                   ICT Referral:
                 </Typography>

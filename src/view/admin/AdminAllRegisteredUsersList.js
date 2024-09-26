@@ -23,7 +23,7 @@ import authService from "../../api/authService";
 //React search autocomplete
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
-function AdminAllUsers() {
+function AdminAllRegisteredUsersList() {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
@@ -310,12 +310,14 @@ function AdminAllUsers() {
                                 <Typography variant="p" className="">
                                   {user.credentials === null ? (
                                     <Badge bg="danger">
-                                      No credentials uploaded
+                                      no credentials uploaded
                                     </Badge>
                                   ) : user.credentials_status === 1 ? (
-                                    <Badge bg="success">Approved</Badge>
+                                    <Badge bg="success">approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">Pending</Badge>
+                                    <Badge bg="secondary">
+                                      pending/disapproved
+                                    </Badge>
                                   )}
                                 </Typography>
                               </td>
@@ -324,12 +326,14 @@ function AdminAllUsers() {
                                   {user.guarantors_1 === null ||
                                   user.guarantors_2 === null ? (
                                     <Badge bg="danger">
-                                      No guarantors uploaded
+                                      no guarantors uploaded
                                     </Badge>
                                   ) : user.guarantors_status === 1 ? (
-                                    <Badge bg="success">Approved</Badge>
+                                    <Badge bg="success">approved</Badge>
                                   ) : (
-                                    <Badge bg="secondary">Pending</Badge>
+                                    <Badge bg="secondary">
+                                      pending/disapproved
+                                    </Badge>
                                   )}
                                 </Typography>
                               </td>
@@ -368,4 +372,4 @@ function AdminAllUsers() {
   );
 }
 
-export default AdminAllUsers;
+export default AdminAllRegisteredUsersList;
