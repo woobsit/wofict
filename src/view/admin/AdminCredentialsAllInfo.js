@@ -24,8 +24,8 @@ import {
   faClock,
   faBookJournalWhills,
   faCheck,
-  faBook,
   faMicrophone,
+  faComputer,
 } from "@fortawesome/free-solid-svg-icons";
 //API service
 import authService from "../../api/authService";
@@ -38,20 +38,19 @@ function AdminCredentialsAllInfo() {
   const { id } = useParams();
   const { website_info } = getAuthAdminData();
   const navigate = useNavigate();
+
+  //Fetch user by id. These user has credetials
   const [fetchUserByCredentialsData, setFetchUserByCredentialsData] = useState(
     []
   );
   const [fetchUserByCredentialsStatus, setFetchUserByCredentialsStatus] =
     useState(false);
-
   const [loadingViewCredentials, setLoadingViewCredentials] = useState(false);
-
   const [loadingApprovedCredential, setLoadingApprovedCredential] =
     useState(false);
-
   const [loadingPendedCredential, setLoadingPendedCredential] = useState(false);
 
-  //Display button text
+  //Display action button
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -65,12 +64,14 @@ function AdminCredentialsAllInfo() {
     };
   }, []);
 
+  //fetch user details by id.
   useEffect(() => {
     if (id) {
       fetchUserByCredentials(id); // Pass the id here
     }
   }, [id]);
 
+  //fetch user with the id that has credentials
   async function fetchUserByCredentials(id) {
     setFetchUserByCredentialsStatus(true);
     try {
@@ -97,6 +98,7 @@ function AdminCredentialsAllInfo() {
     }
   }
 
+  //view user credentials form
   async function fetchToViewCredentials(id) {
     setLoadingViewCredentials(true);
     try {
@@ -126,6 +128,7 @@ function AdminCredentialsAllInfo() {
     }
   }
 
+  //Approve credentials status
   async function fetchApprovedCredential(id) {
     setLoadingApprovedCredential(true);
     try {
@@ -153,6 +156,7 @@ function AdminCredentialsAllInfo() {
     }
   }
 
+  //Disapprove/pend credentials status
   async function fetchPendedCredential(id) {
     setLoadingPendedCredential(true);
     try {
@@ -271,7 +275,9 @@ function AdminCredentialsAllInfo() {
                         onClick={() => fetchApprovedCredential(id)} // Pass id here
                         disabled={loadingApprovedCredential}
                       >
-                        {loadingApprovedCredential ? "Approving..." : "Approve"}
+                        {loadingApprovedCredential
+                          ? "Approving credentials..."
+                          : "Approve credentials"}
                       </Dropdown.Item>
                     ) : (
                       <Dropdown.Item
@@ -279,8 +285,8 @@ function AdminCredentialsAllInfo() {
                         disabled={loadingPendedCredential}
                       >
                         {loadingPendedCredential
-                          ? "Disapprove..."
-                          : "Disapprove"}
+                          ? "Disapproving credentials..."
+                          : "Disapprove credentials"}
                       </Dropdown.Item>
                     )}
                   </Dropdown.Menu>
@@ -310,6 +316,7 @@ function AdminCredentialsAllInfo() {
                       Firstname:
                     </Typography>
                   </div>
+
                   {fetchUserByCredentialsStatus ? null : (
                     <Typography variant="span" className="user-name-value">
                       {fetchUserByCredentialsData.firstname}
@@ -424,8 +431,7 @@ function AdminCredentialsAllInfo() {
                   </div>
                   {fetchUserByCredentialsStatus ? null : (
                     <Typography variant="span" className="user-name-value">
-                      {fetchUserByCredentialsStatus &&
-                        fetchUserByCredentialsData.state_of_origin}
+                      {fetchUserByCredentialsData.state_of_origin}
                     </Typography>
                   )}
                 </div>
@@ -547,7 +553,10 @@ function AdminCredentialsAllInfo() {
                 </Typography>
               </div>
               <div className="user-heading-name">
-                <FontAwesomeIcon icon={faBook} className="user__user-icon" />
+                <FontAwesomeIcon
+                  icon={faComputer}
+                  className="user__user-icon"
+                />
                 <Typography variant="h6" className="user-heading">
                   Computer Literacy:
                 </Typography>
@@ -556,7 +565,6 @@ function AdminCredentialsAllInfo() {
                 </Typography>
               </div>
               <div className="user-heading-name">
-                {" "}
                 <FontAwesomeIcon icon={faPhone} className="user__user-icon" />
                 <Typography variant="h6" className="user-heading">
                   ICT Referral:
