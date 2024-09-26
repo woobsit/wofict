@@ -266,7 +266,7 @@ function AdminGuarantorsAllInfo() {
               <Dropdown as={ButtonGroup}>
                 <Dropdown.Toggle
                   split
-                  variant="primary"
+                  variant="warning"
                   id="dropdown-split-basic"
                   size="sm"
                 >

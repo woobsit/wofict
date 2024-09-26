@@ -28,25 +28,42 @@ function AdminAllUsers() {
 
   const [items, setItems] = useState([]);
 
-  const [fetchAllUsersData, setFetchAllRegisteredUsersData] = useState([]);
+  //All registered users
+  const [fetchAllRegisteredUsersData, setFetchAllRegisteredUsersData] =
+    useState([]);
   const [
     fetchAllRegisteredUsersDataStatus,
     setFetchAllRegisteredUsersDataStatus,
   ] = useState(false);
-  const [fetchAllUserDataStatus, setFetchAllRegisteredUserDataStatus] =
-    useState(false);
+  const [
+    fetchAllRegisteredUserDataStatus,
+    setFetchAllRegisteredUserDataStatus,
+  ] = useState(false);
+  const [
+    fetchAllRegisteredUsersDataNoRecords,
+    setFetchAllRegisteredUsersDataNoRecords,
+  ] = useState("");
+
+  //Paginations
   const [pagination, setPagination] = useState({});
+
+  //tabs
   const [activeTab, setActiveTab] = useState("all-registered-users");
 
-  // Fetch functions for all, approved, and disapproved users
+  // Fetch all registered users
   async function fetchAllRegisteredUsers(page = 1) {
     setFetchAllRegisteredUsersDataStatus(true);
     try {
       const response = await authService.getAllRegisteredUsers(page);
-      if (response.status === 201) {
+      if (response.status === 201 && response.result.length > 0) {
         setFetchAllRegisteredUsersData(response.result);
         setPagination(response.pagination);
         setFetchAllRegisteredUserDataStatus(true);
+        setFetchAllRegisteredUsersDataNoRecords("");
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchAllRegisteredUsersData([]);
+        setPagination(null);
+        setFetchAllRegisteredUsersDataNoRecords("No records found");
       } else {
         notify(
           "error",
@@ -155,10 +172,11 @@ function AdminAllUsers() {
     // Handle what happens when an item is selected (e.g., redirect to a page)
   };
 
+  //Search all registered users
   const handleSearch = async (query) => {
     if (query.length < 1) return ""; // Prevent search for empty
     try {
-      const response = await authService.getSearchedCredentials(query);
+      const response = await authService.getSearchAllRegisteredUsers(query);
       if (response.status === 201) {
         const results = response.result.map((item) => ({
           id: item.id,
@@ -278,8 +296,9 @@ function AdminAllUsers() {
                         </tr>
                       </thead>
                       <tbody>
-                        {fetchAllUserDataStatus &&
-                          fetchAllUsersData.map((user, index) => (
+                        {fetchAllRegisteredUserDataStatus &&
+                        fetchAllRegisteredUsersData.length > 0 ? (
+                          fetchAllRegisteredUsersData.map((user, index) => (
                             <tr key={user.id}>
                               <td>{index + 1}</td>
                               <td>{user.firstname}</td>
@@ -324,11 +343,19 @@ function AdminAllUsers() {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          ))
+                        ) : fetchAllRegisteredUsersDataNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchAllRegisteredUsersDataNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
                       </tbody>
                     </Table>
                   </div>
-                  {renderPagination(pagination, "all-registered-users")}
+                  {pagination &&
+                    renderPagination(pagination, "all-registered-users")}
                 </>
               )}
             </Tab>

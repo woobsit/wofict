@@ -703,6 +703,14 @@ class StudentController extends Controller
                     ],
                 ]);
             }
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occured']);
