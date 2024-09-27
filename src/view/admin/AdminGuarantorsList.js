@@ -22,53 +22,66 @@ import { notify } from "../../utils/Notification";
 import authService from "../../api/authService";
 //React search autocomplete
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
-//React Apex chart
-import Chart from "react-apexcharts";
 
 function AdminGuarantorsList() {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
 
+  //users with guarantors
   const [fetchAllUsersData, setFetchAllUsersData] = useState([]);
   const [fetchAllUsersDataStatus, setFetchAllUsersDataStatus] = useState(false);
-  const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
+  const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
+  const [fetchAllUsersDataNoRecords, setFetchAllUsersDataNoRecords] =
+    useState("");
+
+  //users with pending guarantor approval or disapproval
+  const [fetchAllPendingUsersDataStatus, setFetchAllPendingUsersDataStatus] =
+    useState(false);
   const [fetchPendingApprovalUsersData, setFetchPendingApprovalUsersData] =
     useState([]);
-  const [fetchAllUserDataStatus, setFetchAllUserDataStatus] = useState(false);
-  const [fetchApprovedUserDataStatus, setFetchApprovedUserDataStatus] =
-    useState(false);
   const [
     fetchPendingApprovalUserDataStatus,
     setFetchPendingApprovalUserDataStatus,
   ] = useState(false);
+  const [
+    fetchPendingApprovalUsersNoRecords,
+    setFetchPendingApprovalUsersNoRecords,
+  ] = useState("");
 
+  //users with approved guarantor form
+  const [fetchAllApprovedUsersDataStatus, setFetchAllApprovedUsersDataStatus] =
+    useState(false);
+  const [fetchApprovedUsersData, setFetchApprovedUsersData] = useState([]);
+  const [fetchApprovedUserDataStatus, setFetchApprovedUserDataStatus] =
+    useState(false);
+  const [fetchApprovedUserDataNoRecords, setFetchApprovedUserDataNoRecords] =
+    useState("");
+
+  //Paginations
   const [pagination, setPagination] = useState({});
   const [paginationApproved, setPaginationApproved] = useState({});
   const [paginationPendingApproval, setPaginationPendingApproval] = useState(
     {}
   );
 
+  //tabs
   const [activeTab, setActiveTab] = useState("guarantors");
 
-  //Pie chart data
-  const [fetchPieChartStatus, setFetchPieChartStatus] = useState(false);
-  const [chartData, setChartData] = useState({
-    series: [],
-    chartOptions: {
-      labels: [],
-    },
-  });
-
-  // Fetch functions for all, pending, and approved users
+  // Fetch all users with guarantors
   async function fetchAllUsersWithGuarantors(page = 1) {
     setFetchAllUsersDataStatus(true);
     try {
       const response = await authService.getUsersWithGuarantors(page);
-      if (response.status === 201) {
+      if (response.status === 201 && response.result.length > 0) {
         setFetchAllUsersData(response.result);
         setPagination(response.pagination);
         setFetchAllUserDataStatus(true);
+        setFetchAllUsersDataNoRecords("");
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchAllUsersData([]);
+        setPagination(null);
+        setFetchAllUsersDataNoRecords("No records found");
       } else {
         notify(
           "error",
@@ -87,13 +100,20 @@ function AdminGuarantorsList() {
     }
   }
 
+  // Fetch all users with guarantors pending
   async function fetchPendingApprovalUsers(page = 1) {
+    setFetchAllPendingUsersDataStatus(true);
     try {
       const response = await authService.getPendingApprovalGuarantors(page);
       if (response.status === 201) {
         setFetchPendingApprovalUsersData(response.result);
         setPaginationPendingApproval(response.pagination);
         setFetchPendingApprovalUserDataStatus(true);
+        setFetchPendingApprovalUsersNoRecords("");
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchPendingApprovalUsersData([]);
+        setPaginationPendingApproval(null);
+        setFetchPendingApprovalUsersNoRecords("No records found");
       } else {
         notify(
           "error",
@@ -107,16 +127,25 @@ function AdminGuarantorsList() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setFetchAllPendingUsersDataStatus(false);
     }
   }
 
+  // Fetch all users with approved guarantors
   async function fetchApprovedUsers(page = 1) {
+    setFetchAllApprovedUsersDataStatus(true);
     try {
       const response = await authService.getUsersWithApprovedGuarantors(page);
-      if (response.status === 201) {
+      if (response.status === 201 && response.result.length > 0) {
         setFetchApprovedUsersData(response.result);
         setPaginationApproved(response.pagination);
         setFetchApprovedUserDataStatus(true);
+        setFetchApprovedUserDataNoRecords("");
+      } else if (response.status === 404 || response.result.length === 0) {
+        setFetchApprovedUsersData([]);
+        setPaginationApproved(null);
+        setFetchApprovedUserDataNoRecords("No records found");
       } else {
         notify(
           "error",
@@ -130,6 +159,8 @@ function AdminGuarantorsList() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setFetchAllApprovedUsersDataStatus(false);
     }
   }
 
@@ -181,8 +212,25 @@ function AdminGuarantorsList() {
       />
     );
 
-    // Add page numbers
-    for (let i = 1; i <= totalPages; i++) {
+    // Add page numbers with ellipsis for large sets of pages
+    const maxPagesToShow = 5; // Number of pages to display around the current page
+    const pagesAroundCurrent = Math.floor(maxPagesToShow / 2); // Pages to show before and after the current page
+
+    // Show ellipsis and first page if current page is far from the first page
+    if (currentPage > pagesAroundCurrent + 1) {
+      items.push(
+        <Pagination.Item key={1} onClick={() => handlePageChange(1, type)}>
+          {1}
+        </Pagination.Item>
+      );
+      items.push(<Pagination.Ellipsis key="start-ellipsis" disabled />);
+    }
+
+    // Generate page numbers dynamically based on the current page
+    const startPage = Math.max(1, currentPage - pagesAroundCurrent);
+    const endPage = Math.min(totalPages, currentPage + pagesAroundCurrent);
+
+    for (let i = startPage; i <= endPage; i++) {
       if (i === currentPage) {
         items.push(
           <Pagination.Item key={i} active>
@@ -196,6 +244,19 @@ function AdminGuarantorsList() {
           </Pagination.Item>
         );
       }
+    }
+
+    // Show ellipsis and last page if current page is far from the last page
+    if (currentPage < totalPages - pagesAroundCurrent) {
+      items.push(<Pagination.Ellipsis key="end-ellipsis" disabled />);
+      items.push(
+        <Pagination.Item
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages, type)}
+        >
+          {totalPages}
+        </Pagination.Item>
+      );
     }
 
     // Next and last buttons
@@ -225,40 +286,6 @@ function AdminGuarantorsList() {
     navigate(`/admin/user-info-by-guarantors/${item.id}`);
     // Handle what happens when an item is selected (e.g., redirect to a page)
   };
-
-  //Pie chart data
-  useEffect(() => {
-    async function fetchGetAllAppliedUsers() {
-      setFetchPieChartStatus(true);
-      try {
-        const response = await authService.getAllAppliedUsers();
-        if (response.status === 201) {
-          const apiData = response.result;
-          // Transform data for the chart
-          const seriesData = apiData.map((item) => item.user_count); // Extract counts
-          const labelData = apiData.map((item) => item.group_name); // Extract group names
-          // Update chart data
-          setChartData({
-            series: seriesData,
-            chartOptions: {
-              labels: labelData,
-            },
-          });
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
-        notify(
-          "error",
-          "Error",
-          "An unexpected error occurred. Please try again."
-        );
-      } finally {
-        setFetchPieChartStatus(false);
-      }
-    }
-    fetchGetAllAppliedUsers();
-  }, []);
 
   //Search users with guarantors
   const handleSearchAllGuarantors = async (query) => {
@@ -419,29 +446,94 @@ function AdminGuarantorsList() {
                   <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} size="xs" />
                   </Placeholder>
+                </>
+              ) : (
+                <>
+                  <div className="credentials__table-wrapper">
+                    <Table striped bordered hover responsive>
+                      <thead>
+                        <tr className="credentials__table-head">
+                          <th>#</th>
+                          <th>Firstname</th>
+                          <th>Surname</th>
+                          <th>Email</th>
+                          <th>Gender</th>
+                          <th>Course</th>
+                          <th>Guarantors Status</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {fetchAllUserDataStatus &&
+                        fetchAllUsersData.length > 0 ? (
+                          fetchAllUsersData.map((user, index) => (
+                            <tr key={user.id}>
+                              <td>{index + 1}</td>
+                              <td>{user.firstname}</td>
+                              <td>{user.surname}</td>
+                              <td>{user.email}</td>
+                              <td>{user.gender}</td>
+                              <td>{user.course}</td>
+                              <td>
+                                <Typography variant="p" className="">
+                                  {user.guarantors_status === 1 ? (
+                                    <Badge bg="success">approved</Badge>
+                                  ) : (
+                                    <Badge bg="secondary">
+                                      pending/disapproved
+                                    </Badge>
+                                  )}
+                                </Typography>
+                              </td>
+                              <td>
+                                <Button
+                                  variant="primary"
+                                  size="sm"
+                                  onClick={() => handleViewUserDetails(user.id)}
+                                >
+                                  View details
+                                </Button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : fetchAllUsersDataNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchAllUsersDataNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
+                      </tbody>
+                    </Table>
+                  </div>
+                  {pagination && renderPagination(pagination, "all")}
+                </>
+              )}
+            </Tab>
+
+            <Tab eventKey="unapproved" title="Pending approval">
+              {/* Pending approval Credentials Table */}
+              <div className="credentials__table-title-box">
+                <Typography variant="h4" className="credentials__table-title">
+                  Pending approval
+                </Typography>
+
+                <ReactSearchAutocomplete
+                  items={items}
+                  onSearch={handleSearchGuarantorsNotApproved}
+                  onSelect={handleOnSelect}
+                  placeholder="Pending approval..."
+                  className="credentials-autosearch"
+                  styling={styling}
+                />
+              </div>
+              {fetchAllPendingUsersDataStatus ? (
+                <>
                   <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
+                    <Placeholder xs={12} size="lg" />
                   </Placeholder>
                   <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
+                    <Placeholder xs={12} size="lg" />
                   </Placeholder>
                   <Placeholder as="p" animation="glow">
                     <Placeholder xs={12} size="xs" />
@@ -467,8 +559,9 @@ function AdminGuarantorsList() {
                         </tr>
                       </thead>
                       <tbody>
-                        {fetchAllUserDataStatus &&
-                          fetchAllUsersData.map((user, index) => (
+                        {fetchPendingApprovalUserDataStatus &&
+                        fetchPendingApprovalUsersData.length > 0 ? (
+                          fetchPendingApprovalUsersData.map((user, index) => (
                             <tr key={user.id}>
                               <td>{index + 1}</td>
                               <td>{user.firstname}</td>
@@ -495,81 +588,23 @@ function AdminGuarantorsList() {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          ))
+                        ) : fetchPendingApprovalUsersNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchPendingApprovalUsersNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
                       </tbody>
                     </Table>
                   </div>
-                  {renderPagination(pagination, "all")}
+                  <div className="pagination-controls">
+                    {paginationPendingApproval &&
+                      renderPagination(paginationPendingApproval, "unapproved")}
+                  </div>
                 </>
               )}
-            </Tab>
-
-            <Tab eventKey="unapproved" title="Pending approval">
-              {/* Pending approval Credentials Table */}
-              <div className="credentials__table-title-box">
-                <Typography variant="h4" className="credentials__table-title">
-                  Pending approval
-                </Typography>
-
-                <ReactSearchAutocomplete
-                  items={items}
-                  onSearch={handleSearchGuarantorsNotApproved}
-                  onSelect={handleOnSelect}
-                  placeholder="Pending approval..."
-                  className="credentials-autosearch"
-                  styling={styling}
-                />
-              </div>
-              <div className="credentials__table-wrapper">
-                <Table striped bordered hover responsive>
-                  <thead>
-                    <tr className="credentials__table-head">
-                      <th>#</th>
-                      <th>Firstname</th>
-                      <th>Surname</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Course</th>
-                      <th>Guarantors Status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {fetchPendingApprovalUserDataStatus &&
-                      fetchPendingApprovalUsersData.map((user, index) => (
-                        <tr key={user.id}>
-                          <td>{index + 1}</td>
-                          <td>{user.firstname}</td>
-                          <td>{user.surname}</td>
-                          <td>{user.email}</td>
-                          <td>{user.gender}</td>
-                          <td>{user.course}</td>
-                          <td>
-                            <Typography variant="p" className="">
-                              {user.guarantors_status === 1 ? (
-                                <Badge bg="success">approved</Badge>
-                              ) : (
-                                <Badge bg="secondary">unapproved</Badge>
-                              )}
-                            </Typography>
-                          </td>
-                          <td>
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleViewUserDetails(user.id)}
-                            >
-                              View details
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </Table>
-              </div>
-              <div className="pagination-controls">
-                {renderPagination(paginationPendingApproval, "unapproved")}
-              </div>
             </Tab>
 
             <Tab eventKey="approved" title="Approved">
@@ -588,73 +623,86 @@ function AdminGuarantorsList() {
                   styling={styling}
                 />
               </div>
-              <div className="credentials__table-wrapper">
-                <Table striped bordered hover responsive>
-                  <thead>
-                    <tr className="credentials__table-head">
-                      <th>#</th>
-                      <th>Firstname</th>
-                      <th>Surname</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Course</th>
-                      <th>Guarantors Status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {fetchApprovedUserDataStatus &&
-                      fetchApprovedUsersData.map((user, index) => (
-                        <tr key={user.id}>
-                          <td>{index + 1}</td>
-                          <td>{user.firstname}</td>
-                          <td>{user.surname}</td>
-                          <td>{user.email}</td>
-                          <td>{user.gender}</td>
-                          <td>{user.course}</td>
-                          <td>
-                            <Typography variant="p" className="">
-                              {user.guarantors_status === 1 ? (
-                                <Badge bg="success">approved</Badge>
-                              ) : (
-                                <Badge bg="secondary">unapproved</Badge>
-                              )}
-                            </Typography>
-                          </td>
-                          <td>
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleViewUserDetails(user.id)}
-                            >
-                              View details
-                            </Button>
-                          </td>
+              {fetchAllApprovedUsersDataStatus ? (
+                <>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="lg" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="lg" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="glow">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} size="xs" />
+                  </Placeholder>
+                </>
+              ) : (
+                <>
+                  <div className="credentials__table-wrapper">
+                    <Table striped bordered hover responsive>
+                      <thead>
+                        <tr className="credentials__table-head">
+                          <th>#</th>
+                          <th>Firstname</th>
+                          <th>Surname</th>
+                          <th>Email</th>
+                          <th>Gender</th>
+                          <th>Course</th>
+                          <th>Guarantors Status</th>
+                          <th></th>
                         </tr>
-                      ))}
-                  </tbody>
-                </Table>
-              </div>
-              <div className="pagination-controls">
-                {renderPagination(paginationApproved, "approved")}
-              </div>
+                      </thead>
+                      <tbody>
+                        {fetchApprovedUserDataStatus &&
+                        fetchApprovedUsersData.length > 0 ? (
+                          fetchApprovedUsersData.map((user, index) => (
+                            <tr key={user.id}>
+                              <td>{index + 1}</td>
+                              <td>{user.firstname}</td>
+                              <td>{user.surname}</td>
+                              <td>{user.email}</td>
+                              <td>{user.gender}</td>
+                              <td>{user.course}</td>
+                              <td>
+                                <Typography variant="p" className="">
+                                  {user.guarantors_status === 1 ? (
+                                    <Badge bg="success">approved</Badge>
+                                  ) : (
+                                    <Badge bg="secondary">unapproved</Badge>
+                                  )}
+                                </Typography>
+                              </td>
+                              <td>
+                                <Button
+                                  variant="primary"
+                                  size="sm"
+                                  onClick={() => handleViewUserDetails(user.id)}
+                                >
+                                  View details
+                                </Button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : fetchApprovedUserDataNoRecords ? (
+                          <tr>
+                            <td colSpan="8" className="text-center">
+                              {fetchApprovedUserDataNoRecords}
+                            </td>
+                          </tr>
+                        ) : null}
+                      </tbody>
+                    </Table>
+                  </div>
+                  <div className="pagination-controls">
+                    {paginationApproved &&
+                      renderPagination(paginationApproved, "approved")}
+                  </div>
+                </>
+              )}
             </Tab>
           </Tabs>
-        </div>
-        <div className="credentials__infograph-box">
-          <div className="credentials__table-box">
-            {fetchPieChartStatus ? (
-              "Loading"
-            ) : (
-              <Chart
-                options={chartData}
-                series={chartData.series}
-                type="donut"
-                width="380"
-              />
-            )}
-          </div>
-          <div className="credentials__table-box"></div>
         </div>
       </div>
 

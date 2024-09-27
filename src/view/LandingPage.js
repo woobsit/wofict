@@ -241,6 +241,15 @@ function LandingPage() {
               <Button className="landing-form__button" disabled={loading}>
                 Login
               </Button>
+              <div className="landing-form__text-link-box">
+                <Typography variant="span">Not registered?</Typography>{" "}
+                <Typography
+                  variant="span"
+                  className="landing-form__typography-link"
+                >
+                  <Link to="/register">Register now</Link>
+                </Typography>
+              </div>
             </div>
           </div>
         </form>

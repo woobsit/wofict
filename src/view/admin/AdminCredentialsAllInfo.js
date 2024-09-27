@@ -20,6 +20,12 @@ import {
   faLocationDot,
   faPhone,
   faSignal,
+  faUniversity,
+  faClock,
+  faBookJournalWhills,
+  faCheck,
+  faMicrophone,
+  faComputer,
 } from "@fortawesome/free-solid-svg-icons";
 //API service
 import authService from "../../api/authService";
@@ -32,20 +38,19 @@ function AdminCredentialsAllInfo() {
   const { id } = useParams();
   const { website_info } = getAuthAdminData();
   const navigate = useNavigate();
+
+  //Fetch user by id. These user has credetials
   const [fetchUserByCredentialsData, setFetchUserByCredentialsData] = useState(
     []
   );
   const [fetchUserByCredentialsStatus, setFetchUserByCredentialsStatus] =
     useState(false);
-
   const [loadingViewCredentials, setLoadingViewCredentials] = useState(false);
-
   const [loadingApprovedCredential, setLoadingApprovedCredential] =
     useState(false);
-
   const [loadingPendedCredential, setLoadingPendedCredential] = useState(false);
 
-  //Display button text
+  //Display action button
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -59,18 +64,20 @@ function AdminCredentialsAllInfo() {
     };
   }, []);
 
+  //fetch user details by id.
   useEffect(() => {
     if (id) {
       fetchUserByCredentials(id); // Pass the id here
     }
   }, [id]);
 
+  //fetch user with the id that has credentials
   async function fetchUserByCredentials(id) {
+    setFetchUserByCredentialsStatus(true);
     try {
       const response = await authService.getUserByCredentials(id);
       if (response.status === 201) {
         setFetchUserByCredentialsData(response.result);
-        setFetchUserByCredentialsStatus(true);
       } else if (response.status === 404) {
         notify(
           "error",
@@ -86,9 +93,12 @@ function AdminCredentialsAllInfo() {
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setFetchUserByCredentialsStatus(false);
     }
   }
 
+  //view user credentials form
   async function fetchToViewCredentials(id) {
     setLoadingViewCredentials(true);
     try {
@@ -118,6 +128,7 @@ function AdminCredentialsAllInfo() {
     }
   }
 
+  //Approve credentials status
   async function fetchApprovedCredential(id) {
     setLoadingApprovedCredential(true);
     try {
@@ -145,16 +156,21 @@ function AdminCredentialsAllInfo() {
     }
   }
 
+  //Disapprove/pend credentials status
   async function fetchPendedCredential(id) {
     setLoadingPendedCredential(true);
     try {
       const response = await authService.getPendCredential(id);
       if (response.status === 200) {
-        notify("success", "Disapproved", "Credentials are disapproved");
+        notify(
+          "error",
+          "Disapproved",
+          "Credentials has now been disapproved or pended"
+        );
         // Update the status in the state
         setFetchUserByCredentialsData((prevData) => ({
           ...prevData,
-          credentials_status: 0, // Assuming 0 indicates pending/disapproved
+          credentials_status: 0, // 0 indicates pending/disapproved
         }));
       } else if (response.status === 404) {
         notify("error", "Error", "User not found");
@@ -205,7 +221,11 @@ function AdminCredentialsAllInfo() {
       <div>
         <div className="card user-name">
           <div className="image-name-button-wrapper">
-            {fetchUserByCredentialsStatus && (
+            {fetchUserByCredentialsStatus ? (
+              <Typography variant="h4" className="image-name__loader">
+                loading...
+              </Typography>
+            ) : (
               <div className="image-name-wrapper">
                 <img
                   src={
@@ -237,6 +257,7 @@ function AdminCredentialsAllInfo() {
                 </div>
               </div>
             )}
+
             <div>
               <Dropdown as={ButtonGroup}>
                 <Dropdown.Toggle
@@ -247,24 +268,29 @@ function AdminCredentialsAllInfo() {
                 >
                   {isMobileView ? null : "Action "}
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {fetchUserByCredentialsStatus &&
-                  fetchUserByCredentialsData.credentials_status === 0 ? (
-                    <Dropdown.Item
-                      onClick={() => fetchApprovedCredential(id)} // Pass id here
-                      disabled={loadingApprovedCredential}
-                    >
-                      {loadingApprovedCredential ? "Approving..." : "Approve"}
-                    </Dropdown.Item>
-                  ) : (
-                    <Dropdown.Item
-                      onClick={() => fetchPendedCredential(id)} // Pass id here
-                      disabled={loadingPendedCredential}
-                    >
-                      {loadingPendedCredential ? "Disapprove..." : "Disapprove"}
-                    </Dropdown.Item>
-                  )}
-                </Dropdown.Menu>
+                {fetchUserByCredentialsStatus ? null : (
+                  <Dropdown.Menu>
+                    {fetchUserByCredentialsData.credentials_status === 0 ? (
+                      <Dropdown.Item
+                        onClick={() => fetchApprovedCredential(id)} // Pass id here
+                        disabled={loadingApprovedCredential}
+                      >
+                        {loadingApprovedCredential
+                          ? "Approving credentials..."
+                          : "Approve credentials"}
+                      </Dropdown.Item>
+                    ) : (
+                      <Dropdown.Item
+                        onClick={() => fetchPendedCredential(id)} // Pass id here
+                        disabled={loadingPendedCredential}
+                      >
+                        {loadingPendedCredential
+                          ? "Disapproving credentials..."
+                          : "Disapprove credentials"}
+                      </Dropdown.Item>
+                    )}
+                  </Dropdown.Menu>
+                )}
               </Dropdown>
             </div>
           </div>
@@ -290,10 +316,12 @@ function AdminCredentialsAllInfo() {
                       Firstname:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.firstname}
-                  </Typography>
+
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.firstname}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -305,10 +333,11 @@ function AdminCredentialsAllInfo() {
                       Surname:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.surname}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.surname}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -320,10 +349,11 @@ function AdminCredentialsAllInfo() {
                       Other names:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.other_names}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.other_names}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -335,10 +365,11 @@ function AdminCredentialsAllInfo() {
                       Gender:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.gender}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.gender}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -350,10 +381,11 @@ function AdminCredentialsAllInfo() {
                       Date of Birth:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.date_of_birth}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.date_of_birth}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -365,10 +397,11 @@ function AdminCredentialsAllInfo() {
                       Address:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.contact_address}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.contact_address}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -380,10 +413,11 @@ function AdminCredentialsAllInfo() {
                       Phone:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.phone_number}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.phone_number}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -395,10 +429,11 @@ function AdminCredentialsAllInfo() {
                       State of Origin:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.state_of_origin}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.state_of_origin}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -410,17 +445,18 @@ function AdminCredentialsAllInfo() {
                       Credentials status:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.credentials_status === 1 ? (
-                      <Badge bg="success">approved</Badge>
-                    ) : fetchUserByCredentialsStatus &&
-                      fetchUserByCredentialsData.credentials_status === 0 ? (
-                      <Badge bg="secondary">disapproved</Badge>
-                    ) : (
-                      ""
-                    )}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.credentials_status === 1 ? (
+                        <Badge bg="success">approved</Badge>
+                      ) : fetchUserByCredentialsData.credentials_status ===
+                        0 ? (
+                        <Badge bg="secondary">pending/disapproved</Badge>
+                      ) : (
+                        ""
+                      )}
+                    </Typography>
+                  )}
                 </div>
                 <div className="user-heading-name">
                   <div className="user__firstname-icon">
@@ -432,14 +468,17 @@ function AdminCredentialsAllInfo() {
                       Guarantor status:
                     </Typography>
                   </div>
-                  <Typography variant="span" className="user-name-value">
-                    {fetchUserByCredentialsStatus &&
-                    fetchUserByCredentialsData.guarantors_status === 1 ? (
-                      <Badge bg="success">approved</Badge>
-                    ) : (
-                      <Badge bg="secondary">disapproved</Badge>
-                    )}
-                  </Typography>
+                  {fetchUserByCredentialsStatus ? null : (
+                    <Typography variant="span" className="user-name-value">
+                      {fetchUserByCredentialsData.guarantors_status === 1 ? (
+                        <Badge bg="success">approved</Badge>
+                      ) : fetchUserByCredentialsData.guarantors_status === 0 ? (
+                        <Badge bg="secondary">pending/disapproved</Badge>
+                      ) : (
+                        ""
+                      )}
+                    </Typography>
+                  )}
                 </div>
               </div>
             </div>
@@ -452,6 +491,10 @@ function AdminCredentialsAllInfo() {
               </Typography>
               <div className="">
                 <div className="user-heading-name">
+                  <FontAwesomeIcon
+                    icon={faUniversity}
+                    className="user__user-icon"
+                  />
                   <Typography variant="h6" className="user-heading">
                     Course:
                   </Typography>
@@ -460,6 +503,7 @@ function AdminCredentialsAllInfo() {
                   </Typography>
                 </div>
                 <div className="user-heading-name">
+                  <FontAwesomeIcon icon={faClock} className="user__user-icon" />
                   <Typography variant="h6" className="user-heading">
                     Session:
                   </Typography>
@@ -469,6 +513,10 @@ function AdminCredentialsAllInfo() {
                   </Typography>
                 </div>
                 <div className="user-heading-name">
+                  <FontAwesomeIcon
+                    icon={faBookJournalWhills}
+                    className="user__user-icon"
+                  />
                   <Typography variant="h6" className="user-heading">
                     Qualification Level:
                   </Typography>
@@ -478,6 +526,7 @@ function AdminCredentialsAllInfo() {
                   </Typography>
                 </div>
                 <div className="user-heading-name">
+                  <FontAwesomeIcon icon={faCheck} className="user__user-icon" />
                   <Typography variant="h6" className="user-heading">
                     English Language Fluency:
                   </Typography>
@@ -492,6 +541,10 @@ function AdminCredentialsAllInfo() {
                 Other Info
               </Typography>
               <div className="user-heading-name">
+                <FontAwesomeIcon
+                  icon={faMicrophone}
+                  className="user__user-icon"
+                />
                 <Typography variant="h6" className="user-heading">
                   Conversation Strenght:
                 </Typography>
@@ -500,6 +553,10 @@ function AdminCredentialsAllInfo() {
                 </Typography>
               </div>
               <div className="user-heading-name">
+                <FontAwesomeIcon
+                  icon={faComputer}
+                  className="user__user-icon"
+                />
                 <Typography variant="h6" className="user-heading">
                   Computer Literacy:
                 </Typography>
@@ -508,6 +565,7 @@ function AdminCredentialsAllInfo() {
                 </Typography>
               </div>
               <div className="user-heading-name">
+                <FontAwesomeIcon icon={faPhone} className="user__user-icon" />
                 <Typography variant="h6" className="user-heading">
                   ICT Referral:
                 </Typography>

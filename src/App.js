@@ -16,6 +16,7 @@ import AdminEnterNewPassword from "./view/admin/AdminEnterNewPassword";
 import AdminCredentialsSearch from "./view/admin/AdminCredentialsSearch";
 import AdminCredentialsAllInfo from "./view/admin/AdminCredentialsAllInfo";
 import AdminGuarantorsAllInfo from "./view/admin/AdminGuarantorsAllInfo";
+import AdminAllRegisteredUserAllInfo from "./view/admin/AdminAllRegisteredUserAllInfo";
 //React Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 //scss style
@@ -47,13 +48,20 @@ function App() {
         return "home-background";
     }
   };
-
   const backgroundClass = getBackgroundClass(location.pathname);
 
+  //Fetch admin routes and student users
   const getAdminRoutes = (allRoutes) =>
     allRoutes.map((route) => {
-      if (route.collapse) {
-        return getAdminRoutes(route.collapse);
+      if (route.children) {
+        return route.children.map((child) => (
+          <Route
+            exact
+            path={child.route}
+            element={child.component}
+            key={child.key}
+          />
+        ));
       }
 
       if (route.route) {
@@ -69,7 +77,6 @@ function App() {
 
       return null;
     });
-
   const getStudentRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
@@ -149,17 +156,23 @@ function App() {
               element={<AdminCredentialsAllInfo />}
               key="admin-user-info-by-credentials"
             />
-            {/* search users with credentials by id */}
+            {/* search user with credentials by id */}
             <Route
               path="/admin/search-by-credentials/:id"
               element={<AdminCredentialsSearch />}
               key="admin-search-credentials"
             />
-            {/* route for users with guarantors by id  */}
+            {/* route for user with guarantors by id  */}
             <Route
               path="/admin/user-info-by-guarantors/:id"
               element={<AdminGuarantorsAllInfo />}
               key="admin-user-info-by-guarantors"
+            />
+            {/* route for a registered user */}
+            <Route
+              path="/admin/registered-user-info/:id"
+              element={<AdminAllRegisteredUserAllInfo />}
+              key="admin-registered-user-info"
             />
           </Route>
         </Routes>

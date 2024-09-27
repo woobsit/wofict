@@ -173,7 +173,7 @@ const authService = {
 
   //Disapprove/pend credentials
   getPendCredential: (id) => handleRequest(`/pend-credential/${id}`),
-
+  //Search credentials
   getSearchedCredentials: (searchTerm) =>
     handleRequest(
       `/search-credentials?prospective-students=${searchTerm}`,
@@ -226,11 +226,17 @@ const authService = {
   //Users with guarantors
   getUserWithGuarantors: (id) =>
     handleRequest(`/get-user-with-guarantors-by-id/${id}`),
-  //view guarantor forms of user
-  // viewUserGuarantorForms: (id) =>
-  //   handleRequest(`/view-guarantor-forms/${id}`, "get", null, {
-  //     responseType: "blob",
-  //   }),
+  //Get all registered users. (email confirmed)
+  getAllRegisteredUsers: (page = 1) =>
+    handleRequest(`/get-all-registered-users?page=${page}`),
+  //Search all registered users
+  getSearchAllRegisteredUsers: (searchTerm) =>
+    handleRequest(
+      `/search-all-registered-users?search-all-registered-users=${searchTerm}`,
+      "get"
+    ),
+  //Registered user
+  getRegisteredUser: (id) => handleRequest(`/get-registered-user/${id}`),
 };
 
 export default authService;
