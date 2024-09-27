@@ -212,8 +212,25 @@ function AdminGuarantorsList() {
       />
     );
 
-    // Add page numbers
-    for (let i = 1; i <= totalPages; i++) {
+    // Add page numbers with ellipsis for large sets of pages
+    const maxPagesToShow = 5; // Number of pages to display around the current page
+    const pagesAroundCurrent = Math.floor(maxPagesToShow / 2); // Pages to show before and after the current page
+
+    // Show ellipsis and first page if current page is far from the first page
+    if (currentPage > pagesAroundCurrent + 1) {
+      items.push(
+        <Pagination.Item key={1} onClick={() => handlePageChange(1, type)}>
+          {1}
+        </Pagination.Item>
+      );
+      items.push(<Pagination.Ellipsis key="start-ellipsis" disabled />);
+    }
+
+    // Generate page numbers dynamically based on the current page
+    const startPage = Math.max(1, currentPage - pagesAroundCurrent);
+    const endPage = Math.min(totalPages, currentPage + pagesAroundCurrent);
+
+    for (let i = startPage; i <= endPage; i++) {
       if (i === currentPage) {
         items.push(
           <Pagination.Item key={i} active>
@@ -227,6 +244,19 @@ function AdminGuarantorsList() {
           </Pagination.Item>
         );
       }
+    }
+
+    // Show ellipsis and last page if current page is far from the last page
+    if (currentPage < totalPages - pagesAroundCurrent) {
+      items.push(<Pagination.Ellipsis key="end-ellipsis" disabled />);
+      items.push(
+        <Pagination.Item
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages, type)}
+        >
+          {totalPages}
+        </Pagination.Item>
+      );
     }
 
     // Next and last buttons
