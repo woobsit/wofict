@@ -92,19 +92,18 @@ function AdminSidebar({ routes }) {
 
   return (
     <sidebar className="sidebar">
-      <div className="sidebar__logo-image-container">
-        <img
-          className="sidebar__logo-image"
-          src={
-            fetchWebsiteDataStatus &&
-            fetchWebsiteInfo[2].value + fetchWebsiteInfo[3].value
-          }
-          alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
-          title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
-        />
-      </div>
-
       <div className="sidebar__list-container">
+        <div className="sidebar__logo-image-container">
+          <img
+            className="sidebar__logo-image"
+            src={
+              fetchWebsiteDataStatus &&
+              fetchWebsiteInfo[2].value + fetchWebsiteInfo[3].value
+            }
+            alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
+            title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
+          />
+        </div>
         <ul className="sidebar__unordered-list">{renderRoutes}</ul>
       </div>
     </sidebar>
