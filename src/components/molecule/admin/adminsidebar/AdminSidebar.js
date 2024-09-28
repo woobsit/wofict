@@ -48,22 +48,25 @@ function AdminSidebar({ routes }) {
         const isOpen = openCollapse === name; // Check if this collapse is open
         returnValue = children ? (
           <div key={key}>
-            <button
-              className="parent-menu"
+            <Link
+              className={`sidebar__parent-menu sidebar__link ${key === collapseName ? "sidebar__link-active" : ""}`}
               onClick={() => toggleCollapse(name)}
             >
               <SidenavCollapse name={name} icon={icon} />
-              <FontAwesomeIcon icon={isOpen ? faCaretDown : faCaretRight} />
-            </button>
+              <FontAwesomeIcon
+                icon={isOpen ? faCaretDown : faCaretRight}
+                className="sidebar__icon-caret"
+              />
+            </Link>
             {isOpen && (
-              <div className="child-menu">
+              <div>
                 {children.map((child, index) => (
-                  <Link to={child.route} key={index}>
+                  <Link to={child.route} key={index} className="sidebar__link">
                     <SidenavCollapse
                       name={child.name}
-                      icon={child.icon}
-                      active={child.key === collapseName}
+                      // active={child.key === collapseName}
                       noCollapse={child.noCollapse}
+                      className="sidebar__child-menu"
                     />
                   </Link>
                 ))}
@@ -71,11 +74,15 @@ function AdminSidebar({ routes }) {
             )}
           </div>
         ) : (
-          <Link key={key} to={route}>
+          <Link
+            key={key}
+            to={route}
+            className={`sidebar__link ${key === collapseName ? "sidebar__link-active" : ""}`}
+          >
             <SidenavCollapse
               name={name}
               icon={icon}
-              active={key === collapseName}
+              // active={key === collapseName}
               noCollapse={noCollapse}
             />
           </Link>

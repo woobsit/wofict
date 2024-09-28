@@ -5,8 +5,6 @@ import {
   faUniversity,
   faCog,
   faUserGear,
-  faFileText,
-  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 //views
 import AdminAllRegisteredUsersList from "./view/admin/AdminAllRegisteredUsersList";
@@ -36,23 +34,20 @@ const adminRoutes = [
         type: "collapse",
         name: "Registered Users",
         key: "all-users",
-        icon: <FontAwesomeIcon icon={faUniversity} />,
         route: "/all-users",
         component: <AdminAllRegisteredUsersList />,
       },
       {
         type: "collapse",
-        name: "Users With Credentials",
+        name: "Users with Credentials",
         key: "admin/admission/credentials",
-        icon: <FontAwesomeIcon icon={faFileText} />,
         route: "/admin/admission/credentials",
         component: <AdminCredentialsList />,
       },
       {
         type: "collapse",
-        name: "Users With Guarantors",
+        name: "Users with Guarantors",
         key: "admin/admission/guarantors",
-        icon: <FontAwesomeIcon icon={faUsers} />,
         route: "/admin/admission/guarantors",
         component: <AdminGuarantorsList />,
       },
