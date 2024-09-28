@@ -13,6 +13,7 @@ import AdminAdmins from "./view/admin/AdminAdmins";
 import AdminSettings from "./view/admin/AdminSettings";
 import AdminCredentialsList from "./view/admin/AdminCredentialsList";
 import AdminGuarantorsList from "./view/admin/AdminGuarantorsList";
+import AdminToAdmitUsers from "./view/admin/AdminToAdmitUsers";
 
 const adminRoutes = [
   {
@@ -50,6 +51,13 @@ const adminRoutes = [
         key: "admin/admission/guarantors",
         route: "/admin/admission/guarantors",
         component: <AdminGuarantorsList />,
+      },
+      {
+        type: "collapse",
+        name: "Admit Users",
+        key: "admin/admission/to-admit-users",
+        route: "/admin/admission/to-admit-users",
+        component: <AdminToAdmitUsers />,
       },
     ],
   },

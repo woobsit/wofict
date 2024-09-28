@@ -774,4 +774,71 @@ class StudentController extends Controller
             return response()->json(['status' => 500, 'message' => 'System error occured']);
         }
     }
+
+    //All users to be admitted
+    public function getUsersToBeAdmitted()
+    {
+        try {
+            $user = User::where('active', 1)->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->orderBy('created_at', 'desc')->paginate(10);
+            if ($user) {
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'success',
+                    'result' => $user->items(),
+                    'pagination' => [
+                        'total' => $user->total(),
+                        'per_page' => $user->perPage(),
+                        'current_page' => $user->currentPage(),
+                        'last_page' => $user->lastPage(),
+                        'from' => $user->firstItem(),
+                        'to' => $user->lastItem(),
+                    ],
+                ]);
+            }
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //search users to be admitted
+    public function searchUsersToBeAdmitted(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('users-to-be-admitted');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname'
+            $users = User::where('active', 1)
+                ->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
 }
