@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use setasign\Fpdi\Fpdi;
-use setasign\Fpdi\PdfReader;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class StudentController extends Controller
 {
@@ -839,6 +842,49 @@ class StudentController extends Controller
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    public function admitUser($id)
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)
+                ->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->get();
+
+            if ($user) {
+                $data = [
+                    'user' => $user->firstname . ' ' . $user->surname,
+                    'email' => $user->email
+                ];
+
+                // Dynamically generate the PDF
+                $pdf = PDF::loadView('pdf.admitted', $data);
+
+                // Get the PDF content as a string
+                $pdfOutput = $pdf->output();
+
+                // Send the email with the generated PDF attached
+                Mail::send('emails.admitted', $data, function ($message) use ($user, $pdfOutput) {
+                    $message->to($user->email)
+                        ->subject('Admission Acknowledgement')
+                        ->attachData($pdfOutput, 'admission-acknowledgement.pdf', [
+                            'mime' => 'application/pdf',
+                        ]);
+                });
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Acknowledgement PDF generated and sent successfully.'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Invalid user details entered'
+                ]);
+            }
+        } catch (Exception $e) {
+            // Log the actual error message for debugging purposes
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
         }
     }
 }

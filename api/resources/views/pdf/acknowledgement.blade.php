@@ -1,4 +1,4 @@
-<!-- resources/views/pdf/myPDF.blade.php -->
+<!-- resources/views/pdf/acknowledgement.blade.php -->
 <!DOCTYPE html>
 <html>
 

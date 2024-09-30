@@ -246,6 +246,8 @@ const authService = {
       `/search-users-to-be-admitted?users-to-be-admitted=${searchTerm}`,
       "get"
     ),
+  //admit user
+  getAdmit: (id) => handleRequest(`/admit-user/${id}`),
 };
 
 export default authService;

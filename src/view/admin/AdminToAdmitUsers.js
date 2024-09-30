@@ -22,6 +22,8 @@ import { notify } from "../../utils/Notification";
 import authService from "../../api/authService";
 //React search autocomplete
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
+//Sweetalert2
+import Swal from "sweetalert2";
 
 function AdminToAdmitUsers() {
   const navigate = useNavigate();
@@ -43,6 +45,9 @@ function AdminToAdmitUsers() {
     fetchAllUsersToBeAdmittedDataNoRecords,
     setFetchAllUsersToBeAdmittedDataNoRecords,
   ] = useState("");
+
+  //admit status
+  //const [admitStatus, setAdmitStatus] = useState(false);
 
   //Paginations
   const [pagination, setPagination] = useState({});
@@ -229,6 +234,45 @@ function AdminToAdmitUsers() {
     }
   };
 
+  // Admit user
+  //   async function fetchAdmit($id) {
+  //     setAdmitStatus(true);
+  //     try {
+  //       const response = await authService.getAdmit($id);
+  //       if (response.status === 200) {
+  //         //
+  //       } else {
+  //         notify(
+  //           "error",
+  //           "Error",
+  //           response.message || "An unexpected error occurred"
+  //         );
+  //       }
+  //     } catch (error) {
+  //       notify(
+  //         "error",
+  //         "Error",
+  //         "An unexpected error occurred. Please try again."
+  //       );
+  //     } finally {
+  //       setAdmitStatus(false);
+  //     }
+  //   }
+
+  const admitUser = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Admit user?",
+      description: "User will be admitted as a student",
+      showConfirmButton: true, // Show the "OK" button
+      allowOutsideClick: false, // Prevent closing by clicking outside the dialog
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("");
+      }
+    });
+  };
+
   const styling = {
     borderRadius: "5px",
     height: "35px",
@@ -377,7 +421,11 @@ function AdminToAdmitUsers() {
                                 </Button>
                               </td>
                               <td>
-                                <Button variant="success" size="sm">
+                                <Button
+                                  variant="success"
+                                  size="sm"
+                                  onClick={admitUser}
+                                >
                                   Admit user
                                 </Button>
                               </td>
