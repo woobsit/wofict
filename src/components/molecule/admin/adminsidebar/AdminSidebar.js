@@ -47,14 +47,17 @@ function AdminSidebar({ routes }) {
       if (type === "collapse") {
         const isOpen = openCollapse === name; // Check if this collapse is open
         returnValue = children ? (
-          <div key={key}>
-            <button
-              className="parent-menu"
+          <div key={key} className="">
+            <Link
+              className="sidebar__parent-menu"
               onClick={() => toggleCollapse(name)}
             >
               <SidenavCollapse name={name} icon={icon} />
-              <FontAwesomeIcon icon={isOpen ? faCaretDown : faCaretRight} />
-            </button>
+              <FontAwesomeIcon
+                icon={isOpen ? faCaretDown : faCaretRight}
+                className="sidebar__caret-icon"
+              />
+            </Link>
             {isOpen && (
               <div className="child-menu">
                 {children.map((child, index) => (
@@ -92,19 +95,18 @@ function AdminSidebar({ routes }) {
 
   return (
     <sidebar className="sidebar">
-      <div className="sidebar__logo-image-container">
-        <img
-          className="sidebar__logo-image"
-          src={
-            fetchWebsiteDataStatus &&
-            fetchWebsiteInfo[2].value + fetchWebsiteInfo[3].value
-          }
-          alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
-          title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
-        />
-      </div>
-
       <div className="sidebar__list-container">
+        <div className="sidebar__logo-image-container">
+          <img
+            className="sidebar__logo-image"
+            src={
+              fetchWebsiteDataStatus &&
+              fetchWebsiteInfo[2].value + fetchWebsiteInfo[3].value
+            }
+            alt={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
+            title={fetchWebsiteDataStatus && fetchWebsiteInfo[0].value}
+          />
+        </div>
         <ul className="sidebar__unordered-list">{renderRoutes}</ul>
       </div>
     </sidebar>

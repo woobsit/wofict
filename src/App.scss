@@ -356,7 +356,7 @@
 }
 
 .sidebar__unordered-list a {
-  color: $gray;
+  color: rgb(224, 224, 224);
 }
 
 .header {
@@ -695,9 +695,9 @@
     width: 100%;
     display: flex;
     align-items: center;
-    padding: 6px 10px;
-    margin-bottom: 6px;
-    border-radius: 5px;
+    padding: 10px 10px;
+    margin-bottom: 2px;
+   
   }
 
   .sidebar__link:hover {
@@ -705,18 +705,30 @@
   }
 
   .sidebar__link-active {
-    background: rgba(23, 23, 255, 0.589);
+    background: rgba(131, 131, 252, 0.589);
     color: white;
   }
 
+.sidebar__parent-menu{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+}
+
+.sidebar__caret-icon{
+  margin-right:13px;
+}
+
   .sidebar__list-span-icon {
-    margin-right: 12px;
-    font-size: 24px;
+    margin-right: 6px;
+    font-size: 17px;
+    width: 20px;    
+    color: #0089ff;
   }
 
   .sidebar__list-span-text {
-    text-transform: uppercase;
     font-weight: bold;
+    font-size: 15px;
   }
 
   .nav__logo {
@@ -729,6 +741,8 @@
     align-items: center;
     justify-content: center;
     height: 65px;
+    border-bottom:1px solid rgb(139, 139, 139);
+    margin-bottom:20px;
   }
 
   .sidebar__logo-image {
@@ -746,7 +760,7 @@
     background-repeat: no-repeat;
     height: 100vh;
     width: 100%;
-    padding: 20px 10px 10px 10px;
+    padding-top: 10px;
   }
 }
 
@@ -1079,6 +1093,6 @@
  }
 
  .user-info {
-  min-height: 485px;
+  min-height: 520px;
 }
 }
