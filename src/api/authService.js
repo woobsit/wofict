@@ -237,6 +237,17 @@ const authService = {
     ),
   //Registered user
   getRegisteredUser: (id) => handleRequest(`/get-registered-user/${id}`),
+  //Get all users to be admitted.
+  getUsersToBeAdmitted: (page = 1) =>
+    handleRequest(`/get-users-to-be-admitted?page=${page}`),
+  //Search users to be admitted
+  getSearchedUsersToBeAdmitted: (searchTerm) =>
+    handleRequest(
+      `/search-users-to-be-admitted?users-to-be-admitted=${searchTerm}`,
+      "get"
+    ),
+  //admit user
+  getAdmit: (id) => handleRequest(`/admit-user/${id}`),
 };
 
 export default authService;

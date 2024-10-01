@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use setasign\Fpdi\Fpdi;
-use setasign\Fpdi\PdfReader;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class StudentController extends Controller
 {
@@ -770,6 +773,120 @@ class StudentController extends Controller
                 ]);
             }
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //All users to be admitted
+    public function getUsersToBeAdmitted()
+    {
+        try {
+            $user = User::where('active', 1)->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->orderBy('created_at', 'desc')->paginate(10);
+            if ($user) {
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'success',
+                    'result' => $user->items(),
+                    'pagination' => [
+                        'total' => $user->total(),
+                        'per_page' => $user->perPage(),
+                        'current_page' => $user->currentPage(),
+                        'last_page' => $user->lastPage(),
+                        'from' => $user->firstItem(),
+                        'to' => $user->lastItem(),
+                    ],
+                ]);
+            }
+
+            // Check if there are any users
+            if ($user->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No records found',
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //search users to be admitted
+    public function searchUsersToBeAdmitted(Request $request)
+    {
+        try {
+            // Get the search input from the query parameter
+            $searchTerm = $request->query('users-to-be-admitted');
+
+            // Split the search term into multiple parts (words)
+            $searchParts = explode(' ', $searchTerm);
+
+            // Search in the 'users' table across 'firstname', 'surname'
+            $users = User::where('active', 1)
+                ->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")
+                ->where(function ($query) use ($searchParts) {
+                    foreach ($searchParts as $part) {
+                        $query->orWhere('firstname', 'LIKE', "%$part%")
+                            ->orWhere('surname', 'LIKE', "%$part%");
+                    }
+                })
+                ->get();
+
+            // Check if any users were found
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    public function admitUser($id)
+    {
+        try {
+            $user = User::where('active', 1)->where('id', $id)
+                ->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->first();
+
+            if ($user) {
+                $data = [
+                    'user' => $user->firstname . ' ' . $user->surname,
+                    'email' => $user->email
+                ];
+
+                // Dynamically generate the PDF
+                $pdf = PDF::loadView('mail.admitted', $data);
+
+                // Get the PDF content as a string
+                $pdfOutput = $pdf->output();
+
+                // Send the email with the generated PDF attached
+                Mail::send('mail.admitted', $data, function ($message) use ($user, $pdfOutput) {
+                    $message->to($user->email)
+                        ->subject('Admission Acknowledgement')
+                        ->attachData($pdfOutput, 'admission-acknowledgement.pdf', [
+                            'mime' => 'application/pdf',
+                        ]);
+                });
+
+                $user->admission_status = 'Admitted';
+                $user->save();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'An acknowledgment mail has been sent to the user'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Invalid user details entered'
+                ]);
+            }
+        } catch (Exception $e) {
+            // Log the actual error message for debugging purposes
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occured']);
         }

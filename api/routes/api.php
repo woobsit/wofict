@@ -120,9 +120,14 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/search-all-registered-users', [StudentController::class, 'searchAllRegisteredUsers']);
     //get a registered user
     Route::get('/get-registered-user/{id}', [StudentController::class, 'getRegisteredUser']);
+    //All admitted users lists
+    Route::get('/get-users-to-be-admitted', [StudentController::class, 'getUsersToBeAdmitted']);
+    //search users that are to be admitted
+    Route::get('/search-users-to-be-admitted', [StudentController::class, 'searchUsersToBeAdmitted']);
+    //admit user
+    Route::get('/admit-user/{id}', [StudentController::class, 'admitUser']);
 });
 
 
     // Endpoints that require admin scope
-    //
     // Other admin routes
