@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import authService from "./../../../api/authService";
 //Custom component
 import Card from "./../../../components/atom/card/Card";
-import Typography from "./../../../components/atom/typography/Typography";
+//import Typography from "./../../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -14,30 +14,30 @@ import AdminBreadcrumbs from "./AdminBreadcrumbs";
 
 function AdminMain() {
   const [fetchAdminData, setFetchAdminData] = useState({});
-  const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
-  const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
+  //const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
+  //const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
   const [fetchAdminDataStatus, setFetchAdminDataStatus] = useState(false);
 
-  useEffect(() => {
-    async function displayWebsiteInfo() {
-      try {
-        const response = await authService.websiteInfo();
-        if (response.status === 201) {
-          setFetchWebsiteInfo(response.result);
-          setFetchWebsiteDataStatus(true);
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
-        notify(
-          "error",
-          "Error",
-          "An unexpected error occurred. Please try again."
-        );
-      }
-    }
-    displayWebsiteInfo();
-  }, []);
+  // useEffect(() => {
+  //   async function displayWebsiteInfo() {
+  //     try {
+  //       const response = await authService.websiteInfo();
+  //       if (response.status === 201) {
+  //         setFetchWebsiteInfo(response.result);
+  //         setFetchWebsiteDataStatus(true);
+  //       } else if (response.status === 500) {
+  //         notify("error", "System Error", response.message);
+  //       }
+  //     } catch (error) {
+  //       notify(
+  //         "error",
+  //         "Error",
+  //         "An unexpected error occurred. Please try again."
+  //       );
+  //     }
+  //   }
+  //   displayWebsiteInfo();
+  // }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -82,7 +82,7 @@ function AdminMain() {
         </div>
       </div>
       <div className="card-student-info-container">
-        <Card className="card-student-info">
+        {/* <Card className="card-student-info">
           <div>
             <img
               className="nav__menu-image"
@@ -107,16 +107,34 @@ function AdminMain() {
           </div>
           <div></div>
           <div></div>
-        </Card>
+        </Card> */}
       </div>
       <div className="cards-container">
         <div className="cards-container__inner-box">
-          <Card className="card card__card--blue">dfdfd</Card>
+          <Card className="card card__card--blue">
+            <div className="card-upper">
+              <div className="card-upper__wrapper">
+                <div className="card-upper__upper">Current Students</div>
+                <div className="card-upper__lower">12,000</div>
+              </div>
+              <div>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="landing-form__input-icon"
+                />
+              </div>
+            </div>
+            <div className="card-lower">increased by 2.4%</div>
+          </Card>
+        </div>
+        <div className="cards-container__inner-box">
           <Card className="card card__card--red">hdfefe</Card>
         </div>
         <div className="cards-container__inner-box">
-          <Card className="card card__card--green">Hello</Card>
           <Card className="card card__card--black">dfdfd</Card>
+        </div>
+        <div className="cards-container__inner-box">
+          <Card className="card card__card--green">Hello</Card>
         </div>
       </div>
     </main>
