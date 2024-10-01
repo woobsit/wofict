@@ -849,7 +849,7 @@ class StudentController extends Controller
     {
         try {
             $user = User::where('active', 1)->where('id', $id)
-                ->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->get();
+                ->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->first();
 
             if ($user) {
                 $data = [
@@ -858,22 +858,26 @@ class StudentController extends Controller
                 ];
 
                 // Dynamically generate the PDF
-                $pdf = PDF::loadView('pdf.admitted', $data);
+                $pdf = PDF::loadView('mail.admitted', $data);
 
                 // Get the PDF content as a string
                 $pdfOutput = $pdf->output();
 
                 // Send the email with the generated PDF attached
-                Mail::send('emails.admitted', $data, function ($message) use ($user, $pdfOutput) {
+                Mail::send('mail.admitted', $data, function ($message) use ($user, $pdfOutput) {
                     $message->to($user->email)
                         ->subject('Admission Acknowledgement')
                         ->attachData($pdfOutput, 'admission-acknowledgement.pdf', [
                             'mime' => 'application/pdf',
                         ]);
                 });
+
+                $user->admission_status = 'Admitted';
+                $user->save();
+
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Acknowledgement PDF generated and sent successfully.'
+                    'message' => 'An acknowledgment mail has been sent to the user'
                 ]);
             } else {
                 return response()->json([

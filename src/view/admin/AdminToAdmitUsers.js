@@ -24,6 +24,8 @@ import authService from "../../api/authService";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 //Sweetalert2
 import Swal from "sweetalert2";
+//Spinner loader
+import Loader from "./../../components/atom/loader";
 
 function AdminToAdmitUsers() {
   const navigate = useNavigate();
@@ -47,7 +49,7 @@ function AdminToAdmitUsers() {
   ] = useState("");
 
   //admit status
-  //const [admitStatus, setAdmitStatus] = useState(false);
+  const [admitStatus, setAdmitStatus] = useState(false);
 
   //Paginations
   const [pagination, setPagination] = useState({});
@@ -235,40 +237,41 @@ function AdminToAdmitUsers() {
   };
 
   // Admit user
-  //   async function fetchAdmit($id) {
-  //     setAdmitStatus(true);
-  //     try {
-  //       const response = await authService.getAdmit($id);
-  //       if (response.status === 200) {
-  //         //
-  //       } else {
-  //         notify(
-  //           "error",
-  //           "Error",
-  //           response.message || "An unexpected error occurred"
-  //         );
-  //       }
-  //     } catch (error) {
-  //       notify(
-  //         "error",
-  //         "Error",
-  //         "An unexpected error occurred. Please try again."
-  //       );
-  //     } finally {
-  //       setAdmitStatus(false);
-  //     }
-  //   }
+  async function fetchAdmit($id) {
+    setAdmitStatus(true);
+    try {
+      const response = await authService.getAdmit($id);
+      if (response.status === 200) {
+        notify("success", "User admitted", response.message);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setAdmitStatus(false);
+    }
+  }
 
-  const admitUser = () => {
+  const admitUser = ($id) => {
     Swal.fire({
-      icon: "success",
+      icon: "question",
       title: "Admit user?",
-      description: "User will be admitted as a student",
+      showCancelButton: true,
+      text: "User will be admitted as a student",
       showConfirmButton: true, // Show the "OK" button
       allowOutsideClick: false, // Prevent closing by clicking outside the dialog
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate("");
+        fetchAdmit($id);
       }
     });
   };
@@ -281,177 +284,184 @@ function AdminToAdmitUsers() {
   };
 
   return (
-    <div className="content">
-      <AdminHeader />
+    <>
+      {admitStatus && <Loader />}
+      <div className="content">
+        <AdminHeader />
 
-      <div className="image-container">
-        <div>
-          <Typography variant="h3" className="credential-text">
-            Users to be admitted
-          </Typography>
+        <div className="image-container">
+          <div>
+            <Typography variant="h3" className="credential-text">
+              Users to be admitted
+            </Typography>
+          </div>
+          <div>
+            <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
+            <Typography variant="span" className="credential-span">
+              /all users
+            </Typography>
+          </div>
         </div>
-        <div>
-          <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
-          <Typography variant="span" className="credential-span">
-            /all users
-          </Typography>
+
+        <div className="search-input-container">
+          <div className="landing-form__input-box">
+            <input
+              type="text"
+              placeholder="Search students"
+              className="landing-form__input"
+              name="email"
+            />
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="landing-student-form__input-icon"
+            />
+          </div>
         </div>
-      </div>
+        <div className="credentials">
+          <div className="credentials__table-box">
+            <Tabs
+              activeKey={activeTab}
+              onSelect={handleTabSelect}
+              id="fill-tab-example"
+              className="mb-3"
+              fill
+            >
+              <Tab eventKey="users-to-be-admitted" title="Users to be admitted">
+                <div className="credentials__table-title-box">
+                  <Typography variant="h4" className="credentials__table-title">
+                    Users to be admitted
+                  </Typography>
 
-      <div className="search-input-container">
-        <div className="landing-form__input-box">
-          <input
-            type="text"
-            placeholder="Search students"
-            className="landing-form__input"
-            name="email"
-          />
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="landing-student-form__input-icon"
-          />
-        </div>
-      </div>
-      <div className="credentials">
-        <div className="credentials__table-box">
-          <Tabs
-            activeKey={activeTab}
-            onSelect={handleTabSelect}
-            id="fill-tab-example"
-            className="mb-3"
-            fill
-          >
-            <Tab eventKey="users-to-be-admitted" title="Users to be admitted">
-              <div className="credentials__table-title-box">
-                <Typography variant="h4" className="credentials__table-title">
-                  Users to be admitted
-                </Typography>
+                  <ReactSearchAutocomplete
+                    items={items}
+                    onSearch={handleSearch}
+                    onSelect={handleOnSelect}
+                    placeholder="Users to be admitted..."
+                    className="credentials-autosearch"
+                    styling={styling}
+                  />
+                </div>
+                {fetchAllUsersToBeAdmittedDataStatus ? (
+                  <>
+                    <Placeholder as="p" animation="glow">
+                      <Placeholder xs={12} size="lg" />
+                    </Placeholder>
+                    <Placeholder as="p" animation="wave">
+                      <Placeholder xs={12} size="lg" />
+                    </Placeholder>
+                    <Placeholder as="p" animation="glow">
+                      <Placeholder xs={12} size="xs" />
+                    </Placeholder>
+                    <Placeholder as="p" animation="wave">
+                      <Placeholder xs={12} size="xs" />
+                    </Placeholder>
+                  </>
+                ) : (
+                  <>
+                    <div className="credentials__table-wrapper">
+                      <Table striped bordered hover responsive>
+                        <thead>
+                          <tr className="credentials__table-head">
+                            <th>#</th>
+                            <th>Firstname</th>
+                            <th>Surname</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>Course</th>
+                            <th>Credential Status</th>
+                            <th>Guarantor Status</th>
 
-                <ReactSearchAutocomplete
-                  items={items}
-                  onSearch={handleSearch}
-                  onSelect={handleOnSelect}
-                  placeholder="Users to be admitted..."
-                  className="credentials-autosearch"
-                  styling={styling}
-                />
-              </div>
-              {fetchAllUsersToBeAdmittedDataStatus ? (
-                <>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                </>
-              ) : (
-                <>
-                  <div className="credentials__table-wrapper">
-                    <Table striped bordered hover responsive>
-                      <thead>
-                        <tr className="credentials__table-head">
-                          <th>#</th>
-                          <th>Firstname</th>
-                          <th>Surname</th>
-                          <th>Email</th>
-                          <th>Gender</th>
-                          <th>Course</th>
-                          <th>Credential Status</th>
-                          <th>Guarantor Status</th>
-
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {fetchAllUserToBeAdmittedDataStatus &&
-                        fetchAllUsersToBeAdmittedData.length > 0 ? (
-                          fetchAllUsersToBeAdmittedData.map((user, index) => (
-                            <tr key={user.id}>
-                              <td>{index + 1}</td>
-                              <td>{user.firstname}</td>
-                              <td>{user.surname}</td>
-                              <td>{user.email}</td>
-                              <td>{user.gender}</td>
-                              <td>{user.course}</td>
-                              <td>
-                                <Typography variant="p" className="">
-                                  {user.credentials === null ? (
-                                    <Badge bg="danger">
-                                      no credentials uploaded
-                                    </Badge>
-                                  ) : user.credentials_status === 1 ? (
-                                    <Badge bg="success">approved</Badge>
-                                  ) : (
-                                    <Badge bg="secondary">
-                                      pending/disapproved
-                                    </Badge>
-                                  )}
-                                </Typography>
-                              </td>
-                              <td>
-                                <Typography variant="p" className="">
-                                  {user.guarantors_1 === null ||
-                                  user.guarantors_2 === null ? (
-                                    <Badge bg="danger">
-                                      no guarantors uploaded
-                                    </Badge>
-                                  ) : user.guarantors_status === 1 ? (
-                                    <Badge bg="success">approved</Badge>
-                                  ) : (
-                                    <Badge bg="secondary">
-                                      pending/disapproved
-                                    </Badge>
-                                  )}
-                                </Typography>
-                              </td>
-                              <td>
-                                <Button
-                                  variant="primary"
-                                  size="sm"
-                                  onClick={() => handleViewUserDetails(user.id)}
-                                >
-                                  View details
-                                </Button>
-                              </td>
-                              <td>
-                                <Button
-                                  variant="success"
-                                  size="sm"
-                                  onClick={admitUser}
-                                >
-                                  Admit user
-                                </Button>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {fetchAllUserToBeAdmittedDataStatus &&
+                          fetchAllUsersToBeAdmittedData.length > 0 ? (
+                            fetchAllUsersToBeAdmittedData.map((user, index) => (
+                              <tr key={user.id}>
+                                <td>{index + 1}</td>
+                                <td>{user.firstname}</td>
+                                <td>{user.surname}</td>
+                                <td>{user.email}</td>
+                                <td>{user.gender}</td>
+                                <td>{user.course}</td>
+                                <td>
+                                  <Typography variant="p" className="">
+                                    {user.credentials === null ? (
+                                      <Badge bg="danger">
+                                        no credentials uploaded
+                                      </Badge>
+                                    ) : user.credentials_status === 1 ? (
+                                      <Badge bg="success">approved</Badge>
+                                    ) : (
+                                      <Badge bg="secondary">
+                                        pending/disapproved
+                                      </Badge>
+                                    )}
+                                  </Typography>
+                                </td>
+                                <td>
+                                  <Typography variant="p" className="">
+                                    {user.guarantors_1 === null ||
+                                    user.guarantors_2 === null ? (
+                                      <Badge bg="danger">
+                                        no guarantors uploaded
+                                      </Badge>
+                                    ) : user.guarantors_status === 1 ? (
+                                      <Badge bg="success">approved</Badge>
+                                    ) : (
+                                      <Badge bg="secondary">
+                                        pending/disapproved
+                                      </Badge>
+                                    )}
+                                  </Typography>
+                                </td>
+                                <td>
+                                  <Button
+                                    variant="primary"
+                                    size="sm"
+                                    onClick={() =>
+                                      handleViewUserDetails(user.id)
+                                    }
+                                  >
+                                    View details
+                                  </Button>
+                                </td>
+                                <td>
+                                  <Button
+                                    variant="success"
+                                    size="sm"
+                                    onClick={() => {
+                                      admitUser(user.id);
+                                    }}
+                                  >
+                                    Admit user
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))
+                          ) : fetchAllUsersToBeAdmittedDataNoRecords ? (
+                            <tr>
+                              <td colSpan="8" className="text-center">
+                                {fetchAllUsersToBeAdmittedDataNoRecords}
                               </td>
                             </tr>
-                          ))
-                        ) : fetchAllUsersToBeAdmittedDataNoRecords ? (
-                          <tr>
-                            <td colSpan="8" className="text-center">
-                              {fetchAllUsersToBeAdmittedDataNoRecords}
-                            </td>
-                          </tr>
-                        ) : null}
-                      </tbody>
-                    </Table>
-                  </div>
-                  {pagination &&
-                    renderPagination(pagination, "users-to-be-admitted")}
-                </>
-              )}
-            </Tab>
-          </Tabs>
+                          ) : null}
+                        </tbody>
+                      </Table>
+                    </div>
+                    {pagination &&
+                      renderPagination(pagination, "users-to-be-admitted")}
+                  </>
+                )}
+              </Tab>
+            </Tabs>
+          </div>
         </div>
-      </div>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 }
 
