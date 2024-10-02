@@ -529,7 +529,8 @@ cards-container
   display:flex;
   flex-direction: column;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  height:130px;
+  height:150px;
+  justify-content: space-between;
 }
 
 .cards-container__inner-box .card__card--red {
@@ -562,6 +563,28 @@ cards-container
 .card-upper__upper{
   color:rgb(218, 218, 218);
   margin-bottom:5px;
+  font-size:15px;
+  text-transform: uppercase;
+}
+
+.card-upper__lower{
+  color:white;
+  font-size:25px;
+  font-weight: bolder;
+}
+
+.card-lower__wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background-color: white;
+}
+
+.card-lower__users-icon{
+  color:rgb(40, 201, 40);
 }
 
 .card-pending {

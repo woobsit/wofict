@@ -1,71 +1,56 @@
 import React, { useState, useEffect } from "react";
-//React route dom
+//API service
 import authService from "./../../../api/authService";
+import getAuthAdminData from "./../../../api/handleAuthAdminCookies";
 //Custom component
 import Card from "./../../../components/atom/card/Card";
-//import Typography from "./../../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faUsers } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "./../../../utils/Notification";
 //Molecule
 import AdminBreadcrumbs from "./AdminBreadcrumbs";
 
 function AdminMain() {
-  const [fetchAdminData, setFetchAdminData] = useState({});
-  //const [fetchWebsiteInfo, setFetchWebsiteInfo] = useState({});
-  //const [fetchWebsiteDataStatus, setFetchWebsiteDataStatus] = useState(false);
-  const [fetchAdminDataStatus, setFetchAdminDataStatus] = useState(false);
+  const { admin_user } = getAuthAdminData();
 
-  // useEffect(() => {
-  //   async function displayWebsiteInfo() {
-  //     try {
-  //       const response = await authService.websiteInfo();
-  //       if (response.status === 201) {
-  //         setFetchWebsiteInfo(response.result);
-  //         setFetchWebsiteDataStatus(true);
-  //       } else if (response.status === 500) {
-  //         notify("error", "System Error", response.message);
-  //       }
-  //     } catch (error) {
-  //       notify(
-  //         "error",
-  //         "Error",
-  //         "An unexpected error occurred. Please try again."
-  //       );
-  //     }
-  //   }
-  //   displayWebsiteInfo();
-  // }, []);
+  const [countCurrentStudentsState, setCountCurrentStudentsState] =
+    useState(false);
+  const [countCurrentStudents, setCountCurrentStudents] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await authService.getAdmin();
+    toCountCurrentStudents();
+  }, []);
 
-        if (response.status === 201) {
-          setFetchAdminData(response.result);
-          setFetchAdminDataStatus(true);
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        }
-      } catch (error) {
+  // count current students
+  async function toCountCurrentStudents() {
+    setCountCurrentStudentsState(true);
+    try {
+      const response = await authService.getCurrentStudentsCount();
+      if (response.status === 201) {
+        setCountCurrentStudents(response.result);
+      } else {
         notify(
           "error",
           "Error",
-          "An unexpected error occurred. Please try again."
+          response.message || "An unexpected error occurred"
         );
       }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setCountCurrentStudentsState(false);
     }
-    fetchData();
-  }, []);
+  }
 
   return (
     <main>
-      <AdminBreadcrumbs
-        firstname={fetchAdminDataStatus && fetchAdminData.firstname}
-      />
+      <AdminBreadcrumbs firstname={admin_user.firstname} />
 
       <div className="search-input-container">
         <div className="landing-form__input-box">
@@ -115,16 +100,20 @@ function AdminMain() {
             <div className="card-upper">
               <div className="card-upper__wrapper">
                 <div className="card-upper__upper">Current Students</div>
-                <div className="card-upper__lower">12,000</div>
+                <div className="card-upper__lower">
+                  {countCurrentStudentsState ? null : countCurrentStudents}
+                </div>
               </div>
-              <div>
+              <div className="card-lower__wrapper">
                 <FontAwesomeIcon
-                  icon={faSearch}
-                  className="landing-form__input-icon"
+                  icon={faUsers}
+                  className="card-lower__users-icon"
                 />
               </div>
             </div>
-            <div className="card-lower">increased by 2.4%</div>
+            <div className="card-lower">
+              <span className="">2.4%</span>increased this month
+            </div>
           </Card>
         </div>
         <div className="cards-container__inner-box">
