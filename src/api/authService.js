@@ -250,6 +250,8 @@ const authService = {
   getAdmit: (id) => handleRequest(`/admit-user/${id}`),
   //current students count
   getCurrentStudentsCount: () => handleRequest(`/current-students-count`),
+  //students growth
+  getCurrentStudentsGrowth: () => handleRequest(`/students-growth-rate`),
 };
 
 export default authService;

@@ -6,7 +6,12 @@ import getAuthAdminData from "./../../../api/handleAuthAdminCookies";
 import Card from "./../../../components/atom/card/Card";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown,
+  faArrowUp,
+  faSearch,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "./../../../utils/Notification";
 //Molecule
@@ -15,12 +20,17 @@ import AdminBreadcrumbs from "./AdminBreadcrumbs";
 function AdminMain() {
   const { admin_user } = getAuthAdminData();
 
+  //student count state
   const [countCurrentStudentsState, setCountCurrentStudentsState] =
     useState(false);
   const [countCurrentStudents, setCountCurrentStudents] = useState(null);
+  //student growth state
+  const [studentsGrowthState, setStudentsGrowthState] = useState(false);
+  const [studentsGrowth, setStudentsGrowth] = useState({ growth_rate: 0 });
 
   useEffect(() => {
     toCountCurrentStudents();
+    toGetStudentsGrowth();
   }, []);
 
   // count current students
@@ -45,6 +55,31 @@ function AdminMain() {
       );
     } finally {
       setCountCurrentStudentsState(false);
+    }
+  }
+
+  //students growth
+  async function toGetStudentsGrowth() {
+    setStudentsGrowthState(true);
+    try {
+      const response = await authService.getCurrentStudentsGrowth();
+      if (response.status === 201) {
+        setStudentsGrowth({ growth_rate: response.data.growth_rate }); // Ensure you're accessing growth_rate
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setStudentsGrowthState(false);
     }
   }
 
@@ -112,7 +147,27 @@ function AdminMain() {
               </div>
             </div>
             <div className="card-lower">
-              <span className="">2.4%</span>increased this month
+              <span>
+                {studentsGrowthState ? (
+                  <span>Loading...</span> // Optional: You can show a loading indicator here.
+                ) : (
+                  <>
+                    {studentsGrowth.growth_rate > 0 ? (
+                      <FontAwesomeIcon
+                        icon={faArrowUp}
+                        className="card-arrow-up-icon"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faArrowDown}
+                        className=".card-arrow-down-icon"
+                      />
+                    )}
+                    {studentsGrowth.growth_rate}%{" "}
+                  </>
+                )}
+              </span>
+              increased this month
             </div>
           </Card>
         </div>

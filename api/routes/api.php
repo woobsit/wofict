@@ -128,6 +128,8 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/admit-user/{id}', [StudentController::class, 'admitUser']);
     //get number of current students
     Route::get('/current-students-count', [StudentController::class, 'getStudentsCount']);
+    //get student growth rate
+    Route::get('/students-growth-rate', [StudentController::class, 'getStudentsGrowthRate']);
 });
 
 

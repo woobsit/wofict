@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use setasign\Fpdi\Fpdi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 
 
@@ -908,6 +909,46 @@ class StudentController extends Controller
             // Log the actual error message for debugging purposes
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //growth rate for current number of students
+    public function getStudentsGrowthRate()
+    {
+        try {
+            // Get the current date
+            $currentDate = Carbon::now();
+
+            // Query to get the count of users created in the current month
+            $currentMonthCount = User::where('active', 1)->where('admission_status', 'Admitted')->where('guarantors_status', 1)->where('credentials_status', 1)->whereYear('created_at', $currentDate->year)
+                ->whereMonth('created_at', $currentDate->month)
+                ->count();
+
+            // Query to get the count of users created in the previous month
+            $previousMonthCount = User::where('active', 1)->where('admission_status', 'Admitted')->where('guarantors_status', 1)->where('credentials_status', 1)->whereYear('created_at', $currentDate->year)
+                ->whereMonth('created_at', $currentDate->subMonth()->month)
+                ->count();
+
+            // If there were no users last month, avoid division by zero
+            if ($previousMonthCount == 0) {
+                $growthRate = $currentMonthCount > 0 ? 100 : 0;  // If there are new users this month but none last month
+            } else {
+                // Calculate the percentage growth
+                $growthRate = (($currentMonthCount - $previousMonthCount) / $previousMonthCount) * 100;
+            }
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'data' => [
+                    'current_month_users' => $currentMonthCount,
+                    'previous_month_users' => $previousMonthCount,
+                    'growth_rate' => round($growthRate, 2)
+                ]
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 }

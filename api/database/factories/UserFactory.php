@@ -47,7 +47,7 @@ class UserFactory extends Factory
             'guarantors_status' => 1,
             'admission_status' => 'Admitted',
             'forget_password' => null,
-            'created_at' => Carbon::now(),
+            'created_at' => $this->faker->randomElement(["2024-09-02 12:00:22", "2024-10-02 12:00:22"]),
             'updated_at' => Carbon::now(),
         ];
     }
