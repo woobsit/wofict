@@ -35,10 +35,10 @@ class UserSeeder extends Seeder
                 'guarantors_1' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
                 'guarantors_2' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
                 'guarantors_status' => 1,
-                'credentials_status' => 1,
+                'admission_status' => 'Admitted',
                 'class_sessions' => 'Morning',
                 'course' => 'Digital Marketing',
-                'forget_password' => '',
+                'forget_password' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -56,10 +56,14 @@ class UserSeeder extends Seeder
                 'state_of_origin' => 'Anambra',
                 'qualification_level' => 'Bsc',
                 'credentials' => null,
-                'credentials_status' => 0,
+                'credentials_status' => 1,
+                'guarantors_1' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
+                'guarantors_2' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
+                'guarantors_status' => 1,
+                'admission_status' => 'Admitted',
                 'class_sessions' => 'Evening',
                 'course' => 'Digital Marketing',
-                'forget_password' => '',
+                'forget_password' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -67,6 +71,6 @@ class UserSeeder extends Seeder
 
         User::insert($users);
 
-        User::factory()->count(1000)->create();
+        User::factory()->count(1010)->create();
     }
 }
