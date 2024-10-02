@@ -600,7 +600,7 @@ function AdminCredentialsList() {
                     </Table>
                   </div>
                   <div className="pagination-controls">
-                    {paginationApproved &&
+                    {paginationPendingApproval &&
                       renderPagination(
                         paginationPendingApproval,
                         "pending-credentials"
@@ -701,7 +701,7 @@ function AdminCredentialsList() {
                     </Table>
                   </div>
                   <div className="pagination-controls">
-                    {paginationPendingApproval &&
+                    {paginationApproved &&
                       renderPagination(paginationApproved, "approved")}
                   </div>
                 </>
