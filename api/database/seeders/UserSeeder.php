@@ -32,6 +32,10 @@ class UserSeeder extends Seeder
                 'qualification_level' => 'Bsc',
                 'credentials' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
                 'credentials_status' => 1,
+                'guarantors_1' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
+                'guarantors_2' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
+                'guarantors_status' => 1,
+                'credentials_status' => 1,
                 'class_sessions' => 'Morning',
                 'course' => 'Digital Marketing',
                 'forget_password' => '',
@@ -63,6 +67,6 @@ class UserSeeder extends Seeder
 
         User::insert($users);
 
-        User::factory()->count(200)->create();
+        User::factory()->count(1000)->create();
     }
 }

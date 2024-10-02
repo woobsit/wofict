@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import "./assets/styles/variables";
 @import "./assets/styles/base";
-
+cards-container
 .landing-page-background {
   min-height: 100vh;
   background-image: url("./assets/images/background-login.jpg");
@@ -503,7 +503,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   padding: 0 9px 9px 9px;
 }
@@ -525,22 +524,67 @@
   flex: 1;
 }
 
-.card__card--blue {
-  background-color: #a7b4ff;
-  margin-right: 10px;
+.cards-container__inner-box .card__card--blue {
+  background: linear-gradient(45deg, rgb(94, 94, 94), rgb(39, 39, 39));
+  display:flex;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height:150px;
+  justify-content: space-between;
 }
 
-.card__card--red {
-  background-color: #ffaeae;
+.cards-container__inner-box .card__card--red {
+  background: linear-gradient(45deg, rgb(107, 66, 255), rgb(59, 37, 255));
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.card__card--green {
-  background-color: #9dffd1;
-  margin-right: 10px;
+.cards-container__inner-box .card__card--green {
+  background: linear-gradient(45deg, rgb(255, 72, 72), rgb(255, 37, 37));
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.card__card--black {
-  background-color: #525252;
+.cards-container__inner-box .card__card--black {
+  background: linear-gradient(45deg, rgb(72, 255, 133), rgb(37, 255, 128));
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.card-upper{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-upper__wrapper{
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-upper__upper{
+  color:rgb(218, 218, 218);
+  margin-bottom:5px;
+  font-size:15px;
+  text-transform: uppercase;
+}
+
+.card-upper__lower{
+  color:white;
+  font-size:25px;
+  font-weight: bolder;
+}
+
+.card-lower__wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background-color: white;
+}
+
+.card-lower__users-icon{
+  color:rgb(40, 201, 40);
 }
 
 .card-pending {

@@ -11,12 +11,18 @@ function AdminBreadcrumbs({ firstname }) {
   return (
     <div className="image-container">
       <div>
-        <Typography variant="h3">Dashboard</Typography>
-        <Typography variant="span">Welcome back, {firstname} </Typography>
+        <Typography variant="h3" className="credential-text">
+          Dashboard
+        </Typography>
+        <Typography variant="span" className="credential-text">
+          Welcome back, {firstname}
+        </Typography>
       </div>
       <div>
-        <FontAwesomeIcon icon={faHome} className="nav__menu-icon" /> /
-        <Typography variant="span"> dashboard</Typography>
+        <FontAwesomeIcon icon={faHome} className="nav__menu-icon" />
+        <Typography variant="span" className="credential-text">
+          /dashboard
+        </Typography>
       </div>
     </div>
   );

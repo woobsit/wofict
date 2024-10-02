@@ -845,6 +845,7 @@ class StudentController extends Controller
         }
     }
 
+    //confirm the users
     public function admitUser($id)
     {
         try {
@@ -885,6 +886,24 @@ class StudentController extends Controller
                     'message' => 'Invalid user details entered'
                 ]);
             }
+        } catch (Exception $e) {
+            // Log the actual error message for debugging purposes
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //Current number of students
+    public function getStudentsCount()
+    {
+        try {
+            $currentStudent = User::where('active', 1)->where('admission_status', 'Admitted')->where('guarantors_status', 1)->where('credentials_status', 1)->count();
+
+            return response()->json([
+                'status' => 201,
+                'result' => number_format($currentStudent),
+                'message' => 'Successful'
+            ]);
         } catch (Exception $e) {
             // Log the actual error message for debugging purposes
             Log::error($e->getMessage());
