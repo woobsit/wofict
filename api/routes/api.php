@@ -130,6 +130,14 @@ Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () 
     Route::get('/current-students-count', [StudentController::class, 'getStudentsCount']);
     //get student growth rate
     Route::get('/students-growth-rate', [StudentController::class, 'getStudentsGrowthRate']);
+    //get registered users count
+    Route::get('/registered-users-count', [StudentController::class, 'getRegisteredUsersCount']);
+    //get registered users growth rate
+    Route::get('/registered-users-growth-rate', [StudentController::class, 'getRegisteredUsersGrowthRate']);
+    //get pending credentials users count
+    Route::get('/pending-credentials-users-count', [StudentController::class, 'getPendingCredentialsUsersCount']);
+    //get pending credentials users growth rate
+    Route::get('/pending-credentials-users-growth-rate', [StudentController::class, 'getPendingCredentialsUsersGrowthRate']);
 });
 
 

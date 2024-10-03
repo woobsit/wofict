@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
   faArrowUp,
+  faFile,
+  faHourglassHalf,
   faSearch,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -27,10 +29,42 @@ function AdminMain() {
   //student growth state
   const [studentsGrowthState, setStudentsGrowthState] = useState(false);
   const [studentsGrowth, setStudentsGrowth] = useState({ growth_rate: 0 });
+  //registered users count state
+  const [countRegisteredUsersState, setCountRegisteredUsersState] =
+    useState(false);
+  const [countRegisteredUsers, setCountRegisteredUsers] = useState(null);
+  //registered users growth
+  const [registeredUsersGrowthState, setRegisteredUsersGrowthState] =
+    useState(false);
+  const [registeredUsersGrowth, setRegisteredUsersGrowth] = useState({
+    growth_rate: 0,
+  });
+  //pending credentials count status
+  const [
+    countPendingCredentialsUsersState,
+    setCountPendingCredentialsUsersState,
+  ] = useState(false);
+  const [countPendingCredentialsUsers, setCountPendingCredentialsUsers] =
+    useState(null);
+  //pending credentials users growth rate
+  const [
+    countPendingCredentialsUsersGrowthRateState,
+    setCountPendingCredentialsUsersGrowthRateState,
+  ] = useState(false);
+  const [
+    countPendingCredentialsUsersGrowthRate,
+    setCountPendingCredentialsUsersGrowth,
+  ] = useState({
+    growth_rate: 0,
+  });
 
   useEffect(() => {
     toCountCurrentStudents();
     toGetStudentsGrowth();
+    toCountRegisteredUsers();
+    toGetRegisteredUsersGrowth();
+    toCountPendingCredentialsUsers();
+    toGetPendingCredentialsUsersGrowth();
   }, []);
 
   // count current students
@@ -83,6 +117,108 @@ function AdminMain() {
     }
   }
 
+  //registered users count
+  async function toCountRegisteredUsers() {
+    setCountRegisteredUsersState(true);
+    try {
+      const response = await authService.getRegisteredUsersCount();
+      if (response.status === 201) {
+        setCountRegisteredUsers(response.result);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setCountRegisteredUsersState(false);
+    }
+  }
+
+  //registered users growth
+  async function toGetRegisteredUsersGrowth() {
+    setRegisteredUsersGrowthState(true);
+    try {
+      const response = await authService.getRegisteredUsersGrowth();
+      if (response.status === 201) {
+        setRegisteredUsersGrowth({ growth_rate: response.data.growth_rate }); // Ensure you're accessing growth_rate
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setRegisteredUsersGrowthState(false);
+    }
+  }
+
+  //Pending credentials users count
+  async function toCountPendingCredentialsUsers() {
+    setCountPendingCredentialsUsersState(true);
+    try {
+      const response = await authService.getPendingCredentialsUsersCount();
+      if (response.status === 201) {
+        setCountPendingCredentialsUsers(response.result);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setCountPendingCredentialsUsersState(false);
+    }
+  }
+
+  //pending credentials users growth rate
+  async function toGetPendingCredentialsUsersGrowth() {
+    setCountPendingCredentialsUsersGrowthRateState(true);
+    try {
+      const response = await authService.getPendingCredentialsUsersGrowth();
+      if (response.status === 201) {
+        setCountPendingCredentialsUsersGrowth({
+          growth_rate: response.data.growth_rate,
+        }); // Ensure you're accessing growth_rate
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setCountPendingCredentialsUsersGrowthRateState(false);
+    }
+  }
+
   return (
     <main>
       <AdminBreadcrumbs firstname={admin_user.firstname} />
@@ -131,10 +267,10 @@ function AdminMain() {
       </div>
       <div className="cards-container">
         <div className="cards-container__inner-box">
-          <Card className="card card__card--blue">
+          <Card className="card card__card--black">
             <div className="card-upper">
               <div className="card-upper__wrapper">
-                <div className="card-upper__upper">Current Students</div>
+                <div className="card-upper__upper">Admitted Users</div>
                 <div className="card-upper__lower">
                   {countCurrentStudentsState ? null : countCurrentStudents}
                 </div>
@@ -146,39 +282,198 @@ function AdminMain() {
                 />
               </div>
             </div>
-            <div className="card-lower">
-              <span>
+            <div className="card-lower-border--black">
+              <div className="card-lower-icon-value">
                 {studentsGrowthState ? (
-                  <span>Loading...</span> // Optional: You can show a loading indicator here.
+                  <span className="card-lower-loading">Loading...</span>
                 ) : (
-                  <>
+                  <div>
                     {studentsGrowth.growth_rate > 0 ? (
-                      <FontAwesomeIcon
-                        icon={faArrowUp}
-                        className="card-arrow-up-icon"
-                      />
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowUp}
+                          className="card-arrow-up-icon" // Up arrow
+                        />
+                        <span className="growth-rate-positive">
+                          {studentsGrowth.growth_rate}%{" "}
+                        </span>
+                      </>
                     ) : (
-                      <FontAwesomeIcon
-                        icon={faArrowDown}
-                        className=".card-arrow-down-icon"
-                      />
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowDown}
+                          className="card-arrow-down-icon" // Down arrow
+                        />
+                        <span className="growth-rate-negative">
+                          {studentsGrowth.growth_rate}%{" "}
+                        </span>
+                      </>
                     )}
-                    {studentsGrowth.growth_rate}%{" "}
-                  </>
+                  </div>
                 )}
-              </span>
-              increased this month
+              </div>
+              <span className="card-lower-text">increased this month</span>
             </div>
           </Card>
         </div>
         <div className="cards-container__inner-box">
-          <Card className="card card__card--red">hdfefe</Card>
+          <Card className="card card__card--blue">
+            <div className="card-upper">
+              <div className="card-upper__wrapper">
+                <div className="card-upper__upper">Registered Users</div>
+                <div className="card-upper__lower">
+                  {countRegisteredUsersState ? null : countRegisteredUsers}
+                </div>
+              </div>
+              <div className="card-lower__wrapper">
+                <FontAwesomeIcon
+                  icon={faFile}
+                  className="card-lower__users-icon"
+                />
+              </div>
+            </div>
+            <div className="card-lower-border--blue">
+              <div className="card-lower-icon-value">
+                {registeredUsersGrowthState ? (
+                  <span className="card-lower-loading">Loading...</span>
+                ) : (
+                  <div>
+                    {registeredUsersGrowth.growth_rate > 0 ? (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowUp}
+                          className="card-arrow-up-icon" // Up arrow
+                        />
+                        <span className="growth-rate-positive">
+                          {registeredUsersGrowth.growth_rate}%{" "}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowDown}
+                          className="card-arrow-down-icon" // Down arrow
+                        />
+                        <span className="growth-rate-negative">
+                          {registeredUsersGrowth.growth_rate}%{" "}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+              <span className="card-lower-text">increased this month</span>
+            </div>
+          </Card>
         </div>
         <div className="cards-container__inner-box">
-          <Card className="card card__card--black">dfdfd</Card>
+          <Card className="card card__card--red">
+            <div className="card-upper">
+              <div className="card-upper__wrapper">
+                <div className="card-upper__upper">
+                  Pending credentials approval
+                </div>
+                <div className="card-upper__lower">
+                  {countPendingCredentialsUsersState
+                    ? null
+                    : countPendingCredentialsUsers}
+                </div>
+              </div>
+              <div className="card-lower__wrapper">
+                <FontAwesomeIcon
+                  icon={faHourglassHalf}
+                  className="card-lower__users-icon"
+                />
+              </div>
+            </div>
+            <div className="card-lower-border--red">
+              <div className="card-lower-icon-value">
+                {countPendingCredentialsUsersGrowthRateState ? (
+                  <span className="card-lower-loading">Loading...</span>
+                ) : (
+                  <div>
+                    {countPendingCredentialsUsersGrowthRate.growth_rate > 0 ? (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowUp}
+                          className="card-arrow-up-icon" // Up arrow
+                        />
+                        <span className="growth-rate-positive">
+                          {countPendingCredentialsUsersGrowthRate.growth_rate}%{" "}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowDown}
+                          className="card-arrow-down-icon" // Down arrow
+                        />
+                        <span className="growth-rate-negative">
+                          {countPendingCredentialsUsersGrowthRate.growth_rate}%{" "}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+              <span className="card-lower-text">increased this month</span>
+            </div>
+          </Card>
         </div>
         <div className="cards-container__inner-box">
-          <Card className="card card__card--green">Hello</Card>
+          <Card className="card card__card--green">
+            {" "}
+            <div className="card-upper">
+              <div className="card-upper__wrapper">
+                <div className="card-upper__upper">
+                  Pending guarantors approval
+                </div>
+                <div className="card-upper__lower">
+                  {countPendingCredentialsUsersState
+                    ? null
+                    : countPendingCredentialsUsers}
+                </div>
+              </div>
+              <div className="card-lower__wrapper">
+                <FontAwesomeIcon
+                  icon={faHourglassHalf}
+                  className="card-lower__users-icon"
+                />
+              </div>
+            </div>
+            <div className="card-lower-border--green">
+              <div className="card-lower-icon-value">
+                {countPendingCredentialsUsersGrowthRateState ? (
+                  <span className="card-lower-loading">Loading...</span>
+                ) : (
+                  <div>
+                    {countPendingCredentialsUsersGrowthRate.growth_rate > 0 ? (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowUp}
+                          className="card-arrow-up-icon" // Up arrow
+                        />
+                        <span className="growth-rate-positive">
+                          {countPendingCredentialsUsersGrowthRate.growth_rate}%{" "}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faArrowDown}
+                          className="card-arrow-down-icon" // Down arrow
+                        />
+                        <span className="growth-rate-negative">
+                          {countPendingCredentialsUsersGrowthRate.growth_rate}%{" "}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+              <span className="card-lower-text">increased this month</span>
+            </div>
+          </Card>
         </div>
       </div>
     </main>

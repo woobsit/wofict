@@ -951,4 +951,119 @@ class StudentController extends Controller
             return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
+
+    //Count registered users
+    public function getRegisteredUsersCount()
+    {
+        try {
+            $registeredUsers = User::where('active', 1)->count();
+
+            return response()->json([
+                'status' => 201,
+                'result' => number_format($registeredUsers),
+                'message' => 'Successful'
+            ]);
+        } catch (Exception $e) {
+            // Log the actual error message for debugging purposes
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
+    //growth rate for registered users
+    public function getRegisteredUsersGrowthRate()
+    {
+        try {
+            // Get the current date
+            $currentDate = Carbon::now();
+
+            // Query to get the count of users created in the current month
+            $currentMonthCount = User::where('active', 1)->whereYear('created_at', $currentDate->year)
+                ->whereMonth('created_at', $currentDate->month)
+                ->count();
+
+            // Query to get the count of users created in the previous month
+            $previousMonthCount = User::where('active', 1)->whereYear('created_at', $currentDate->year)
+                ->whereMonth('created_at', $currentDate->subMonth()->month)
+                ->count();
+
+            // If there were no users last month, avoid division by zero
+            if ($previousMonthCount == 0) {
+                $growthRate = $currentMonthCount > 0 ? 100 : 0;  // If there are new users this month but none last month
+            } else {
+                // Calculate the percentage growth
+                $growthRate = (($currentMonthCount - $previousMonthCount) / $previousMonthCount) * 100;
+            }
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'data' => [
+                    'current_month_users' => $currentMonthCount,
+                    'previous_month_users' => $previousMonthCount,
+                    'growth_rate' => round($growthRate, 2)
+                ]
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
+
+    //Count pending credentials users
+    public function getPendingCredentialsUsersCount()
+    {
+        try {
+            $registeredUsers = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 0)->count();
+
+            return response()->json([
+                'status' => 201,
+                'result' => number_format($registeredUsers),
+                'message' => 'Successful'
+            ]);
+        } catch (Exception $e) {
+            // Log the actual error message for debugging purposes
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+    //growth rate for pending credentials users
+    public function getPendingCredentialsUsersGrowthRate()
+    {
+        try {
+            // Get the current date
+            $currentDate = Carbon::now();
+
+            // Query to get the count of users created in the current month
+            $currentMonthCount = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 0)->whereYear('created_at', $currentDate->year)
+                ->whereMonth('created_at', $currentDate->month)
+                ->count();
+
+            // Query to get the count of users created in the previous month
+            $previousMonthCount = User::where('active', 1)->whereYear('created_at', $currentDate->year)
+                ->whereMonth('created_at', $currentDate->subMonth()->month)
+                ->count();
+
+            // If there were no users last month, avoid division by zero
+            if ($previousMonthCount == 0) {
+                $growthRate = $currentMonthCount > 0 ? 100 : 0;  // If there are new users this month but none last month
+            } else {
+                // Calculate the percentage growth
+                $growthRate = (($currentMonthCount - $previousMonthCount) / $previousMonthCount) * 100;
+            }
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'data' => [
+                    'current_month_users' => $currentMonthCount,
+                    'previous_month_users' => $previousMonthCount,
+                    'growth_rate' => round($growthRate, 2)
+                ]
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
+        }
+    }
 }
