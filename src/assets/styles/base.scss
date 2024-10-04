@@ -39,18 +39,18 @@ li {
 
 /* overide bootstrap */
 .btn-primary {
-    color: #fff;
-    background: linear-gradient(45deg, rgb(86, 201, 255), rgb(64, 64, 255));
-    border:none;
-    font-size: 12px;
+  color: #fff;
+  background: linear-gradient(45deg, rgb(86, 201, 255), rgb(64, 64, 255));
+  border: none;
+  font-size: 12px;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(45deg, rgb(0, 162, 255), rgb(55, 0, 255));
-  }
+  background: linear-gradient(45deg, rgb(0, 162, 255), rgb(55, 0, 255));
+}
 
-.btn-secondary{
-  border:none;
+.btn-secondary {
+  border: none;
   font-size: 12px;
   background: linear-gradient(45deg, rgb(209, 209, 209), rgb(39, 39, 39));
 }
@@ -59,9 +59,9 @@ li {
   background: linear-gradient(45deg, rgb(139, 139, 139), rgb(29, 29, 29));
 }
 
-.btn-info{
-  color:white;
-  border:none;
+.btn-info {
+  color: white;
+  border: none;
   font-size: 12px;
   background: linear-gradient(45deg, rgb(255, 176, 87), rgb(64, 64, 255));
 }
@@ -70,9 +70,9 @@ li {
   background: linear-gradient(45deg, rgb(241, 141, 26), rgb(55, 0, 255));
 }
 
-.btn-warning{
-  color:white;
-  border:none;
+.btn-warning {
+  color: white;
+  border: none;
   font-size: 12px;
   background: linear-gradient(45deg, rgb(255, 176, 87), rgb(255, 64, 64));
 }
@@ -81,9 +81,9 @@ li {
   background: linear-gradient(45deg, rgb(241, 141, 26), rgb(255, 0, 0));
 }
 
-.btn-success{
-  color:white;
-  border:none;
+.btn-success {
+  color: white;
+  border: none;
   font-size: 12px;
   background: linear-gradient(45deg, rgb(84, 177, 61), rgb(56, 182, 221));
 }
@@ -92,39 +92,38 @@ li {
   background: linear-gradient(45deg, rgb(29, 153, 18), rgb(0, 127, 212));
 }
 
-.h5{
-  font-size:18px;
-  margin-bottom:0px;
+.h5 {
+  font-size: 18px;
+  margin-bottom: 0px;
 }
 
-p{
-  font-size:14px;
+p {
+  font-size: 14px;
 }
 
-.modal-header{
+.modal-header {
   background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));
 }
 
-.form-label{
-  font-size:14px;
-  margin-bottom:0px;
+.form-label {
+  font-size: 14px;
+  margin-bottom: 0px;
 }
 
-.nav-tabs .nav-link.active{
-  color:white;
+.nav-tabs .nav-link.active {
+  color: white;
   background: linear-gradient(45deg, #00b8ff, #00b8ff);
-
 }
 
-tr{
-  font-size:14px;
+tr {
+  font-size: 14px;
 }
 
 .dropdown-item {
   font-size: 14px;
- }
+}
 
- .btn-group>.btn.dropdown-toggle-split:first-child{
+.btn-group > .btn.dropdown-toggle-split:first-child {
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
- }
+}

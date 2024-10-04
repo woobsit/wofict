@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import LogoImage from "./../assets/images/logo.png";
 //Custom component
-import Button from "./../components/atom/button/Button";
+import Button from "../components/atom/button/Button";
 import Typography from "./../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
