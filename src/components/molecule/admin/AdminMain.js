@@ -266,8 +266,8 @@ function AdminMain() {
         </Card> */}
       </div>
       <div className="cards-container">
-        <div className="">
-          <div className="cards-container__inner-box">
+        <div className="cards-container__pair">
+          <div className="cards-container__inner-box cards-container__inner-box--black">
             <Card className="card card__card--black">
               <div className="card-upper">
                 <div className="card-upper__wrapper">
@@ -317,7 +317,7 @@ function AdminMain() {
               </div>
             </Card>
           </div>
-          <div className="cards-container__inner-box">
+          <div className="cards-container__inner-box cards-container__inner-box--blue">
             <Card className="card card__card--blue">
               <div className="card-upper">
                 <div className="card-upper__wrapper">
@@ -368,8 +368,8 @@ function AdminMain() {
             </Card>
           </div>
         </div>
-        <div className="">
-          <div className="cards-container__inner-box">
+        <div className="cards-container__pair">
+          <div className="cards-container__inner-box cards-container__inner-box--red">
             <Card className="card card__card--red">
               <div className="card-upper">
                 <div className="card-upper__wrapper">
@@ -426,7 +426,7 @@ function AdminMain() {
               </div>
             </Card>
           </div>
-          <div className="cards-container__inner-box">
+          <div className="cards-container__inner-box cards-container__inner-box--green">
             <Card className="card card__card--green">
               {" "}
               <div className="card-upper">
