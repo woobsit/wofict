@@ -11,13 +11,14 @@ import {
   faArrowUp,
   faFile,
   faHourglassHalf,
-  faSearch,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "./../../../utils/Notification";
 //Molecule
 import AdminBreadcrumbs from "./AdminBreadcrumbs";
+//React search autocomplete
+import AdminSearchStudent from "./AdminSearchStudent";
 
 function AdminMain() {
   const { admin_user } = getAuthAdminData();
@@ -58,6 +59,27 @@ function AdminMain() {
     growth_rate: 0,
   });
 
+  //pending guarantors count status
+  const [
+    countPendingGuarantorsUsersState,
+    setCountPendingGuarantorsUsersState,
+  ] = useState(false);
+  const [countPendingGuarantorsUsers, setCountPendingGuarantorsUsers] =
+    useState(null);
+
+  //pending guarantors users growth rate
+  const [
+    countPendingGuarantorsUsersGrowthRateState,
+    setCountPendingGuarantorsUsersGrowthRateState,
+  ] = useState(false);
+  const [
+    countPendingGuarantorsUsersGrowthRate,
+    setCountPendingGuarantorsUsersGrowth,
+  ] = useState({
+    growth_rate: 0,
+  });
+
+  //call the functions
   useEffect(() => {
     toCountCurrentStudents();
     toGetStudentsGrowth();
@@ -65,6 +87,8 @@ function AdminMain() {
     toGetRegisteredUsersGrowth();
     toCountPendingCredentialsUsers();
     toGetPendingCredentialsUsersGrowth();
+    toCountPendingGuarantorsUsers();
+    toGetPendingGuarantorsUsersGrowth();
   }, []);
 
   // count current students
@@ -219,52 +243,62 @@ function AdminMain() {
     }
   }
 
+  //Pending guarantors users count
+  async function toCountPendingGuarantorsUsers() {
+    setCountPendingGuarantorsUsersState(true);
+    try {
+      const response = await authService.getPendingGuarantorsUsersCount();
+      if (response.status === 201) {
+        setCountPendingGuarantorsUsers(response.result);
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setCountPendingGuarantorsUsersState(false);
+    }
+  }
+
+  //pending guarantors users growth rate
+  async function toGetPendingGuarantorsUsersGrowth() {
+    setCountPendingGuarantorsUsersGrowthRateState(true);
+    try {
+      const response = await authService.getPendingGuarantorsUsersGrowth();
+      if (response.status === 201) {
+        setCountPendingGuarantorsUsersGrowth({
+          growth_rate: response.data.growth_rate,
+        }); // Ensure you're accessing growth_rate
+      } else {
+        notify(
+          "error",
+          "Error",
+          response.message || "An unexpected error occurred"
+        );
+      }
+    } catch (error) {
+      notify(
+        "error",
+        "Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setCountPendingGuarantorsUsersGrowthRateState(false);
+    }
+  }
+
   return (
     <main>
       <AdminBreadcrumbs firstname={admin_user.firstname} />
-
-      <div className="search-input-container">
-        <div className="landing-form__input-box">
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="landing-form__input-icon"
-          />
-          <input
-            type="text"
-            placeholder="search"
-            className="landing-form__input"
-            name="email"
-          />
-        </div>
-      </div>
-      <div className="card-student-info-container">
-        {/* <Card className="card-student-info">
-          <div>
-            <img
-              className="nav__menu-image"
-              src={
-                fetchWebsiteDataStatus &&
-                fetchAdminDataStatus &&
-                fetchWebsiteInfo[2].value + fetchAdminData.photo
-              }
-              alt={
-                fetchAdminDataStatus &&
-                fetchAdminData.firstname + " " + fetchAdminData.surname
-              }
-              title={
-                fetchAdminDataStatus &&
-                fetchAdminData.firstname + " " + fetchAdminData.surname
-              }
-            />
-            <Typography variant="h3">
-              {fetchAdminDataStatus &&
-                fetchAdminData.firstname + " " + fetchAdminData.surname}
-            </Typography>
-          </div>
-          <div></div>
-          <div></div>
-        </Card> */}
-      </div>
+      <AdminSearchStudent />
       <div className="cards-container">
         <div className="cards-container__pair">
           <div className="cards-container__inner-box cards-container__inner-box--black">
@@ -435,9 +469,9 @@ function AdminMain() {
                     Pending guarantors approval
                   </div>
                   <div className="card-upper__lower">
-                    {countPendingCredentialsUsersState
+                    {countPendingGuarantorsUsersState
                       ? null
-                      : countPendingCredentialsUsers}
+                      : countPendingGuarantorsUsers}
                   </div>
                 </div>
                 <div className="card-lower__wrapper">
@@ -447,22 +481,20 @@ function AdminMain() {
                   />
                 </div>
               </div>
-              <div className="card-lower-border--gred">
+              <div className="card-lower-border--green">
                 <div className="card-lower-icon-value">
-                  {countPendingCredentialsUsersGrowthRateState ? (
+                  {countPendingGuarantorsUsersGrowthRateState ? (
                     <span className="card-lower-loading">Loading...</span>
                   ) : (
                     <div>
-                      {countPendingCredentialsUsersGrowthRate.growth_rate >
-                      0 ? (
+                      {countPendingGuarantorsUsersGrowthRate.growth_rate > 0 ? (
                         <>
                           <FontAwesomeIcon
                             icon={faArrowUp}
                             className="card-arrow-up-icon" // Up arrow
                           />
                           <span className="growth-rate-positive">
-                            {countPendingCredentialsUsersGrowthRate.growth_rate}
-                            %{" "}
+                            {countPendingGuarantorsUsersGrowthRate.growth_rate}%{" "}
                           </span>
                         </>
                       ) : (
@@ -472,8 +504,7 @@ function AdminMain() {
                             className="card-arrow-down-icon" // Down arrow
                           />
                           <span className="growth-rate-negative">
-                            {countPendingCredentialsUsersGrowthRate.growth_rate}
-                            %{" "}
+                            {countPendingGuarantorsUsersGrowthRate.growth_rate}%{" "}
                           </span>
                         </>
                       )}

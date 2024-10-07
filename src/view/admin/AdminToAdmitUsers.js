@@ -15,7 +15,7 @@ import Footer from "../../components/molecule/Footer";
 import Typography from "../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "../../utils/Notification";
 //API service
@@ -303,7 +303,7 @@ function AdminToAdmitUsers() {
           </div>
         </div>
 
-        <div className="search-input-container">
+        {/* <div className="search-input-container">
           <div className="landing-form__input-box">
             <input
               type="text"
@@ -316,7 +316,19 @@ function AdminToAdmitUsers() {
               className="landing-student-form__input-icon"
             />
           </div>
+        </div> */}
+
+        <div className="search-input-container">
+          <ReactSearchAutocomplete
+            items={items}
+            onSearch={handleSearch}
+            onSelect={handleOnSelect}
+            placeholder="Search student"
+            className="credentials-autosearch"
+            styling={styling}
+          />
         </div>
+
         <div className="credentials">
           <div className="credentials__table-box">
             <Tabs

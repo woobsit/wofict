@@ -163,7 +163,7 @@ function AdminCredentialsAllInfo() {
       const response = await authService.getPendCredential(id);
       if (response.status === 200) {
         notify(
-          "error",
+          "success",
           "Disapproved",
           "Credentials has now been disapproved or pended"
         );

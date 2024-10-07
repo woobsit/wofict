@@ -263,6 +263,18 @@ const authService = {
   //growth rate pending credentials users
   getPendingCredentialsUsersGrowth: () =>
     handleRequest(`/pending-credentials-users-growth-rate`),
+  //pending guarantors users count
+  getPendingGuarantorsUsersCount: () =>
+    handleRequest(`/pending-guarantors-users-count`),
+  //growth rate pending guarantors users
+  getPendingGuarantorsUsersGrowth: () =>
+    handleRequest(`/pending-guarantors-users-growth-rate`),
+  //Search all admitted current students
+  getSearchAdmittedCurrentStudents: (searchTerm) =>
+    handleRequest(
+      `/search-admitted-current-students?search-all-admitted-current-students=${searchTerm}`,
+      "get"
+    ),
 };
 
 export default authService;

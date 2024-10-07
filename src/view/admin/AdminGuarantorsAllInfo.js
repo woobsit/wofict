@@ -452,9 +452,9 @@ function AdminGuarantorsAllInfo() {
                   </div>
                   {fetchUserByGuarantorsStatus ? null : (
                     <Typography variant="span" className="user-name-value">
-                      {fetchUserByGuarantorsData.guarantors_status === 1 ? (
+                      {fetchUserByGuarantorsData.credentials_status === 1 ? (
                         <Badge bg="success">approved</Badge>
-                      ) : fetchUserByGuarantorsData.guarantors_status === 0 ? (
+                      ) : fetchUserByGuarantorsData.credentials_status === 0 ? (
                         <Badge bg="secondary">pending/disapproved</Badge>
                       ) : (
                         ""

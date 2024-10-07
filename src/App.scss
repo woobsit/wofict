@@ -466,6 +466,21 @@
   padding: 0 10px;
 }
 
+.students-search-input-container {
+  margin-top: 20px;
+  height: 50px;
+  padding: 0 10px;
+  position: relative;
+  z-index: 1000;
+}
+
+@media only screen and (min-width: 768px) {
+  .students-credentials-autosearch {
+    width: 35%;
+  }
+}
+
+
 .landing-student-form__input-icon {
   color: rgb(131 131 131);
   width: 12px;
@@ -622,7 +637,7 @@
 .card-lower-border--green{
   display:flex;
   align-items: center;
-  border-bottom: 3px solid #a0ff9a;
+  border-bottom: 3px solid #7be174;
 }
 
 .card-lower-loading{
