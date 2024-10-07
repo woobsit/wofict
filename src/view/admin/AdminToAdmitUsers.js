@@ -243,6 +243,10 @@ function AdminToAdmitUsers() {
       const response = await authService.getAdmit($id);
       if (response.status === 200) {
         notify("success", "User admitted", response.message);
+        // Remove the admitted user from the state
+        setFetchAllUsersToBeAdmittedData((prevData) =>
+          prevData.filter((user) => user.id !== $id)
+        );
       } else {
         notify(
           "error",

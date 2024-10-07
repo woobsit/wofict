@@ -12,6 +12,7 @@ use setasign\Fpdi\Fpdi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 
 
@@ -21,10 +22,20 @@ class StudentController extends Controller
     public function getAllUsers()
     {
         try {
-            $user = User::where('active', 1)
-                ->whereNotNull('credentials')
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+
+            // Generate a unique cache key based on the current page
+            $page = request()->get('page', 1); // Get the current page or default to 1
+            $cacheKey = "all-users-page-{$page}";
+
+            // Check if the data is already cached
+            $user = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+                return User::where('active', 1)
+                    ->whereNotNull('credentials')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
 
             // Check if there are any users
             if ($user->isEmpty()) {
@@ -54,7 +65,6 @@ class StudentController extends Controller
         }
     }
 
-
     //For pie chart
     public function getAllAppliedUsers()
     {
@@ -81,7 +91,21 @@ class StudentController extends Controller
     public function getPendingApprovalUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 0)->orderBy('created_at', 'desc')->paginate(10);
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+
+            // Generate a unique cache key based on the current page
+            $page = request()->get('page', 1); // Get the current page or default to 1
+            $cacheKey = "pending-approval-users-page-{$page}";
+
+            // Check if the data is already cached
+            $user = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+                return User::where('active', 1)
+                    ->whereNotNull('credentials')
+                    ->where('credentials_status', 0)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
 
             // Check if there are any users
             if ($user->isEmpty()) {
@@ -91,24 +115,23 @@ class StudentController extends Controller
                 ]);
             }
 
-            if ($user) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
-                ]);
-            }
+            // Return the response with paginated data
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $user->items(),
+                'pagination' => [
+                    'total' => $user->total(),
+                    'per_page' => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page' => $user->lastPage(),
+                    'from' => $user->firstItem(),
+                    'to' => $user->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 
@@ -116,7 +139,21 @@ class StudentController extends Controller
     public function getApprovedUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('credentials')->where('credentials_status', 1)->orderBy('created_at', 'desc')->paginate(10);
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+
+            // Generate a unique cache key based on the current page
+            $page = request()->get('page', 1); // Get the current page or default to 1
+            $cacheKey = "approved-users-page-{$page}";
+
+            // Check if the data is already cached
+            $user = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+                return User::where('active', 1)
+                    ->whereNotNull('credentials')
+                    ->where('credentials_status', 1)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
 
             // Check if there are any users
             if ($user->isEmpty()) {
@@ -126,27 +163,25 @@ class StudentController extends Controller
                 ]);
             }
 
-            if ($user) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
-                ]);
-            }
+            // Return the response with paginated data
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $user->items(),
+                'pagination' => [
+                    'total' => $user->total(),
+                    'per_page' => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page' => $user->lastPage(),
+                    'from' => $user->firstItem(),
+                    'to' => $user->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
-
     //get user with id that has credentials
     public function getUserByCredentials($id)
     {
@@ -207,6 +242,14 @@ class StudentController extends Controller
                 $user->credentials_status = 1;
                 $user->save();
 
+                // Invalidate the cached data
+                $totalPages = ceil(User::where('active', 1)->count() / 10); // Assuming 10 items per page
+                for ($page = 1; $page <= $totalPages; $page++) {
+                    Cache::forget("all-users-page-{$page}");
+                    Cache::forget("approved-users-page-{$page}");
+                    Cache::forget("pending-approval-users-page-{$page}");
+                }
+
                 return response()->json(['status' => 200, 'message' => 'success']);
             } else {
                 return response()->json(['status' => 404, 'message' => 'User is not found']);
@@ -234,6 +277,14 @@ class StudentController extends Controller
                 $user->credentials_status = 0;
                 //$user->credentials = null;
                 $user->save();
+
+                // Invalidate the cached data
+                $totalPages = ceil(User::where('active', 1)->count() / 10); // Assuming 10 items per page
+                for ($page = 1; $page <= $totalPages; $page++) {
+                    Cache::forget("all-users-page-{$page}");
+                    Cache::forget("approved-users-page-{$page}");
+                    Cache::forget("pending-approval-users-page-{$page}");
+                }
 
                 return response()->json(['status' => 200, 'message' => 'success']);
             } else {
@@ -350,7 +401,22 @@ class StudentController extends Controller
     public function getAllUsersWithGuarantors()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->orderBy('created_at', 'desc')->paginate(10);
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+
+            // Generate a unique cache key based on the current page
+            $page = request()->get('page', 1);
+            $cacheKey = "all-users-with-guarantors-page-{$page}";
+
+            // Retrieve from cache or query if not cached
+            $user = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+
+                return User::where('active', 1)
+                    ->whereNotNull('guarantors_1')
+                    ->whereNotNull('guarantors_2')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
 
             // Check if there are any users
             if ($user->isEmpty()) {
@@ -360,24 +426,22 @@ class StudentController extends Controller
                 ]);
             }
 
-            if ($user) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
-                ]);
-            }
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $user->items(),
+                'pagination' => [
+                    'total' => $user->total(),
+                    'per_page' => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page' => $user->lastPage(),
+                    'from' => $user->firstItem(),
+                    'to' => $user->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 
@@ -385,7 +449,23 @@ class StudentController extends Controller
     public function getPendingApprovalGuarantorUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->where('guarantors_status', 0)->orderBy('created_at', 'desc')->paginate(10);
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+
+            // Generate a unique cache key based on the current page
+            $page = request()->get('page', 1);
+            $cacheKey = "pending-approval-guarantor-users-page-{$page}";
+
+            // Retrieve from cache or query if not cached
+            $user = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+
+                return User::where('active', 1)
+                    ->whereNotNull('guarantors_1')
+                    ->whereNotNull('guarantors_2')
+                    ->where('guarantors_status', 0)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
 
             // Check if there are any users
             if ($user->isEmpty()) {
@@ -395,24 +475,22 @@ class StudentController extends Controller
                 ]);
             }
 
-            if ($user) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
-                ]);
-            }
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $user->items(),
+                'pagination' => [
+                    'total' => $user->total(),
+                    'per_page' => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page' => $user->lastPage(),
+                    'from' => $user->firstItem(),
+                    'to' => $user->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 
@@ -420,7 +498,23 @@ class StudentController extends Controller
     public function getApprovedGuarantorsUsers()
     {
         try {
-            $user = User::where('active', 1)->whereNotNull('guarantors_1')->whereNotNull('guarantors_2')->where('guarantors_status', 1)->orderBy('created_at', 'desc')->paginate(10);
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+
+            // Generate a unique cache key based on the current page
+            $page = request()->get('page', 1);
+            $cacheKey = "approved-guarantors-users-page-{$page}";
+
+            // Retrieve from cache or query if not cached
+            $user = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+
+                return User::where('active', 1)
+                    ->whereNotNull('guarantors_1')
+                    ->whereNotNull('guarantors_2')
+                    ->where('guarantors_status', 1)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
 
             // Check if there are any users
             if ($user->isEmpty()) {
@@ -430,24 +524,22 @@ class StudentController extends Controller
                 ]);
             }
 
-            if ($user) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
-                ]);
-            }
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $user->items(),
+                'pagination' => [
+                    'total' => $user->total(),
+                    'per_page' => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page' => $user->lastPage(),
+                    'from' => $user->firstItem(),
+                    'to' => $user->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 
@@ -562,24 +654,36 @@ class StudentController extends Controller
     public function approveGuarantor($id)
     {
         try {
-            $user = User::where('active', 1)->where('id', $id)->whereNotNull('guarantors_1')
+            $user = User::where('active', 1)
+                ->where('id', $id)
+                ->whereNotNull('guarantors_1')
                 ->whereNotNull('guarantors_2')
-                ->where('guarantors_status', 0)->first();
+                ->where('guarantors_status', 0)
+                ->first();
 
             if ($user) {
                 $user->guarantors_status = 1;
                 $user->save();
 
-                return response()->json(['status' => 200, 'message' => 'success']);
+                // Invalidate the cache for all pages
+                $totalPages = ceil(User::where('active', 1)
+                    ->count() / 10); // Assuming 10 items per page
+
+                for ($page = 1; $page <= $totalPages; $page++) {
+                    Cache::forget("all-users-with-guarantors-page-{$page}");
+                    Cache::forget("pending-approval-guarantor-users-page-{$page}");
+                    Cache::forget("approved-guarantors-users-page-{$page}");
+                }
+
+                return response()->json(['status' => 200, 'message' => 'Guarantor approved successfully']);
             } else {
-                return response()->json(['status' => 404, 'message' => 'User is not found']);
+                return response()->json(['status' => 404, 'message' => 'User not found or not eligible for approval']);
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
-
     //disapprove/ignore guarantors status
     public function disapproveGuarantor($id)
     {
@@ -590,16 +694,19 @@ class StudentController extends Controller
 
             if ($user) {
 
-                // $filePath = storage_path('app/' . $user->credentials); // Assuming credentials are stored in 'storage/app/public'
-
-                // Delete the file if it exists
-                // if (file_exists($filePath)) {
-                //     unlink($filePath);
-                // }
-
                 $user->guarantors_status = 0;
                 //$user->credentials = null;
                 $user->save();
+
+                // Invalidate the cache for all pages
+                $totalPages = ceil(User::where('active', 1)
+                    ->count() / 10); // Assuming 10 items per page
+
+                for ($page = 1; $page <= $totalPages; $page++) {
+                    Cache::forget("all-users-with-guarantors-page-{$page}");
+                    Cache::forget("pending-approval-guarantor-users-page-{$page}");
+                    Cache::forget("approved-guarantors-users-page-{$page}");
+                }
 
                 return response()->json(['status' => 200, 'message' => 'success']);
             } else {
