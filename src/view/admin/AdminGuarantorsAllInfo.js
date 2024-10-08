@@ -13,7 +13,6 @@ import Badge from "react-bootstrap/Badge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
-  faSearch,
   faUser,
   faVenusMars,
   faCalendar,
@@ -33,6 +32,8 @@ import getAuthAdminData from "./../../api/handleAuthAdminCookies";
 import axiosInstance from "./../../api/axiosInstance";
 //utils
 import { notify } from "../../utils/Notification";
+//React search autocomplete
+import AdminSearchStudent from "./../../components/molecule/admin/AdminSearchStudent";
 
 function AdminGuarantorsAllInfo() {
   const { id } = useParams();
@@ -210,20 +211,7 @@ function AdminGuarantorsAllInfo() {
           </Typography>
         </div>
       </div>
-      <div className="search-input-container">
-        <div className="landing-form__input-box">
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="landing-form__input-icon"
-          />
-          <input
-            type="text"
-            placeholder="Search student"
-            className="landing-form__input"
-            name="email"
-          />
-        </div>
-      </div>
+      <AdminSearchStudent />
       <div>
         <div className="card user-name">
           <div className="image-name-button-wrapper">

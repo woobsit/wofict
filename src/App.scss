@@ -498,7 +498,7 @@
   min-height: 50px;
   margin-top: 10px;
   padding: 5px 10px;
-  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));
+  background: linear-gradient(45deg, rgb(245 16 16), rgb(28 28 249));
 }
 
 .image-container .credential-text{
@@ -958,6 +958,10 @@
   .sidebar {
     flex: 1;
   }
+
+.content{
+  flex:6;
+}
 
   .content__content-bar {
     flex: 5;

@@ -798,6 +798,19 @@ class StudentController extends Controller
     public function getAllRegisteredUsers()
     {
         try {
+
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+            $page = request()->get('page', 1); // Default to page 1 if no page parameter is provided
+            $cacheKey = "registered-users-page-{$page}";
+
+            // Try to get data from cache
+            $users = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+                return User::where('active', 1)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
+
             $user = User::where('active', 1)->orderBy('created_at', 'desc')->paginate(10);
             if ($user) {
                 return response()->json([
@@ -890,33 +903,44 @@ class StudentController extends Controller
     public function getUsersToBeAdmitted()
     {
         try {
-            $user = User::where('active', 1)->where('credentials_status', 1)->where('guarantors_status', 1)->where('admission_status', "Processing")->orderBy('created_at', 'desc')->paginate(10);
-            if ($user) {
-                return response()->json([
-                    'status' => 201,
-                    'message' => 'success',
-                    'result' => $user->items(),
-                    'pagination' => [
-                        'total' => $user->total(),
-                        'per_page' => $user->perPage(),
-                        'current_page' => $user->currentPage(),
-                        'last_page' => $user->lastPage(),
-                        'from' => $user->firstItem(),
-                        'to' => $user->lastItem(),
-                    ],
-                ]);
-            }
+            // Define cache duration (in minutes)
+            $cacheDuration = 5;
+            $page = request()->get('page', 1); // Default to page 1 if no page parameter is provided
+            $cacheKey = "users-to-be-admitted-page-{$page}";
 
-            // Check if there are any users
-            if ($user->isEmpty()) {
+            // Try to get data from cache
+            $users = Cache::remember($cacheKey, $cacheDuration * 60, function () {
+                return User::where('active', 1)
+                    ->where('credentials_status', 1)
+                    ->where('guarantors_status', 1)
+                    ->where('admission_status', 'Processing')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            });
+
+            if ($users->isEmpty()) {
                 return response()->json([
                     'status' => 404,
                     'message' => 'No records found',
                 ]);
             }
+
+            return response()->json([
+                'status' => 201,
+                'message' => 'success',
+                'result' => $users->items(),
+                'pagination' => [
+                    'total' => $users->total(),
+                    'per_page' => $users->perPage(),
+                    'current_page' => $users->currentPage(),
+                    'last_page' => $users->lastPage(),
+                    'from' => $users->firstItem(),
+                    'to' => $users->lastItem(),
+                ],
+            ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 500, 'message' => 'System error occured']);
+            return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
 

@@ -15,13 +15,15 @@ import Footer from "../../components/molecule/Footer";
 import Typography from "../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "../../utils/Notification";
 //API service
 import authService from "../../api/authService";
 //React search autocomplete
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
+//React search autocomplete
+import AdminSearchStudent from "./../../components/molecule/admin/AdminSearchStudent";
 
 function AdminCredentialsList() {
   const navigate = useNavigate();
@@ -381,7 +383,7 @@ function AdminCredentialsList() {
       <div className="image-container">
         <div>
           <Typography variant="h3" className="credential-text">
-            Credentials
+            Users with Credentials
           </Typography>
         </div>
         <div>
@@ -392,20 +394,8 @@ function AdminCredentialsList() {
         </div>
       </div>
 
-      <div className="search-input-container">
-        <div className="landing-form__input-box">
-          <input
-            type="text"
-            placeholder="Search students"
-            className="landing-form__input"
-            name="email"
-          />
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="landing-student-form__input-icon"
-          />
-        </div>
-      </div>
+      <AdminSearchStudent />
+
       <div className="credentials">
         <div className="credentials__table-box">
           <Tabs
@@ -418,7 +408,7 @@ function AdminCredentialsList() {
             <Tab eventKey="credentials" title="All credentials">
               <div className="credentials__table-title-box">
                 <Typography variant="h4" className="credentials__table-title">
-                  All credentials
+                  Users with Credentials
                 </Typography>
 
                 <ReactSearchAutocomplete
@@ -432,17 +422,86 @@ function AdminCredentialsList() {
               </div>
               {fetchAllUsersDataStatus ? (
                 <>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder
+                      xs={1}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                  </Placeholder>
                   <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="lg" />
+                    <Placeholder
+                      xs={1}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
                   </Placeholder>
                   <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
+                    <Placeholder
+                      xs={1}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
                   </Placeholder>
                 </>
               ) : (
@@ -527,17 +586,86 @@ function AdminCredentialsList() {
               </div>
               {fetchAllPendingUsersDataStatus ? (
                 <>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder
+                      xs={1}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                  </Placeholder>
                   <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="lg" />
+                    <Placeholder
+                      xs={1}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
                   </Placeholder>
                   <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
+                    <Placeholder
+                      xs={1}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
                   </Placeholder>
                 </>
               ) : (
@@ -628,17 +756,86 @@ function AdminCredentialsList() {
               </div>
               {fetchAllApprovedUsersDataStatus ? (
                 <>
+                  <Placeholder as="p" animation="wave">
+                    <Placeholder
+                      xs={1}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="lg"
+                      style={{ marginRight: "20px" }}
+                    />
+                  </Placeholder>
                   <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="lg" />
+                    <Placeholder
+                      xs={1}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
                   </Placeholder>
                   <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="lg" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="glow">
-                    <Placeholder xs={12} size="xs" />
-                  </Placeholder>
-                  <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} size="xs" />
+                    <Placeholder
+                      xs={1}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={2}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
+                    <Placeholder
+                      xs={4}
+                      size="xs"
+                      style={{ marginRight: "20px" }}
+                    />
                   </Placeholder>
                 </>
               ) : (

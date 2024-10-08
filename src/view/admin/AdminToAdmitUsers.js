@@ -26,6 +26,8 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import Swal from "sweetalert2";
 //Spinner loader
 import Loader from "./../../components/atom/loader";
+//React search autocomplete
+import AdminSearchStudent from "./../../components/molecule/admin/AdminSearchStudent";
 
 function AdminToAdmitUsers() {
   const navigate = useNavigate();
@@ -307,31 +309,7 @@ function AdminToAdmitUsers() {
           </div>
         </div>
 
-        {/* <div className="search-input-container">
-          <div className="landing-form__input-box">
-            <input
-              type="text"
-              placeholder="Search students"
-              className="landing-form__input"
-              name="email"
-            />
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="landing-student-form__input-icon"
-            />
-          </div>
-        </div> */}
-
-        <div className="search-input-container">
-          <ReactSearchAutocomplete
-            items={items}
-            onSearch={handleSearch}
-            onSelect={handleOnSelect}
-            placeholder="Search student"
-            className="credentials-autosearch"
-            styling={styling}
-          />
-        </div>
+        <AdminSearchStudent />
 
         <div className="credentials">
           <div className="credentials__table-box">
@@ -359,17 +337,86 @@ function AdminToAdmitUsers() {
                 </div>
                 {fetchAllUsersToBeAdmittedDataStatus ? (
                   <>
+                    <Placeholder as="p" animation="wave">
+                      <Placeholder
+                        xs={1}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={4}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                    </Placeholder>
                     <Placeholder as="p" animation="glow">
-                      <Placeholder xs={12} size="lg" />
+                      <Placeholder
+                        xs={1}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={4}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
                     </Placeholder>
                     <Placeholder as="p" animation="wave">
-                      <Placeholder xs={12} size="lg" />
-                    </Placeholder>
-                    <Placeholder as="p" animation="glow">
-                      <Placeholder xs={12} size="xs" />
-                    </Placeholder>
-                    <Placeholder as="p" animation="wave">
-                      <Placeholder xs={12} size="xs" />
+                      <Placeholder
+                        xs={1}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={4}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
                     </Placeholder>
                   </>
                 ) : (
