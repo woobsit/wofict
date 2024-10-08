@@ -48,7 +48,7 @@ class WebsiteInfoSeeder extends Seeder
             ],
             [
                 'name' => 'fav logo',
-                'value' => 'storage/assets/images/default-logo.png',
+                'value' => 'storage/assets/images/fav-icon.png',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
