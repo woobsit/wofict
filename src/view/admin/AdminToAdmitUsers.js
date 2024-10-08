@@ -15,7 +15,7 @@ import Footer from "../../components/molecule/Footer";
 import Typography from "../../components/atom/typography/Typography";
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 //utils
 import { notify } from "../../utils/Notification";
 //API service
@@ -26,6 +26,8 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import Swal from "sweetalert2";
 //Spinner loader
 import Loader from "./../../components/atom/loader";
+//React search autocomplete
+import AdminSearchStudent from "./../../components/molecule/admin/AdminSearchStudent";
 
 function AdminToAdmitUsers() {
   const navigate = useNavigate();
@@ -243,6 +245,10 @@ function AdminToAdmitUsers() {
       const response = await authService.getAdmit($id);
       if (response.status === 200) {
         notify("success", "User admitted", response.message);
+        // Remove the admitted user from the state
+        setFetchAllUsersToBeAdmittedData((prevData) =>
+          prevData.filter((user) => user.id !== $id)
+        );
       } else {
         notify(
           "error",
@@ -303,20 +309,8 @@ function AdminToAdmitUsers() {
           </div>
         </div>
 
-        <div className="search-input-container">
-          <div className="landing-form__input-box">
-            <input
-              type="text"
-              placeholder="Search students"
-              className="landing-form__input"
-              name="email"
-            />
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="landing-student-form__input-icon"
-            />
-          </div>
-        </div>
+        <AdminSearchStudent />
+
         <div className="credentials">
           <div className="credentials__table-box">
             <Tabs
@@ -343,17 +337,86 @@ function AdminToAdmitUsers() {
                 </div>
                 {fetchAllUsersToBeAdmittedDataStatus ? (
                   <>
+                    <Placeholder as="p" animation="wave">
+                      <Placeholder
+                        xs={1}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={4}
+                        size="lg"
+                        style={{ marginRight: "20px" }}
+                      />
+                    </Placeholder>
                     <Placeholder as="p" animation="glow">
-                      <Placeholder xs={12} size="lg" />
+                      <Placeholder
+                        xs={1}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={4}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
                     </Placeholder>
                     <Placeholder as="p" animation="wave">
-                      <Placeholder xs={12} size="lg" />
-                    </Placeholder>
-                    <Placeholder as="p" animation="glow">
-                      <Placeholder xs={12} size="xs" />
-                    </Placeholder>
-                    <Placeholder as="p" animation="wave">
-                      <Placeholder xs={12} size="xs" />
+                      <Placeholder
+                        xs={1}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={2}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
+                      <Placeholder
+                        xs={4}
+                        size="xs"
+                        style={{ marginRight: "20px" }}
+                      />
                     </Placeholder>
                   </>
                 ) : (

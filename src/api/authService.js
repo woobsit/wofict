@@ -250,6 +250,31 @@ const authService = {
   getAdmit: (id) => handleRequest(`/admit-user/${id}`),
   //current students count
   getCurrentStudentsCount: () => handleRequest(`/current-students-count`),
+  //students growth
+  getCurrentStudentsGrowth: () => handleRequest(`/students-growth-rate`),
+  //registered users count
+  getRegisteredUsersCount: () => handleRequest(`/registered-users-count`),
+  //registered users growth
+  getRegisteredUsersGrowth: () =>
+    handleRequest(`/registered-users-growth-rate`),
+  //pending credentials users count
+  getPendingCredentialsUsersCount: () =>
+    handleRequest(`/pending-credentials-users-count`),
+  //growth rate pending credentials users
+  getPendingCredentialsUsersGrowth: () =>
+    handleRequest(`/pending-credentials-users-growth-rate`),
+  //pending guarantors users count
+  getPendingGuarantorsUsersCount: () =>
+    handleRequest(`/pending-guarantors-users-count`),
+  //growth rate pending guarantors users
+  getPendingGuarantorsUsersGrowth: () =>
+    handleRequest(`/pending-guarantors-users-growth-rate`),
+  //Search all admitted current students
+  getSearchAdmittedCurrentStudents: (searchTerm) =>
+    handleRequest(
+      `/search-admitted-current-students?search-all-admitted-current-students=${searchTerm}`,
+      "get"
+    ),
 };
 
 export default authService;
