@@ -70,12 +70,6 @@ function AdminHeader() {
             />
           </Link>
           <div className="nav__menu-box">
-            <img
-              className="nav__menu-image"
-              src={website_info[2].value + "" + admin_user.photo}
-              alt={admin_user.firstname + " " + admin_user.surname}
-              title={admin_user.firstname + " " + admin_user.surname}
-            />
             <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-cog">
               <FontAwesomeIcon
                 icon={faCog}
@@ -92,21 +86,39 @@ function AdminHeader() {
               <FontAwesomeIcon
                 icon={faBars}
                 className="nav__menu-icon nav__menu-icon-bars"
-                onClick={setMenu}
               />
             </div>
+
+            <img
+              className="nav__menu-image"
+              src={website_info[2].value + "" + admin_user.photo}
+              alt={admin_user.firstname + " " + admin_user.surname}
+              title={admin_user.firstname + " " + admin_user.surname}
+            />
+            <Dropdown show={menuStatus} className="dropdown-menu-end">
+              <Dropdown.Toggle
+                variant="secondary"
+                id="dropdown-basic"
+                as="div" // Needed to avoid a button being rendered
+                onClick={setMenu}
+              >
+                {/* The icon button will be used to trigger the dropdown */}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu align="end"></Dropdown.Menu>
+            </Dropdown>
             {menuStatus && (
               <Dropdown show={menuStatus} className="dropdown-menu-end">
                 <Dropdown.Toggle
                   variant="secondary"
                   id="dropdown-basic"
                   as="div" // Needed to avoid a button being rendered
+                  onClick={setMenu}
                 >
                   {/* The icon button will be used to trigger the dropdown */}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="#/action-1">List One</Dropdown.Item>
                   <Dropdown.Item onClick={adminLogout}>Log out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
