@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 //React route dom
 import { useNavigate, Link } from "react-router-dom";
 //API service
@@ -13,19 +13,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faBell, faBars } from "@fortawesome/free-solid-svg-icons";
 //Spinner loader
 import Loader from "./../../../components/atom/loader";
-//Atom component
-//import Card from "./../../atom/card/Card";
 // React Bootstrap
 import { Dropdown } from "react-bootstrap";
+//custom Component
+import Box from "./../../atom/box/Box";
 
 function AdminHeader() {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [menuStatus, setMenuStatus] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // State for sidebar
+  const dropdownRef = useRef(null); // Ref to the dropdown
 
   const setMenu = () => {
-    setMenuStatus(!menuStatus);
+    setMenuStatus(!menuStatus); // Toggle menu visibility
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
   };
 
   const adminLogout = async () => {
@@ -56,6 +61,19 @@ function AdminHeader() {
 
   const { admin_user, website_info } = getAuthAdminData();
 
+  // Handle click outside to close the menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMenuStatus(false); // Close menu if clicked outside
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       {loading && <Loader />}
@@ -69,7 +87,8 @@ function AdminHeader() {
               title={website_info[0].value}
             />
           </Link>
-          <div className="nav__menu-box">
+          <div className="nav__menu-box" ref={dropdownRef}>
+            {/* Other icons */}
             <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-cog">
               <FontAwesomeIcon
                 icon={faCog}
@@ -82,47 +101,38 @@ function AdminHeader() {
                 className="nav__menu-icon nav__menu-icon-bell"
               />
             </div>
-            <div className="nav__menu-icon__wrapper nav__menu-icon__wrapper-bars">
+
+            {/* Hamburger Menu Icon */}
+            <Box
+              className="nav__menu-icon__wrapper nav__menu-icon__wrapper-bars"
+              onClick={toggleSidebar} // Toggle sidebar on click
+            >
               <FontAwesomeIcon
                 icon={faBars}
                 className="nav__menu-icon nav__menu-icon-bars"
               />
-            </div>
+            </Box>
 
-            <img
-              className="nav__menu-image"
-              src={website_info[2].value + "" + admin_user.photo}
-              alt={admin_user.firstname + " " + admin_user.surname}
-              title={admin_user.firstname + " " + admin_user.surname}
-            />
+            <Box onClick={setMenu}>
+              <img
+                className="nav__menu-image"
+                src={website_info[2].value + "" + admin_user.photo}
+                alt={admin_user.firstname + " " + admin_user.surname}
+                title={admin_user.firstname + " " + admin_user.surname}
+              />
+            </Box>
+
             <Dropdown show={menuStatus} className="dropdown-menu-end">
               <Dropdown.Toggle
                 variant="secondary"
                 id="dropdown-basic"
-                as="div" // Needed to avoid a button being rendered
-                onClick={setMenu}
-              >
-                {/* The icon button will be used to trigger the dropdown */}
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu align="end"></Dropdown.Menu>
+                as="div"
+                onClick={setMenu} // Toggle dropdown on caret click
+              />
+              <Dropdown.Menu align="end">
+                <Dropdown.Item onClick={adminLogout}>Log out</Dropdown.Item>
+              </Dropdown.Menu>
             </Dropdown>
-            {menuStatus && (
-              <Dropdown show={menuStatus} className="dropdown-menu-end">
-                <Dropdown.Toggle
-                  variant="secondary"
-                  id="dropdown-basic"
-                  as="div" // Needed to avoid a button being rendered
-                  onClick={setMenu}
-                >
-                  {/* The icon button will be used to trigger the dropdown */}
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu align="end">
-                  <Dropdown.Item onClick={adminLogout}>Log out</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )}
           </div>
         </nav>
       </header>
