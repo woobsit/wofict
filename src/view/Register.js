@@ -8,7 +8,7 @@ import LogoImage from "./../assets/images/logo.png";
 //Custom component
 import Button from "./../components/atom/button/Button";
 import Typography from "./../components/atom/typography/Typography";
-import Radio from "./../components/atom/radio/Radio";
+//import Radio from "./../components/atom/radio/Radio";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ import {
   faKey,
   faEye,
   faUser,
+  faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 
 //Date picker
@@ -34,9 +35,15 @@ import authService from "./../api/authService";
 //utils
 import { notify } from "./../utils/Notification";
 import { phonePregMatch } from "./../utils/PregMatch";
+//React bootstrap
+import Form from "react-bootstrap/Form";
+//import ProgressBar from "react-bootstrap/ProgressBar";
 
 function Register() {
   const navigate = useNavigate();
+
+const [nigerianStates, setNigerianStates] = useState([]);
+const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
 
   const [inputFields, setInputFields] = useState({
     personal_info: {
@@ -304,6 +311,22 @@ function Register() {
     }
   };
 
+  useEffect(async () => {
+     async function fetchStates(){
+      const response = await authService.getNigerianStates();
+      try{
+        if (response.status === 200) {
+          setNigerianStates();
+        } else {
+        }
+      }catch(){}finally{}
+
+      }
+   
+    
+   
+    fetchStates()}, []);
+
   return (
     <>
       {loading && <Loader />}
@@ -360,7 +383,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your firstname*"
+                        placeholder="Firstname*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.firstname}
@@ -381,7 +404,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your surname*"
+                        placeholder="Surname*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.surname}
@@ -402,7 +425,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your other names"
+                        placeholder="Other names"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.other_names}
@@ -423,7 +446,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your email*"
+                        placeholder="Email*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.email}
@@ -444,7 +467,7 @@ function Register() {
                       />
                       <input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password*"
+                        placeholder="Password*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.password}
@@ -472,7 +495,7 @@ function Register() {
                       />
                       <input
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm new password*"
+                        placeholder="Confirm password*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.password_confirmation}
@@ -488,17 +511,21 @@ function Register() {
                   </div>
 
                   <div className="landing-form__radio-container">
-                    <Radio
-                      id="gender1"
-                      name="gender"
+                    <Form.Check
+                      inline
                       label="Male"
+                      name="gender"
+                      type="radio"
+                      id="gender1"
                       checked="checked"
                       className="landing-form__radio-button"
                     />
-                    <Radio
-                      id="gender2"
-                      name="gender"
+                    <Form.Check
+                      inline
                       label="Female"
+                      name="gender"
+                      type="radio"
+                      id="gender2"
                       className="landing-form__radio-button"
                     />
                   </div>
@@ -515,12 +542,12 @@ function Register() {
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
                       <FontAwesomeIcon
-                        icon={faEnvelope}
+                        icon={faPhone}
                         className="landing-form__input-icon"
                       />
                       <input
                         type="text"
-                        placeholder="Enter your phone number*"
+                        placeholder="Phone number*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.phone_number}
@@ -534,19 +561,29 @@ function Register() {
                     </Typography>
                   </div>
                   <div>
-                    <textarea
-                      name="contact_address"
-                      placeholder="Enter your contact address"
-                    ></textarea>
+                    <Form.Group
+                      className="mb-3"
+                      controlId="exampleForm.ControlTextarea1"
+                    >
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Address*"
+                        name="contact_address"
+                      />
+                    </Form.Group>
                   </div>
+
                   <div>
-                    <select name="state">
-                      <option>Select state</option>
-                      <option>Lagos</option>
-                      <option>Abia</option>
-                      <option>Osun</option>
-                      <option>Kaduna</option>
-                    </select>
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="state"
+                    >
+                      <option>Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </Form.Select>
                   </div>
                 </>
               )}

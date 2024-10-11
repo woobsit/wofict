@@ -4,9 +4,9 @@ import AdminHeader from "../../components/molecule/admin/AdminHeader";
 import AdminMain from "../../components/molecule/admin/AdminMain";
 import Footer from "../../components/molecule/Footer";
 //Molecule
-import AdminSidebar from "./../../components/molecule/admin/adminsidebar/AdminSidebar";
+//import AdminSidebar from "./../../components/molecule/admin/adminsidebar/AdminSidebar";
 //Routes
-import adminRoutes from "./../../adminRoutes";
+//import adminRoutes from "./../../adminRoutes";
 
 function AdminDashboard() {
   return (
@@ -16,7 +16,7 @@ function AdminDashboard() {
         <AdminMain />
         <Footer />
       </div>
-      <AdminSidebar routes={adminRoutes} />
+      {/* <AdminSidebar routes={adminRoutes} /> */}
     </>
   );
 }

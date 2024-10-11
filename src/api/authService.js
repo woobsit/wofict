@@ -1,4 +1,5 @@
 import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 const handleRequest = async (url, method = "get", data = null, config = {}) => {
   // eslint-disable-next-line no-useless-catch
@@ -275,6 +276,22 @@ const authService = {
       `/search-admitted-current-students?search-all-admitted-current-students=${searchTerm}`,
       "get"
     ),
+  //Search all admitted current students
+  getNigerianStates: async () => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await axios.get(
+        "https://nigeria-states-towns-lgas.onrender.com/api/states"
+      );
+      if (response.status === 200) {
+        return response;
+      } else {
+        return response.status;
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

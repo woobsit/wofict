@@ -113,7 +113,7 @@ function AdminHeader() {
               />
             </Box>
 
-            <Box onClick={setMenu}>
+            <Box className="nav__menu-image-box" onClick={setMenu}>
               <img
                 className="nav__menu-image"
                 src={website_info[2].value + "" + admin_user.photo}

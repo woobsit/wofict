@@ -2,6 +2,7 @@
 @import "./assets/styles/variables";
 @import "./assets/styles/base";
 
+landing-form__calender-container
 .landing-page-background {
   min-height: 100vh;
   background-image: url("./assets/images/background-login.jpg");
@@ -71,6 +72,7 @@
 .landing-form__input-box-container {
   height: 60px;
   padding-bottom: 64px;
+  margin-bottom: 8px;
 }
 
 .landing-form__inputs-box {
@@ -190,6 +192,7 @@
 
 .landing-form__calender-container {
   margin-bottom: 20px;
+  color: rgb(131, 131, 131);
 }
 
 .react-datepicker__view-calendar-icon input {
@@ -380,10 +383,19 @@
   height: 35px;
 }
 
+.nav__menu-image-box{
+  cursor: pointer;
+}
+
+.dropdown-menu-end{
+  cursor: pointer;
+}
+
 .nav__menu-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-right:10px;
 }
 
 .nav__menu-image {
@@ -946,9 +958,7 @@
 @media only screen and (min-width: 1440px) {
 
   .main-container{
-    margin-left:auto;
-    margin-right:auto;
-    width:1440px;
+   
   }
 
   .bootstrap-card{
