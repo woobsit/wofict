@@ -57,7 +57,7 @@ function Register() {
       date_of_birth: "Enter date of birth",
       phone_number: "",
       contact_address: "",
-      state_of_origin: "",
+      state_of_origin: "Select state",
     },
     educational_background: {
       course: "",
@@ -97,11 +97,11 @@ function Register() {
     let newValue;
 
     if (type === "radio") {
-      // For radio buttons, use the value, not checked
-      newValue = value;
+      newValue = value; // For radio buttons, use the value directly
+    } else if (type === "select") {
+      newValue = value; // For select elements, use the value directly
     } else {
-      // For all other inputs, continue using checked for checkboxes, and value for other inputs
-      newValue = type === "checkbox" ? checked : value;
+      newValue = type === "checkbox" ? checked : value; // For other inputs
     }
 
     setInputFields((prevState) => {
@@ -177,9 +177,7 @@ function Register() {
           errors.personal_info.contact_address =
             "Enter a valid contact address";
         }
-        if (
-          inputValues.personal_info.state_of_origin.value === "Select state"
-        ) {
+        if (inputValues.personal_info.state_of_origin === "Select state") {
           errors.personal_info.state_of_origin = "Please select your state";
         }
         return errors;
@@ -228,10 +226,12 @@ function Register() {
     switch (page) {
       case 1: {
         setErrors(validate(inputFields)); //object of errors
+        setSubmitting(true);
         break;
       }
       case 2: {
         setErrors(validate(inputFields)); //object of errors
+        setSubmitting(true);
         break;
       }
       default: {
@@ -599,34 +599,43 @@ function Register() {
                       {errors.personal_info.phone_number}
                     </Typography>
                   </div>
-                  <div>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="exampleForm.ControlTextarea1"
-                    >
+                  <div className="landing-form__textarea-box-container">
+                    <Form.Group controlId="exampleForm.ControlTextarea1">
                       <Form.Control
                         as="textarea"
                         rows={3}
                         placeholder="Address*"
                         name="contact_address"
+                        value={inputFields.personal_info.contact_address}
+                        onChange={handleChange}
                       />
                     </Form.Group>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.personal_info.contact_address}
+                    </Typography>
                   </div>
 
-                  <div>
+                  <div className="landing-form__select-box-container">
                     <Form.Select
                       aria-label="Default select example"
-                      name="state"
+                      name="state_of_origin" // Ensure this matches the state in inputFields
+                      value={inputFields.personal_info.state_of_origin} // Bind the select value to state
+                      onChange={handleChange} // Call handleChange on selection
                     >
-                      <option>Select state</option>
+                      <option value="">Select state</option>
                       {nigerianStatesLoading ? (
                         <option>Loading...</option>
                       ) : (
                         nigerianStates.map((state) => (
-                          <option key={state.state_code}>{state.name}</option>
+                          <option key={state.state_code} value={state.name}>
+                            {state.name}
+                          </option>
                         ))
                       )}
                     </Form.Select>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.personal_info.state_of_origin}
+                    </Typography>
                   </div>
                 </>
               )}
