@@ -2,7 +2,6 @@
 @import "./assets/styles/variables";
 @import "./assets/styles/base";
 
-landing-form__calender-container
 .landing-page-background {
   min-height: 100vh;
   background-image: url("./assets/images/background-login.jpg");
@@ -193,6 +192,10 @@ landing-form__calender-container
 .landing-form__calender-container {
   margin-bottom: 20px;
   color: rgb(131, 131, 131);
+}
+
+.react-datepicker-wrapper{
+  display:block;
 }
 
 .react-datepicker__view-calendar-icon input {

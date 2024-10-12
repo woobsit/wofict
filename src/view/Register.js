@@ -41,9 +41,9 @@ import Form from "react-bootstrap/Form";
 
 function Register() {
   const navigate = useNavigate();
-
-const [nigerianStates, setNigerianStates] = useState([]);
-const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
+  //fetch states from api
+  const [nigerianStates, setNigerianStates] = useState([]);
+  const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
 
   const [inputFields, setInputFields] = useState({
     personal_info: {
@@ -53,7 +53,7 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
       email: "",
       password: "",
       password_confirmation: "",
-      gender: "",
+      gender: "Male",
       date_of_birth: "Enter date of birth",
       phone_number: "",
       contact_address: "",
@@ -94,7 +94,15 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    let newValue = type === "radio" ? checked : value;
+    let newValue;
+
+    if (type === "radio") {
+      // For radio buttons, use the value, not checked
+      newValue = value;
+    } else {
+      // For all other inputs, continue using checked for checkboxes, and value for other inputs
+      newValue = type === "checkbox" ? checked : value;
+    }
 
     setInputFields((prevState) => {
       switch (page) {
@@ -159,7 +167,7 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
           errors.personal_info.password_confirmation =
             "Password and confirm password did not match";
         }
-        if (inputValues.personal_info.date_of_birth.value === "") {
+        if (inputValues.personal_info.date_of_birth === "Enter date of birth") {
           errors.personal_info.date_of_birth = "Enter valid date of birth";
         }
         if (!phonePregMatch.test(inputValues.personal_info.phone_number)) {
@@ -311,21 +319,28 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
     }
   };
 
-  useEffect(async () => {
-     async function fetchStates(){
+  //Fetch the Nigerian states
+  useEffect(() => {
+    async function fetchStates() {
       const response = await authService.getNigerianStates();
-      try{
+      try {
+        setNigerianStatesLoading(true);
         if (response.status === 200) {
-          setNigerianStates();
-        } else {
+          setNigerianStates(response.data);
         }
-      }catch(){}finally{}
-
+      } catch (error) {
+        notify(
+          "error",
+          "Error",
+          "An unexpected error occurred. Please try again."
+        );
+      } finally {
+        setNigerianStatesLoading(false);
       }
-   
-    
-   
-    fetchStates()}, []);
+    }
+
+    fetchStates();
+  }, []);
 
   return (
     <>
@@ -517,8 +532,10 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
                       name="gender"
                       type="radio"
                       id="gender1"
-                      checked="checked"
+                      value="Male" // Radio button value for Male
                       className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={inputFields.personal_info.gender === "Male"} // Checked if gender is Male
                     />
                     <Form.Check
                       inline
@@ -526,19 +543,41 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
                       name="gender"
                       type="radio"
                       id="gender2"
+                      value="Female" // Radio button value for Female
                       className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={inputFields.personal_info.gender === "Female"} // Checked if gender is Female
                     />
                   </div>
+
                   <div className="landing-form__calender-container">
                     <DatePicker
                       name="date_of_birth"
                       showIcon
+                      selected={
+                        inputFields.personal_info.date_of_birth !==
+                        "Enter date of birth"
+                          ? new Date(inputFields.personal_info.date_of_birth)
+                          : null
+                      }
+                      onChange={(date) => {
+                        setInputFields((prevState) => ({
+                          ...prevState,
+                          personal_info: {
+                            ...prevState.personal_info,
+                            date_of_birth: date
+                              ? date.toLocaleDateString()
+                              : "Enter date of birth",
+                          },
+                        }));
+                      }}
                       placeholderText="Enter date of birth*"
                     />
                     <Typography className="landing-form__span" variant="span">
                       {errors.personal_info.date_of_birth}
                     </Typography>
                   </div>
+
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
                       <FontAwesomeIcon
@@ -579,10 +618,14 @@ const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
                       aria-label="Default select example"
                       name="state"
                     >
-                      <option>Open this select menu</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                      <option>Select state</option>
+                      {nigerianStatesLoading ? (
+                        <option>Loading...</option>
+                      ) : (
+                        nigerianStates.map((state) => (
+                          <option key={state.state_code}>{state.name}</option>
+                        ))
+                      )}
                     </Form.Select>
                   </div>
                 </>
