@@ -17,12 +17,12 @@ class CourseSeeder extends Seeder
     {
         $courses = [
             [
-                'name' => 'Desktop Publishing',
+                'course_name' => 'Desktop Publishing',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Graphics Design - UI/UX',
+                'course_name' => 'Graphics Design - UI/UX',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

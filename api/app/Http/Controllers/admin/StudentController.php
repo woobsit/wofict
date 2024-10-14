@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Course;
 use Illuminate\Support\Facades\DB;
 use setasign\Fpdi\Fpdi;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -1287,5 +1288,17 @@ class StudentController extends Controller
             Log::error($e->getMessage());
             return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
+    }
+
+    // Select all courses
+    public function getCourses()
+    {
+        $courses = Course::all();
+
+        if ($courses->isEmpty()) {
+            return response()->json(['status' => 404, 'message' => 'No courses found', 'result' => []]);
+        }
+
+        return response()->json(['status' => 201, 'message' => 'success', 'result' => $courses]);
     }
 }

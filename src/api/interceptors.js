@@ -8,16 +8,19 @@ import getAuthUserData from "./handleAuthUserCookies"; // Import the getAuthUser
 export const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
     (config) => {
-      const authAdminData = getAuthAdminData(); // Use the getAuthAdminData function
-      const authUserData = getAuthUserData(); // Use the getAuthUserData function
+      const authAdminData = getAuthAdminData();
+      const authUserData = getAuthUserData();
 
-      var token = "";
-      if (authUserData && authUserData.token) {
-        config.headers["Authorization"] = `Bearer ${authUserData.token}`;
-      } else if (authAdminData && authAdminData.token) {
-        config.headers["Authorization"] = `Bearer ${authAdminData.token}`;
-      } else {
-        config.headers["Authorization"] = `Bearer ${token}`;
+      // List of routes that don't require authentication
+      const publicRoutes = ["/get-all-courses", "/website-info"];
+
+      // If the route is not public, attach the Authorization header
+      if (!publicRoutes.includes(config.url)) {
+        if (authUserData && authUserData.token) {
+          config.headers["Authorization"] = `Bearer ${authUserData.token}`;
+        } else if (authAdminData && authAdminData.token) {
+          config.headers["Authorization"] = `Bearer ${authAdminData.token}`;
+        }
       }
 
       return config;
@@ -42,6 +45,7 @@ export const setupInterceptors = () => {
       if (authAdminData) {
         Cookies.remove("auth_admin_data");
       }
+
       if (error.response && error.response.status === 401) {
         // Unauthorized error, meaning the token is invalid
         window.location.replace("/");

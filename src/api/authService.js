@@ -292,6 +292,8 @@ const authService = {
       throw error;
     }
   },
+  //Search all admitted current students
+  getAllCourses: () => handleRequest(`/get-all-courses`, "get"),
 };
 
 export default authService;

@@ -44,6 +44,9 @@ function Register() {
   //fetch states from api
   const [nigerianStates, setNigerianStates] = useState([]);
   const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
+  //fetch courses
+  const [courses, setCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
 
   const [inputFields, setInputFields] = useState({
     personal_info: {
@@ -60,7 +63,7 @@ function Register() {
       state_of_origin: "Select state",
     },
     educational_background: {
-      course: "",
+      course: "Select course",
       session: "",
       qualification_level: "",
       english_fluency: "",
@@ -342,6 +345,28 @@ function Register() {
     fetchStates();
   }, []);
 
+  //Fetch all courses
+  useEffect(() => {
+    async function fetchCourses() {
+      const response = await authService.getAllCourses();
+      try {
+        setCoursesLoading(true);
+        if (response.status === 201) {
+          setCourses(response.result);
+        }
+      } catch (error) {
+        notify(
+          "error",
+          "Error",
+          "An unexpected error occurred. Please try again."
+        );
+      } finally {
+        setCoursesLoading(false);
+      }
+    }
+
+    fetchCourses();
+  }, []);
   return (
     <>
       {loading && <Loader />}
@@ -622,7 +647,7 @@ function Register() {
                       value={inputFields.personal_info.state_of_origin} // Bind the select value to state
                       onChange={handleChange} // Call handleChange on selection
                     >
-                      <option value="">Select state</option>
+                      <option value="Select state">Select state</option>
                       {nigerianStatesLoading ? (
                         <option>Loading...</option>
                       ) : (
@@ -641,24 +666,67 @@ function Register() {
               )}
               {page === 2 && (
                 <>
-                  <div>
-                    <select name="course">
-                      <option>Select course</option>
-                      <option>Graphics Design - UI/UX</option>
-                      <option>Web Design</option>
-                      <option>Digital Marketing/Content Creation</option>
-                      <option>Photography/Video Editing</option>
-                    </select>
+                  <div className="landing-form__select-box-container">
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="course" // Ensure this matches the state in inputFields
+                      value={inputFields.educational_background.course} // Bind the select value to state
+                      onChange={handleChange} // Call handleChange on selection
+                    >
+                      <option value="Select course">Select course</option>
+                      {coursesLoading ? (
+                        <option>Loading...</option>
+                      ) : (
+                        courses.map((course) => (
+                          <option key={course.id} value={course.course_name}>
+                            {course.course_name}
+                          </option>
+                        ))
+                      )}
+                    </Form.Select>
                   </div>
-                  <div>
-                    <input type="radio" name="session" id="morning" />
-                    <label htmlFor="morning">Morning (10am - 12pm)</label>
-                    <input type="radio" name="session" id="afternoon" />
-                    <label htmlFor="afternoon">Afternoon (3pm - 5pm)</label>
-                    <input type="radio" name="session" id="evening" />
-                    <label htmlFor="evening">
-                      Weekends only (11am - 2pm) (3pm - 5pm)
-                    </label>
+                  <div className="landing-form__radio-container">
+                    <Form.Check
+                      inline
+                      label="Morning (10am - 12pm)"
+                      name="session"
+                      type="radio"
+                      id="session1"
+                      value="Morning" // Radio button value for Morning
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={
+                        inputFields.educational_background.session === "Morning"
+                      }
+                    />
+                    <Form.Check
+                      inline
+                      label="Afternoon (3pm - 5pm)"
+                      name="session"
+                      type="radio"
+                      id="session2"
+                      value="Afternoon" // Radio button value for Female
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={
+                        inputFields.educational_background.session ===
+                        "Afternoon"
+                      }
+                    />
+                    <Form.Check
+                      inline
+                      label="Weekends only (11am - 2pm) (3pm - 5pm)"
+                      name="session"
+                      type="radio"
+                      id="session3"
+                      value="Weekends only"
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={
+                        inputFields.educational_background.session ===
+                        "Weekends only"
+                      }
+                    />
                   </div>
                   <div>
                     <select name="qualification_level">
