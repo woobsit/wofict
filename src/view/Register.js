@@ -64,8 +64,8 @@ function Register() {
     },
     educational_background: {
       course: "Select course",
-      session: "",
-      qualification_level: "",
+      session: "Morning",
+      qualification_level: "Select qualification level",
       english_fluency: "",
     },
     other_info: {
@@ -186,24 +186,22 @@ function Register() {
         return errors;
       }
       case 2: {
-        if (
-          inputValues.educational_background.course.value === "Select course"
-        ) {
+        if (inputValues.educational_background.course === "Select course") {
           errors.educational_background.course = "Please select an option";
         }
-        if (inputValues.educational_background.session.value === "") {
+        if (inputValues.educational_background.session === "") {
           errors.educational_background.session =
             "Please choose the appropriate option";
         }
 
         if (
-          inputValues.educational_background.qualification_level.value ===
+          inputValues.educational_background.qualification_level ===
           "Select qualification level"
         ) {
           errors.educational_background.qualification_level =
             "Please select your qualification level";
         }
-        if (inputValues.educational_background.english_fluency.value === "") {
+        if (inputValues.educational_background.english_fluency === "") {
           errors.educational_background.english_fluency =
             "Please choose the appropriate option";
         }
@@ -351,7 +349,7 @@ function Register() {
       const response = await authService.getAllCourses();
       try {
         setCoursesLoading(true);
-        if (response.status === 201) {
+        if (response.status === 200) {
           setCourses(response.result);
         }
       } catch (error) {
@@ -367,6 +365,7 @@ function Register() {
 
     fetchCourses();
   }, []);
+
   return (
     <>
       {loading && <Loader />}
@@ -684,6 +683,9 @@ function Register() {
                         ))
                       )}
                     </Form.Select>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.educational_background.course}
+                    </Typography>
                   </div>
                   <div className="landing-form__radio-container">
                     <Form.Check
@@ -728,14 +730,24 @@ function Register() {
                       }
                     />
                   </div>
-                  <div>
-                    <select name="qualification_level">
+                  <div className="landing-form__select-box-container">
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="qualification_level" // Ensure this matches the state in inputFields
+                      value={
+                        inputFields.educational_background.qualification_level
+                      } // Bind the select value to state
+                      onChange={handleChange} // Call handleChange on selection
+                    >
                       <option>Select qualification level</option>
                       <option>O Level/SSCE</option>
                       <option>Undergraduate</option>
                       <option>National Diploma (ND)</option>
                       <option>National Certificate of Education (NCE)</option>
-                    </select>
+                    </Form.Select>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.educational_background.qualification_level}
+                    </Typography>
                   </div>
                   <div>
                     <input type="radio" name="english_fluency" id="natural" />

@@ -5,6 +5,8 @@ use App\Http\Controllers\auth\AdminAuthController;
 use App\Http\Controllers\admin\WebsiteInfoController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\StudentController;
+use App\Http\Controllers\CourseController;
+
 
 
 use App\Http\Controllers\UserController;
@@ -49,8 +51,8 @@ Route::middleware(['api'])->prefix('v1')->group(function () {
     Route::post('/admin-enter-new-password', [AdminAuthController::class, 'adminEnterNewPassword']);
     //Website info
     Route::get('/website-info', [WebsiteInfoController::class, 'showWebsiteInfo']);
-     //Get all courses
-     Route::get('/get-all-courses', [StudentController::class, 'getCourses']);
+    //Get all courses
+    Route::get('/get-all-courses', [CourseController::class, 'getCourses']);
 });
 
 /*User routes*/
@@ -65,8 +67,6 @@ Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {
     Route::post('/upload-credentials', [UserController::class, 'uploadCredentials']);
     //upload-guarantors'
     Route::post('/upload-guarantors', [UserController::class, 'uploadGuarantors']);
-    //Get all courses
-    Route::get('/get-all-courses', [StudentController::class, 'getCourses']);
 });
 
 
