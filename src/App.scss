@@ -183,20 +183,23 @@
 
 .landing-form__radio-container {
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  border: 1px solid rgb(214, 214, 214);
-  border-radius: 5px;
-  padding: 10px;
+  flex-direction: column;
+  margin-bottom: 8px;
+  height: 52px;
+}
+
+.landing-form__radio-top{
+  margin-bottom:5px;
 }
 
 .landing-form__radio-container:hover,
 .landing-form__radio-container:focus-within {
-  border: 1px solid rgb(255, 158, 158);
+ 
 }
 
 .landing-form__radio-button {
   margin-right: 15px;
+  cursor:pointer;
 }
 
 .landing-form__calender-container {

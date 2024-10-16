@@ -56,20 +56,20 @@ function Register() {
       email: "",
       password: "",
       password_confirmation: "",
-      gender: "Male",
+      gender: "",
       date_of_birth: "Enter date of birth",
       phone_number: "",
       contact_address: "",
       state_of_origin: "Select state",
     },
     educational_background: {
-      course: "Select course",
-      session: "Morning",
       qualification_level: "Select qualification level",
       english_fluency: "",
-    },
-    other_info: {
       conversation_strength: "",
+    },
+    course_information: {
+      course: "Select course",
+      session: "",
       computer_literacy: "",
       ict_referral: "",
     },
@@ -77,7 +77,7 @@ function Register() {
   const [errors, setErrors] = useState({
     personal_info: "",
     educational_background: "",
-    other_info: "",
+    course_information: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -128,8 +128,8 @@ function Register() {
         default:
           return {
             ...prevState,
-            other_info: {
-              ...prevState.other_info,
+            course_information: {
+              ...prevState.course_information,
               [name]: newValue,
             },
           };
@@ -141,7 +141,7 @@ function Register() {
     let errors = {
       personal_info: {},
       educational_background: {},
-      other_info: {},
+      course_information: {},
     };
     switch (page) {
       case 1: {
@@ -170,6 +170,9 @@ function Register() {
           errors.personal_info.password_confirmation =
             "Password and confirm password did not match";
         }
+        if (inputValues.personal_info.gender === "") {
+          errors.personal_info.gender = "Choose gender";
+        }
         if (inputValues.personal_info.date_of_birth === "Enter date of birth") {
           errors.personal_info.date_of_birth = "Enter valid date of birth";
         }
@@ -186,14 +189,6 @@ function Register() {
         return errors;
       }
       case 2: {
-        if (inputValues.educational_background.course === "Select course") {
-          errors.educational_background.course = "Please select an option";
-        }
-        if (inputValues.educational_background.session === "") {
-          errors.educational_background.session =
-            "Please choose the appropriate option";
-        }
-
         if (
           inputValues.educational_background.qualification_level ===
           "Select qualification level"
@@ -205,15 +200,27 @@ function Register() {
           errors.educational_background.english_fluency =
             "Please choose the appropriate option";
         }
+        if (inputValues.educational_background.conversation_strength === "") {
+          errors.educational_background.conversation_strength =
+            "Please choose the appropriate option";
+        }
+
         return errors;
       }
       default: {
-        if (inputValues.other_info.computer_literacy.value === "") {
-          errors.other_info.computer_literacy =
+        if (inputValues.course_information.course === "Select course") {
+          errors.course_information.course = "Please select an option";
+        }
+        if (inputValues.course_information.session === "") {
+          errors.course_information.session =
             "Please choose the appropriate option";
         }
-        if (inputValues.other_info.ict_referral.value === "") {
-          errors.other_info.ict_referral =
+        if (inputValues.course_information.computer_literacy.value === "") {
+          errors.course_information.computer_literacy =
+            "Please choose the appropriate option";
+        }
+        if (inputValues.course_information.ict_referral.value === "") {
+          errors.course_information.ict_referral =
             "Please choose the appropriate option";
         }
         return errors;
@@ -262,12 +269,16 @@ function Register() {
         break;
       }
       default: {
-        if (Object.keys(errors.other_info).length === 0 && submitting) {
+        if (Object.keys(errors.course_information).length === 0 && submitting) {
           makeRequest();
         }
       }
     }
-  }, [errors.personal_info, errors.educational_background, errors.other_info]);
+  }, [
+    errors.personal_info,
+    errors.educational_background,
+    errors.course_information,
+  ]);
 
   const makeRequest = async () => {
     try {
@@ -286,11 +297,11 @@ function Register() {
         inputFields.personal_info.state_of_origin,
         inputFields.educational_background.qualification_level,
         inputFields.educational_background.english_fluency,
-        inputFields.educational_background.course,
-        inputFields.educational_background.session,
-        inputFields.other_info.conversation_strength,
-        inputFields.other_info.computer_literacy,
-        inputFields.other_info.ict_referral
+        inputFields.educational_background.conversation_strength,
+        inputFields.course_information.course,
+        inputFields.course_information.session,
+        inputFields.course_information.computer_literacy,
+        inputFields.course_information.ict_referral
       );
 
       if (response.status === 200) {
@@ -550,28 +561,34 @@ function Register() {
                   </div>
 
                   <div className="landing-form__radio-container">
-                    <Form.Check
-                      inline
-                      label="Male"
-                      name="gender"
-                      type="radio"
-                      id="gender1"
-                      value="Male" // Radio button value for Male
-                      className="landing-form__radio-button"
-                      onChange={handleChange}
-                      checked={inputFields.personal_info.gender === "Male"} // Checked if gender is Male
-                    />
-                    <Form.Check
-                      inline
-                      label="Female"
-                      name="gender"
-                      type="radio"
-                      id="gender2"
-                      value="Female" // Radio button value for Female
-                      className="landing-form__radio-button"
-                      onChange={handleChange}
-                      checked={inputFields.personal_info.gender === "Female"} // Checked if gender is Female
-                    />
+                    <div className="landing-form__radio-top">
+                      <Form.Check
+                        inline
+                        label="Male"
+                        name="gender"
+                        type="radio"
+                        id="gender1"
+                        value="Male" // Radio button value for Male
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={inputFields.personal_info.gender === "Male"} // Checked if gender is Male
+                      />
+                      <Form.Check
+                        inline
+                        label="Female"
+                        name="gender"
+                        type="radio"
+                        id="gender2"
+                        value="Female" // Radio button value for Female
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={inputFields.personal_info.gender === "Female"} // Checked if gender is Female
+                      />
+                    </div>
+
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.personal_info.gender}
+                    </Typography>
                   </div>
 
                   <div className="landing-form__calender-container">
@@ -668,71 +685,6 @@ function Register() {
                   <div className="landing-form__select-box-container">
                     <Form.Select
                       aria-label="Default select example"
-                      name="course" // Ensure this matches the state in inputFields
-                      value={inputFields.educational_background.course} // Bind the select value to state
-                      onChange={handleChange} // Call handleChange on selection
-                    >
-                      <option value="Select course">Select course</option>
-                      {coursesLoading ? (
-                        <option>Loading...</option>
-                      ) : (
-                        courses.map((course) => (
-                          <option key={course.id} value={course.course_name}>
-                            {course.course_name}
-                          </option>
-                        ))
-                      )}
-                    </Form.Select>
-                    <Typography className="landing-form__span" variant="span">
-                      {errors.educational_background.course}
-                    </Typography>
-                  </div>
-                  <div className="landing-form__radio-container">
-                    <Form.Check
-                      inline
-                      label="Morning (10am - 12pm)"
-                      name="session"
-                      type="radio"
-                      id="session1"
-                      value="Morning" // Radio button value for Morning
-                      className="landing-form__radio-button"
-                      onChange={handleChange}
-                      checked={
-                        inputFields.educational_background.session === "Morning"
-                      }
-                    />
-                    <Form.Check
-                      inline
-                      label="Afternoon (3pm - 5pm)"
-                      name="session"
-                      type="radio"
-                      id="session2"
-                      value="Afternoon" // Radio button value for Female
-                      className="landing-form__radio-button"
-                      onChange={handleChange}
-                      checked={
-                        inputFields.educational_background.session ===
-                        "Afternoon"
-                      }
-                    />
-                    <Form.Check
-                      inline
-                      label="Weekends only (11am - 2pm) (3pm - 5pm)"
-                      name="session"
-                      type="radio"
-                      id="session3"
-                      value="Weekends only"
-                      className="landing-form__radio-button"
-                      onChange={handleChange}
-                      checked={
-                        inputFields.educational_background.session ===
-                        "Weekends only"
-                      }
-                    />
-                  </div>
-                  <div className="landing-form__select-box-container">
-                    <Form.Select
-                      aria-label="Default select example"
                       name="qualification_level" // Ensure this matches the state in inputFields
                       value={
                         inputFields.educational_background.qualification_level
@@ -740,65 +692,227 @@ function Register() {
                       onChange={handleChange} // Call handleChange on selection
                     >
                       <option>Select qualification level</option>
-                      <option>O Level/SSCE</option>
+                      <option>O&apos;Level/SSCE</option>
                       <option>Undergraduate</option>
                       <option>National Diploma (ND)</option>
                       <option>National Certificate of Education (NCE)</option>
+                      <option>Higher National Diploma (HND)</option>
+                      <option>Degree (BSc, B.Tech, B.Edu)</option>
+                      <option>Post Graduate</option>
                     </Form.Select>
                     <Typography className="landing-form__span" variant="span">
                       {errors.educational_background.qualification_level}
                     </Typography>
                   </div>
                   <div>
-                    <input type="radio" name="english_fluency" id="natural" />
-                    <label htmlFor="natural">
-                      It happens naturally without me noticing
-                    </label>
-                    <input type="radio" name="english_fluency" id="easy" />
-                    <label htmlFor="easy">
-                      It is a lot easier than when I started learning, but I
-                      still get confused sometimes
-                    </label>
+                    <Typography variant="h6">
+                      How easy is it for you to speak in English? *
+                    </Typography>
+
+                    <div key="default-radio">
+                      <Form.Check
+                        label="It happens naturally without me noticing"
+                        name="english_fluency"
+                        type="radio"
+                        id="default-radio"
+                        value="It happens naturally"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.english_fluency ===
+                          "It happens naturally"
+                        }
+                      />
+                      <Form.Check
+                        label="It is a lot easier than when I started learning, but
+                        I still get confused sometimes"
+                        name="english_fluency"
+                        type="radio"
+                        id="default-radio"
+                        value="It is a lot easier"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.english_fluency ===
+                          "It is a lot easier"
+                        }
+                      />
+
+                      <Form.Check
+                        label="I find it quite tricky and have to think about it a lot"
+                        name="english_fluency"
+                        type="radio"
+                        id="default-radio"
+                        value="I find it quite tricky"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.english_fluency ===
+                          "I find it quite tricky"
+                        }
+                      />
+
+                      <Form.Check
+                        label="I find it hard to string sentences together and use grammar rules correctly"
+                        name="english_fluency"
+                        type="radio"
+                        id="default-radio"
+                        value="I find it hard"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.english_fluency ===
+                          "I find it hard"
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Typography variant="h6">
+                      Can you understand conversations easily? *
+                    </Typography>
+                    <div key="default-radio">
+                      <Form.Check
+                        label="Yes - understanding English is as natural as my native language"
+                        name="conversation_strength"
+                        type="radio"
+                        id="default-radio"
+                        value="Natural as my native language"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background
+                            .conversation_strength ===
+                          "Natural as my native language"
+                        }
+                      />
+                      <Form.Check
+                        label="Most of the time, but sometimes I get lost if everyone is speaking fast"
+                        name="conversation_strength"
+                        type="radio"
+                        id="default-radio"
+                        value="I get lost"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background
+                            .conversation_strength === "I get lost"
+                        }
+                      />
+                      <Form.Check
+                        label="I can understand when people speak slowly and clearly"
+                        name="conversation_strength"
+                        type="radio"
+                        id="default-radio"
+                        value="I can understand"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background
+                            .conversation_strength === "I can understand"
+                        }
+                      />
+                      <Form.Check
+                        label="I get lost easily and usually only understand a few words in conversation"
+                        name="conversation_strength"
+                        type="radio"
+                        id="default-radio"
+                        value="I only understand a few words in conversation"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background
+                            .conversation_strength ===
+                          "I only understand a few words in conversation"
+                        }
+                      />
+                    </div>
                   </div>
                 </>
               )}
               {page === 3 && (
                 <>
                   <div>
-                    <input
-                      type="radio"
-                      name="conversation_strength"
-                      id="natural"
-                    />
-                    <label htmlFor="natural">
-                      Yes - understanding English is as natural as my native
-                      language
-                    </label>
-                    <input
-                      type="radio"
-                      name="conversation_strength"
-                      id="lost"
-                    />
-                    <label htmlFor="lost">
-                      Most of the time, but sometimes I get lost if everyone is
-                      speaking fast
-                    </label>
-                  </div>
-                  <div>
-                    <input type="radio" name="computer_literacy" id="1" />
-                    <label htmlFor="1">
-                      Yes, I can operate the computer system
-                    </label>
-                    <input type="radio" name="computer_literacy" id="2" />
-                    <label htmlFor="2">
-                      I have a personal computer and I use it effectively
-                    </label>
-                  </div>
-                  <div>
-                    <input type="radio" name="ict_referral" id="1" />
-                    <label htmlFor="1">Flyers</label>
-                    <input type="radio" name="ict_referral" id="2" />
-                    <label htmlFor="2">Banner</label>
+                    <div className="landing-form__select-box-container">
+                      <Form.Select
+                        aria-label="Default select example"
+                        name="course" // Ensure this matches the state in inputFields
+                        value={inputFields.educational_background.course} // Bind the select value to state
+                        onChange={handleChange} // Call handleChange on selection
+                      >
+                        <option value="Select course">Select course</option>
+                        {coursesLoading ? (
+                          <option>Loading...</option>
+                        ) : (
+                          courses.map((course) => (
+                            <option key={course.id} value={course.course_name}>
+                              {course.course_name}
+                            </option>
+                          ))
+                        )}
+                      </Form.Select>
+                      <Typography className="landing-form__span" variant="span">
+                        {errors.educational_background.course}
+                      </Typography>
+                    </div>
+
+                    <div key="default-radio">
+                      <Form.Check
+                        label="Morning (10am - 12pm)"
+                        name="session"
+                        type="radio"
+                        id="default-radio"
+                        value="Morning" // Radio button value for Morning
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.session ===
+                          "Morning"
+                        }
+                      />
+                      <Form.Check
+                        label="Afternoon (3pm - 5pm)"
+                        name="session"
+                        type="radio"
+                        id="default-radio"
+                        value="Afternoon" // Radio button value for Female
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.session ===
+                          "Afternoon"
+                        }
+                      />
+                      <Form.Check
+                        label="Weekends only (11am - 2pm) (3pm - 5pm)"
+                        name="session"
+                        type="radio"
+                        id="default-radio"
+                        value="Weekends only"
+                        className="landing-form__radio-button"
+                        onChange={handleChange}
+                        checked={
+                          inputFields.educational_background.session ===
+                          "Weekends only"
+                        }
+                      />
+                    </div>
+                    <div>
+                      <input type="radio" name="computer_literacy" id="1" />
+                      <label htmlFor="1">
+                        Yes, I can operate the computer system
+                      </label>
+                      <input type="radio" name="computer_literacy" id="2" />
+                      <label htmlFor="2">
+                        I have a personal computer and I use it effectively
+                      </label>
+                    </div>
+                    <div>
+                      <input type="radio" name="ict_referral" id="1" />
+                      <label htmlFor="1">Flyers</label>
+                      <input type="radio" name="ict_referral" id="2" />
+                      <label htmlFor="2">Banner</label>
+                    </div>
                   </div>
                 </>
               )}
