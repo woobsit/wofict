@@ -770,7 +770,16 @@
   display: flex;
   align-items: center;
   margin-top: 15px;
-  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));  padding: 12px 0;
+  background: linear-gradient(45deg, rgb(255, 86, 86), rgb(64, 64, 255));  
+  padding: 12px 0;
+}
+
+.landing-form__box-container{
+  margin-top:15px;
+}
+
+.landing-form__radio-heading{
+  margin-bottom:10px;
 }
 
 .admission-text-container {
