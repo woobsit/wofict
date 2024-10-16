@@ -8,7 +8,7 @@ import LogoImage from "./../assets/images/logo.png";
 //Custom component
 import Button from "./../components/atom/button/Button";
 import Typography from "./../components/atom/typography/Typography";
-import Radio from "./../components/atom/radio/Radio";
+//import Radio from "./../components/atom/radio/Radio";
 
 //Fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ import {
   faKey,
   faEye,
   faUser,
+  faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 
 //Date picker
@@ -34,9 +35,18 @@ import authService from "./../api/authService";
 //utils
 import { notify } from "./../utils/Notification";
 import { phonePregMatch } from "./../utils/PregMatch";
+//React bootstrap
+import Form from "react-bootstrap/Form";
+//import ProgressBar from "react-bootstrap/ProgressBar";
 
 function Register() {
   const navigate = useNavigate();
+  //fetch states from api
+  const [nigerianStates, setNigerianStates] = useState([]);
+  const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
+  //fetch courses
+  const [courses, setCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
 
   const [inputFields, setInputFields] = useState({
     personal_info: {
@@ -46,16 +56,16 @@ function Register() {
       email: "",
       password: "",
       password_confirmation: "",
-      gender: "",
+      gender: "Male",
       date_of_birth: "Enter date of birth",
       phone_number: "",
       contact_address: "",
-      state_of_origin: "",
+      state_of_origin: "Select state",
     },
     educational_background: {
-      course: "",
-      session: "",
-      qualification_level: "",
+      course: "Select course",
+      session: "Morning",
+      qualification_level: "Select qualification level",
       english_fluency: "",
     },
     other_info: {
@@ -87,7 +97,15 @@ function Register() {
   //Set value of inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    let newValue = type === "radio" ? checked : value;
+    let newValue;
+
+    if (type === "radio") {
+      newValue = value; // For radio buttons, use the value directly
+    } else if (type === "select") {
+      newValue = value; // For select elements, use the value directly
+    } else {
+      newValue = type === "checkbox" ? checked : value; // For other inputs
+    }
 
     setInputFields((prevState) => {
       switch (page) {
@@ -152,7 +170,7 @@ function Register() {
           errors.personal_info.password_confirmation =
             "Password and confirm password did not match";
         }
-        if (inputValues.personal_info.date_of_birth.value === "") {
+        if (inputValues.personal_info.date_of_birth === "Enter date of birth") {
           errors.personal_info.date_of_birth = "Enter valid date of birth";
         }
         if (!phonePregMatch.test(inputValues.personal_info.phone_number)) {
@@ -162,32 +180,28 @@ function Register() {
           errors.personal_info.contact_address =
             "Enter a valid contact address";
         }
-        if (
-          inputValues.personal_info.state_of_origin.value === "Select state"
-        ) {
+        if (inputValues.personal_info.state_of_origin === "Select state") {
           errors.personal_info.state_of_origin = "Please select your state";
         }
         return errors;
       }
       case 2: {
-        if (
-          inputValues.educational_background.course.value === "Select course"
-        ) {
+        if (inputValues.educational_background.course === "Select course") {
           errors.educational_background.course = "Please select an option";
         }
-        if (inputValues.educational_background.session.value === "") {
+        if (inputValues.educational_background.session === "") {
           errors.educational_background.session =
             "Please choose the appropriate option";
         }
 
         if (
-          inputValues.educational_background.qualification_level.value ===
+          inputValues.educational_background.qualification_level ===
           "Select qualification level"
         ) {
           errors.educational_background.qualification_level =
             "Please select your qualification level";
         }
-        if (inputValues.educational_background.english_fluency.value === "") {
+        if (inputValues.educational_background.english_fluency === "") {
           errors.educational_background.english_fluency =
             "Please choose the appropriate option";
         }
@@ -213,10 +227,12 @@ function Register() {
     switch (page) {
       case 1: {
         setErrors(validate(inputFields)); //object of errors
+        setSubmitting(true);
         break;
       }
       case 2: {
         setErrors(validate(inputFields)); //object of errors
+        setSubmitting(true);
         break;
       }
       default: {
@@ -304,6 +320,52 @@ function Register() {
     }
   };
 
+  //Fetch the Nigerian states
+  useEffect(() => {
+    async function fetchStates() {
+      const response = await authService.getNigerianStates();
+      try {
+        setNigerianStatesLoading(true);
+        if (response.status === 200) {
+          setNigerianStates(response.data);
+        }
+      } catch (error) {
+        notify(
+          "error",
+          "Error",
+          "An unexpected error occurred. Please try again."
+        );
+      } finally {
+        setNigerianStatesLoading(false);
+      }
+    }
+
+    fetchStates();
+  }, []);
+
+  //Fetch all courses
+  useEffect(() => {
+    async function fetchCourses() {
+      const response = await authService.getAllCourses();
+      try {
+        setCoursesLoading(true);
+        if (response.status === 200) {
+          setCourses(response.result);
+        }
+      } catch (error) {
+        notify(
+          "error",
+          "Error",
+          "An unexpected error occurred. Please try again."
+        );
+      } finally {
+        setCoursesLoading(false);
+      }
+    }
+
+    fetchCourses();
+  }, []);
+
   return (
     <>
       {loading && <Loader />}
@@ -360,7 +422,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your firstname*"
+                        placeholder="Firstname*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.firstname}
@@ -381,7 +443,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your surname*"
+                        placeholder="Surname*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.surname}
@@ -402,7 +464,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your other names"
+                        placeholder="Other names"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.other_names}
@@ -423,7 +485,7 @@ function Register() {
                       />
                       <input
                         type="text"
-                        placeholder="Enter your email*"
+                        placeholder="Email*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.email}
@@ -444,7 +506,7 @@ function Register() {
                       />
                       <input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password*"
+                        placeholder="Password*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.password}
@@ -472,7 +534,7 @@ function Register() {
                       />
                       <input
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm new password*"
+                        placeholder="Confirm password*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.password_confirmation}
@@ -488,39 +550,67 @@ function Register() {
                   </div>
 
                   <div className="landing-form__radio-container">
-                    <Radio
-                      id="gender1"
-                      name="gender"
+                    <Form.Check
+                      inline
                       label="Male"
-                      checked="checked"
-                      className="landing-form__radio-button"
-                    />
-                    <Radio
-                      id="gender2"
                       name="gender"
-                      label="Female"
+                      type="radio"
+                      id="gender1"
+                      value="Male" // Radio button value for Male
                       className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={inputFields.personal_info.gender === "Male"} // Checked if gender is Male
+                    />
+                    <Form.Check
+                      inline
+                      label="Female"
+                      name="gender"
+                      type="radio"
+                      id="gender2"
+                      value="Female" // Radio button value for Female
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={inputFields.personal_info.gender === "Female"} // Checked if gender is Female
                     />
                   </div>
+
                   <div className="landing-form__calender-container">
                     <DatePicker
                       name="date_of_birth"
                       showIcon
+                      selected={
+                        inputFields.personal_info.date_of_birth !==
+                        "Enter date of birth"
+                          ? new Date(inputFields.personal_info.date_of_birth)
+                          : null
+                      }
+                      onChange={(date) => {
+                        setInputFields((prevState) => ({
+                          ...prevState,
+                          personal_info: {
+                            ...prevState.personal_info,
+                            date_of_birth: date
+                              ? date.toLocaleDateString()
+                              : "Enter date of birth",
+                          },
+                        }));
+                      }}
                       placeholderText="Enter date of birth*"
                     />
                     <Typography className="landing-form__span" variant="span">
                       {errors.personal_info.date_of_birth}
                     </Typography>
                   </div>
+
                   <div className="landing-form__input-box-container">
                     <div className="landing-form__input-box">
                       <FontAwesomeIcon
-                        icon={faEnvelope}
+                        icon={faPhone}
                         className="landing-form__input-icon"
                       />
                       <input
                         type="text"
-                        placeholder="Enter your phone number*"
+                        placeholder="Phone number*"
                         className="landing-form__input"
                         // required
                         value={inputFields.personal_info.phone_number}
@@ -533,52 +623,131 @@ function Register() {
                       {errors.personal_info.phone_number}
                     </Typography>
                   </div>
-                  <div>
-                    <textarea
-                      name="contact_address"
-                      placeholder="Enter your contact address"
-                    ></textarea>
+                  <div className="landing-form__textarea-box-container">
+                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Address*"
+                        name="contact_address"
+                        value={inputFields.personal_info.contact_address}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.personal_info.contact_address}
+                    </Typography>
                   </div>
-                  <div>
-                    <select name="state">
-                      <option>Select state</option>
-                      <option>Lagos</option>
-                      <option>Abia</option>
-                      <option>Osun</option>
-                      <option>Kaduna</option>
-                    </select>
+
+                  <div className="landing-form__select-box-container">
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="state_of_origin" // Ensure this matches the state in inputFields
+                      value={inputFields.personal_info.state_of_origin} // Bind the select value to state
+                      onChange={handleChange} // Call handleChange on selection
+                    >
+                      <option value="Select state">Select state</option>
+                      {nigerianStatesLoading ? (
+                        <option>Loading...</option>
+                      ) : (
+                        nigerianStates.map((state) => (
+                          <option key={state.state_code} value={state.name}>
+                            {state.name}
+                          </option>
+                        ))
+                      )}
+                    </Form.Select>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.personal_info.state_of_origin}
+                    </Typography>
                   </div>
                 </>
               )}
               {page === 2 && (
                 <>
-                  <div>
-                    <select name="course">
-                      <option>Select course</option>
-                      <option>Graphics Design - UI/UX</option>
-                      <option>Web Design</option>
-                      <option>Digital Marketing/Content Creation</option>
-                      <option>Photography/Video Editing</option>
-                    </select>
+                  <div className="landing-form__select-box-container">
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="course" // Ensure this matches the state in inputFields
+                      value={inputFields.educational_background.course} // Bind the select value to state
+                      onChange={handleChange} // Call handleChange on selection
+                    >
+                      <option value="Select course">Select course</option>
+                      {coursesLoading ? (
+                        <option>Loading...</option>
+                      ) : (
+                        courses.map((course) => (
+                          <option key={course.id} value={course.course_name}>
+                            {course.course_name}
+                          </option>
+                        ))
+                      )}
+                    </Form.Select>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.educational_background.course}
+                    </Typography>
                   </div>
-                  <div>
-                    <input type="radio" name="session" id="morning" />
-                    <label htmlFor="morning">Morning (10am - 12pm)</label>
-                    <input type="radio" name="session" id="afternoon" />
-                    <label htmlFor="afternoon">Afternoon (3pm - 5pm)</label>
-                    <input type="radio" name="session" id="evening" />
-                    <label htmlFor="evening">
-                      Weekends only (11am - 2pm) (3pm - 5pm)
-                    </label>
+                  <div className="landing-form__radio-container">
+                    <Form.Check
+                      inline
+                      label="Morning (10am - 12pm)"
+                      name="session"
+                      type="radio"
+                      id="session1"
+                      value="Morning" // Radio button value for Morning
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={
+                        inputFields.educational_background.session === "Morning"
+                      }
+                    />
+                    <Form.Check
+                      inline
+                      label="Afternoon (3pm - 5pm)"
+                      name="session"
+                      type="radio"
+                      id="session2"
+                      value="Afternoon" // Radio button value for Female
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={
+                        inputFields.educational_background.session ===
+                        "Afternoon"
+                      }
+                    />
+                    <Form.Check
+                      inline
+                      label="Weekends only (11am - 2pm) (3pm - 5pm)"
+                      name="session"
+                      type="radio"
+                      id="session3"
+                      value="Weekends only"
+                      className="landing-form__radio-button"
+                      onChange={handleChange}
+                      checked={
+                        inputFields.educational_background.session ===
+                        "Weekends only"
+                      }
+                    />
                   </div>
-                  <div>
-                    <select name="qualification_level">
+                  <div className="landing-form__select-box-container">
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="qualification_level" // Ensure this matches the state in inputFields
+                      value={
+                        inputFields.educational_background.qualification_level
+                      } // Bind the select value to state
+                      onChange={handleChange} // Call handleChange on selection
+                    >
                       <option>Select qualification level</option>
                       <option>O Level/SSCE</option>
                       <option>Undergraduate</option>
                       <option>National Diploma (ND)</option>
                       <option>National Certificate of Education (NCE)</option>
-                    </select>
+                    </Form.Select>
+                    <Typography className="landing-form__span" variant="span">
+                      {errors.educational_background.qualification_level}
+                    </Typography>
                   </div>
                   <div>
                     <input type="radio" name="english_fluency" id="natural" />

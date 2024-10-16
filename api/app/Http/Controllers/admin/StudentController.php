@@ -1288,4 +1288,5 @@ class StudentController extends Controller
             return response()->json(['status' => 500, 'message' => 'System error occurred']);
         }
     }
+
 }

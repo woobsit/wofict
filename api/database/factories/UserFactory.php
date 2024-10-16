@@ -46,6 +46,7 @@ class UserFactory extends Factory
             'guarantors_2' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
             'guarantors_status' => 1,
             'admission_status' => 'Admitted',
+            'course' => $this->faker->randomElement(['Digital Marketing', 'Fullstack Development', 'Graphics Design']),
             'forget_password' => null,
             'created_at' => $this->faker->randomElement(["2024-09-02 12:00:22", "2024-10-02 12:00:22"]),
             'updated_at' => Carbon::now(),
