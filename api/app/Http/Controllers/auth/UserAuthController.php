@@ -20,37 +20,49 @@ use Illuminate\Support\Facades\Mail;
 
 class UserAuthController extends Controller
 {
-    // public function register(Request $request)
-    // {
+    public function register(Request $request)
+    {
 
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|min:3|max:255',
-    //         'email' => 'required|email|unique:users',
-    //         'password' => 'min:6|required|confirmed',
+        $validator = Validator::make($request->all(), [
+            'firstname' => 'required|min:3|max:255',
+            'surname' => 'required|min:3|max:255',
+            'other_names' => 'nullable|min:3|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'min:6|required|confirmed',
+            'gender' => 'required',
+            'date_of_birth' => 'required|date',
+            'phone_number' => 'required',
+            'contact_address' => 'required|string|min:3|max:1000',
+            'state_of_origin' => 'required|string|min:3|max:255',
+            'qualification_level' => 'required|string|min:3|max:255',
+            'english_fluency' => 'required|string|min:3|max:255',
+            'conversation_strength' => 'required|string|min:3|max:255',
+            'course' => 'required|string|min:3|max:255',
+            'session' => 'required|string|min:3|max:255',
+            'computer_literacy' => 'required|string|min:3|max:255',
+            'ict_referral' => 'required|string|min:3|max:255',
+        ]);
 
-    //     ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 201,
+                'message' => $validator->messages(),
+            ]);
+        } else {
 
 
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => 200,
-    //             'message' => $validator->messages(),
-    //         ]);
-    //     } else {
+            $user = User::create([
+                'email' => $request->input('email'),
+                'name' => $request->input('name'),
+                'password' => Hash::make($request->input('password')),
+            ]);
 
-
-    //         $user = User::create([
-    //             'email' => $request->input('email'),
-    //             'name' => $request->input('name'),
-    //             'password' => Hash::make($request->input('password')),
-    //         ]);
-
-    //         return response()->json([
-    //             'status' => 200,
-    //             'message' => 'Registration was successful'
-    //         ]);
-    //     }
-    // }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Registration was successful'
+            ]);
+        }
+    }
 
     public function userLogin(Request $request)
     {

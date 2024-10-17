@@ -367,7 +367,7 @@ function Register() {
       if (response.status === 200) {
         //Register was successfull
         setLoading(false);
-        navigate("/home");
+        navigate("/");
       } else if (response.status === 422) {
         setLoading(false);
         notify("error", "Input Validation", response.message);
@@ -436,6 +436,16 @@ function Register() {
 
     fetchCourses();
   }, []);
+
+  //Go back to page one
+  const backToPageOne = () => {
+    setPage(1);
+  };
+
+  //Go back to page 2
+  const backToPageTwo = () => {
+    setPage(2);
+  };
 
   return (
     <>
@@ -1198,6 +1208,7 @@ function Register() {
                         <Button
                           className="landing-form__progress-bar-button--back"
                           disabled={loading}
+                          onClick={backToPageOne}
                         >
                           Back
                         </Button>
@@ -1216,6 +1227,7 @@ function Register() {
                         <Button
                           className="landing-form__progress-bar-button--back"
                           disabled={loading}
+                          onClick={backToPageTwo}
                         >
                           Back
                         </Button>

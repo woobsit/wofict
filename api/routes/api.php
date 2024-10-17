@@ -30,9 +30,11 @@ use Illuminate\Support\Facades\Route;
 
 //Route::prefix('v1')->group(function () {});
 
-// Route::post('/register', [UserAuthController::class, 'register']);
+
 // Route::post('/admin-login', [AdminAuthController::class, 'adminLogin']);
 Route::middleware(['api'])->prefix('v1')->group(function () {
+    // User register
+    Route::post('/register', [UserAuthController::class, 'register']);
     //User Login
     Route::post('/user-login', [UserAuthController::class, 'userLogin']);
     //User forget password endpoint
