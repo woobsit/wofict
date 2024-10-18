@@ -6,6 +6,7 @@ import { setupInterceptors } from "./api/interceptors";
 import Home from "./view/Home";
 import LandingPage from "./view/LandingPage";
 import Register from "./view/Register";
+import VerifyEmail from "./view/VerifyEmail";
 import ForgetPassword from "./view/ForgetPassword";
 // import Admission from "./view/Admission";
 import EnterNewPassword from "./view/EnterNewPassword";
@@ -112,6 +113,11 @@ function App() {
             <Route path="/" element={<LandingPage />} key="landing-page" />
             <Route path="/register" element={<Register />} key="register" />
             <Route path="/home" element={<Home />} key="home" />
+            <Route
+              path="/verify-email/:verify"
+              element={<VerifyEmail />}
+              key="verify-email"
+            />
             <Route
               path="/forget-password"
               element={<ForgetPassword />}

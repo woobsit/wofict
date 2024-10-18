@@ -20,8 +20,51 @@ const handleRequest = async (url, method = "get", data = null, config = {}) => {
 };
 
 const authService = {
+  userRegister: (
+    firstname,
+    surname,
+    other_names,
+    email,
+    password,
+    gender,
+    date_of_birth,
+    phone_number,
+    contact_address,
+    state_of_origin,
+    qualification_level,
+    english_fluency,
+    conversation_strength,
+    course,
+    session,
+    computer_literacy,
+    ict_referral
+  ) =>
+    handleRequest("/register", "post", {
+      firstname,
+      surname,
+      other_names,
+      email,
+      password,
+      gender,
+      date_of_birth,
+      phone_number,
+      contact_address,
+      state_of_origin,
+      qualification_level,
+      english_fluency,
+      conversation_strength,
+      course,
+      session,
+      computer_literacy,
+      ict_referral,
+    }),
   userLogin: (email, password, remember_token) =>
     handleRequest("/user-login", "post", { email, password, remember_token }),
+
+  verifyEmail: (verify) =>
+    handleRequest("/user-login", "post", { email, password, remember_token }),
+
+  /verify-email
 
   userLogout: () => handleRequest("/user-logout", "post"),
 
@@ -45,8 +88,6 @@ const authService = {
       password_confirmation,
       forget_password,
     }),
-
-  userRegister: (userData) => handleRequest("/register", "post", userData),
 
   adminLogin: (email, password, remember_token) =>
     handleRequest("/admin-login", "post", { email, password, remember_token }),

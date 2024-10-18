@@ -112,28 +112,24 @@ function AdminLogin() {
           sameSite: "lax",
         });
 
-        setLoading(false);
         navigate("/admin/dashboard");
       } else if (response.status === 422) {
-        setLoading(false);
         notify("error", "Input Validation", response.message);
       } else if (response.status === 401) {
-        setLoading(false);
         notify("error", "User Login", response.message);
       } else if (response.status === 500) {
-        setLoading(false);
         notify("error", "System Error", response.message);
       } else {
-        setLoading(false);
         notify("error", "Error", "An unexpected error occurred");
       }
     } catch (error) {
-      setLoading(false);
       notify(
         "error",
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 

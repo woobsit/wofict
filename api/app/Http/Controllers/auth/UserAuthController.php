@@ -4,6 +4,7 @@ namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ForgetPassword;
+use App\Mail\SignupRegistration;
 use App\Models\User;
 use App\Models\WebsiteInfo;
 use Carbon\Carbon;
@@ -23,46 +24,115 @@ class UserAuthController extends Controller
     public function register(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'firstname' => 'required|min:3|max:255',
-            'surname' => 'required|min:3|max:255',
-            'other_names' => 'nullable|min:3|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'min:6|required|confirmed',
-            'gender' => 'required',
-            'date_of_birth' => 'required|date',
-            'phone_number' => 'required',
-            'contact_address' => 'required|string|min:3|max:1000',
-            'state_of_origin' => 'required|string|min:3|max:255',
-            'qualification_level' => 'required|string|min:3|max:255',
-            'english_fluency' => 'required|string|min:3|max:255',
-            'conversation_strength' => 'required|string|min:3|max:255',
-            'course' => 'required|string|min:3|max:255',
-            'session' => 'required|string|min:3|max:255',
-            'computer_literacy' => 'required|string|min:3|max:255',
-            'ict_referral' => 'required|string|min:3|max:255',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'firstname' => 'required|min:3|max:255',
+                'surname' => 'required|min:3|max:255',
+                'other_names' => 'nullable|min:3|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'min:6|required|confirmed',
+                'gender' => 'required',
+                'date_of_birth' => 'required|date',
+                'phone_number' => 'required',
+                'contact_address' => 'required|string|min:3|max:1000',
+                'state_of_origin' => 'required|string|min:3|max:255',
+                'qualification_level' => 'required|string|min:3|max:255',
+                'course' => 'required|string|min:3|max:255',
+                'session' => 'required|string|min:3|max:255',
+                'english_fluency' => 'required|integer',
+                'conversation_strength' => 'required|integer',
+                'computer_literacy' => 'required|integer',
+                'ict_referral' => 'required|integer',
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 422,
+                    'message' => $validator->messages()->all(),
+                ]);
+            }
+
+            $email_verification = Str::random(30);
+            $expiryTimestamp = now()->addDay(2);
+
+            User::create([
+                'firstname' => $request->input('firstname'),
+                'surname' => $request->input('surname'),
+                'other_names' => $request->input('other_names'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'gender' => $request->input('gender'),
+                'date_of_birth' => $request->input('date_of_birth'),
+                'phone_number' => $request->input('phone_number'),
+                'contact_address' => $request->input('contact_address'),
+                'state_of_origin' => $request->input('state_of_origin'),
+                'qualification_level' => $request->input('qualification_level'),
+                'course' => $request->input('course'),
+                'session' => $request->input('session'),
+                'english_fluency' => $request->input('english_fluency'),
+                'conversation_strength' => $request->input('conversation_strength'),
+                'computer_literacy' => $request->input('computer_literacy'),
+                'ict_referral' => $request->input('ict_referral'),
+                'email_verification' => $email_verification,
+                'expiry_timestamp' => $expiryTimestamp,
+            ]);
+
+
+            $email_verification_code = ['verification_string' => $email_verification, 'surname' => $request->input('surname')];
+            Mail::to($request->input('email'))->send(new SignupRegistration($email_verification_code));
+
             return response()->json([
                 'status' => 201,
-                'message' => $validator->messages(),
-            ]);
-        } else {
-
-
-            $user = User::create([
-                'email' => $request->input('email'),
-                'name' => $request->input('name'),
-                'password' => Hash::make($request->input('password')),
-            ]);
-
-            return response()->json([
-                'status' => 200,
                 'message' => 'Registration was successful'
             ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
         }
     }
+
+    public function verifyEmail(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email_verification' => 'required|string|size:30',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 422,
+                    'message' => "Invalid",
+                ]);
+            }
+
+            $user = User::where('email_verification', $request->input('email_verification'))->where('active', 0)->first();
+
+            if ($user) {
+                $expiryTimestamp = $user->expiry_timestamp;
+
+                if (now()->lt($expiryTimestamp)) {
+                    // Mark the user as verified
+                    $user->email_verification = null;
+                    $user->active = 1;
+                    $user->email_verified_at = now();
+                    $user->expiry_timestamp = null;
+                    $user->save();
+
+                    return response()->json(['status' => 200, 'message' => 'Email verification was successful']);
+                } else {
+                    // Token has expired
+                    return response()->json(['status' => 401, 'message' => 'Email verification token has expired']);
+                }
+            } else {
+                // User or verification code not found
+                return response()->json(['status' => 401, 'message' => 'Invalid email verification request']);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['status' => 500, 'message' => 'System error occured']);
+        }
+    }
+
 
     public function userLogin(Request $request)
     {

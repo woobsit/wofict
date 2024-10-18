@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['api'])->prefix('v1')->group(function () {
     // User register
     Route::post('/register', [UserAuthController::class, 'register']);
+    Route::post('/verify-email', [UserAuthController::class, 'verifyEmail']);
     //User Login
     Route::post('/user-login', [UserAuthController::class, 'userLogin']);
     //User forget password endpoint
