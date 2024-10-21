@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('phone_number', 11);
             $table->string('state_of_origin', 15);
             $table->string('photo')->default('storage/assets/images/users/default.jpg');
-            $table->string('session', 15);
+            $table->string('session', 50);
             $table->string('qualification_level', 50)->nullable();
             $table->string('credentials')->nullable();
             $table->integer('credentials_status')->default(0);
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('guarantors_2')->nullable();
             $table->integer('guarantors_status')->default(0);
             $table->enum('admission_status', ['Pending documentation', 'Processing', 'Admitted'])->default('Pending documentation');
-            $table->string('course', 20);
+            $table->string('course', 50);
             $table->string('english_fluency');
             $table->string('conversation_strength');
             $table->string('computer_literacy');

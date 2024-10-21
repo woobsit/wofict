@@ -38,8 +38,8 @@ class UserAuthController extends Controller
                 'contact_address' => 'required|string|min:3|max:1000',
                 'state_of_origin' => 'required|string|min:3|max:15',
                 'qualification_level' => 'required|string|min:3|max:50',
-                'course' => 'required|string|min:3|max:20',
-                'session' => 'required|string|min:3|max:15',
+                'course' => 'required|string|min:3|max:50',
+                'session' => 'required|string|min:3|max:50',
                 'english_fluency' => 'required|string',
                 'conversation_strength' => 'required|string',
                 'computer_literacy' => 'required|string',
@@ -56,8 +56,6 @@ class UserAuthController extends Controller
 
             $email_verification = Str::random(30);
             $expiryTimestamp = now()->addDay(2);
-
-            return response()->json(['status' => 100, 'result' => $request->all()]);
 
             User::create([
                 'firstname' => $request->input('firstname'),
