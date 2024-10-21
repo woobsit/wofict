@@ -27,17 +27,37 @@ class CourseSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'course_name' => 'Digital Marketing',
+                'course_name' => 'Web Design',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'course_name' => 'Fullstack Development',
+                'course_name' => 'Digital Marketing/Content Creation',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'course_name' => 'Graphics Design',
+                'course_name' => 'Photography/Video Editing',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'course_name' => 'Front-End Software Development',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'course_name' => 'Back-End Software Development',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'course_name' => 'Fullstack Software Development',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'course_name' => 'Mobile App Development',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

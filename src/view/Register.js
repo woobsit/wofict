@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //images
 import LogoImage from "./../assets/images/logo.png";
@@ -44,7 +44,7 @@ import Form from "react-bootstrap/Form";
 //import ProgressBar from "react-bootstrap/ProgressBar";
 
 function Register() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   //fetch states from api
   const [nigerianStates, setNigerianStates] = useState([]);
   const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
@@ -366,8 +366,8 @@ function Register() {
 
       if (response.status === 201) {
         //Register was successfull
-
-        navigate("/");
+        console.log(response.result);
+        //navigate("/");
       } else if (response.status === 422) {
         notify("error", "Input Validation", response.message);
       } else if (response.status === 500) {
@@ -667,18 +667,22 @@ function Register() {
                           : null
                       }
                       onChange={(date) => {
+                        // Ensure the date is formatted as YYYY-MM-DD for Laravel
+                        const formattedDate = date
+                          ? date.toISOString().split("T")[0] // Format date as YYYY-MM-DD
+                          : "Enter date of birth";
+
                         setInputFields((prevState) => ({
                           ...prevState,
                           personal_info: {
                             ...prevState.personal_info,
-                            date_of_birth: date
-                              ? date.toLocaleDateString()
-                              : "Enter date of birth",
+                            date_of_birth: formattedDate, // Store formatted date
                           },
                         }));
                       }}
                       placeholderText="Enter date of birth*"
                     />
+
                     <Typography className="landing-form__span" variant="span">
                       {errors.personal_info.date_of_birth}
                     </Typography>
@@ -783,27 +787,25 @@ function Register() {
                         name="english_fluency"
                         type="radio"
                         id="It happens naturally without me noticing"
-                        value="It happens naturally"
+                        value="It happens naturally without me noticing"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background.english_fluency ===
-                          "It happens naturally"
+                          "It happens naturally without me noticing"
                         }
                       />
                       <Form.Check
-                        label="It is a lot easier than when I started learning, but
-                        I still get confused sometimes"
+                        label="It is a lot easier than when I started learning, but I still get confused sometimes"
                         name="english_fluency"
                         type="radio"
-                        id="It is a lot easier than when I started learning, but
-                        I still get confused sometimes"
-                        value="It is a lot easier"
+                        id="It is a lot easier than when I started learning, but I still get confused sometimes"
+                        value="It is a lot easier than when I started learning, but I still get confused sometimes"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background.english_fluency ===
-                          "It is a lot easier"
+                          `It is a lot easier than when I started learning, but I still get confused sometimes`
                         }
                       />
 
@@ -812,12 +814,12 @@ function Register() {
                         name="english_fluency"
                         type="radio"
                         id="I find it quite tricky and have to think about it a lot"
-                        value="I find it quite tricky"
+                        value="I find it quite tricky and have to think about it a lot"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background.english_fluency ===
-                          "I find it quite tricky"
+                          "I find it quite tricky and have to think about it a lot"
                         }
                       />
 
@@ -826,12 +828,12 @@ function Register() {
                         name="english_fluency"
                         type="radio"
                         id="I find it hard to string sentences together and use grammar rules correctly"
-                        value="I find it hard"
+                        value="I find it hard to string sentences together and use grammar rules correctly"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background.english_fluency ===
-                          "I find it hard"
+                          "I find it hard to string sentences together and use grammar rules correctly"
                         }
                       />
                       <Typography className="landing-form__span" variant="span">
@@ -852,13 +854,13 @@ function Register() {
                         name="conversation_strength"
                         type="radio"
                         id="Yes - understanding English is as natural as my native language"
-                        value="Natural as my native language"
+                        value="Yes - understanding English is as natural as my native language"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background
                             .conversation_strength ===
-                          "Natural as my native language"
+                          "Yes - understanding English is as natural as my native language"
                         }
                       />
                       <Form.Check
@@ -866,12 +868,13 @@ function Register() {
                         name="conversation_strength"
                         type="radio"
                         id="Most of the time, but sometimes I get lost if everyone is speaking fast"
-                        value="I get lost"
+                        value="Most of the time, but sometimes I get lost if everyone is speaking fast"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background
-                            .conversation_strength === "I get lost"
+                            .conversation_strength ===
+                          "Most of the time, but sometimes I get lost if everyone is speaking fast"
                         }
                       />
                       <Form.Check
@@ -879,12 +882,13 @@ function Register() {
                         name="conversation_strength"
                         type="radio"
                         id="I can understand when people speak slowly and clearly"
-                        value="I can understand"
+                        value="I can understand when people speak slowly and clearly"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background
-                            .conversation_strength === "I can understand"
+                            .conversation_strength ===
+                          "I can understand when people speak slowly and clearly"
                         }
                       />
                       <Form.Check
@@ -892,13 +896,13 @@ function Register() {
                         name="conversation_strength"
                         type="radio"
                         id="I get lost easily and usually only understand a few words in conversation"
-                        value="I only understand a few words in conversation"
+                        value="I get lost easily and usually only understand a few words in conversation"
                         className="landing-form__radio-button"
                         onChange={handleChange}
                         checked={
                           inputFields.educational_background
                             .conversation_strength ===
-                          "I only understand a few words in conversation"
+                          "I get lost easily and usually only understand a few words in conversation"
                         }
                       />
                       <Typography className="landing-form__span" variant="span">
@@ -947,11 +951,12 @@ function Register() {
                           name="session"
                           type="radio"
                           id="Morning (10am - 12pm)"
-                          value="Morning"
+                          value="Morning (10am - 12pm)"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
-                            inputFields.course_information.session === "Morning"
+                            inputFields.course_information.session ===
+                            "Morning (10am - 12pm)"
                           }
                         />
                         <Form.Check
@@ -959,12 +964,12 @@ function Register() {
                           name="session"
                           type="radio"
                           id="Afternoon (3pm - 5pm)"
-                          value="Afternoon"
+                          value="Afternoon (3pm - 5pm)"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
                             inputFields.course_information.session ===
-                            "Afternoon"
+                            "Afternoon (3pm - 5pm)"
                           }
                         />
                         <Form.Check
@@ -972,12 +977,12 @@ function Register() {
                           name="session"
                           type="radio"
                           id="Weekends only (11am - 2pm) (3pm - 5pm)"
-                          value="Weekends only"
+                          value="Weekends only (11am - 2pm) (3pm - 5pm)"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
                             inputFields.course_information.session ===
-                            "Weekends only"
+                            "Weekends only (11am - 2pm) (3pm - 5pm)"
                           }
                         />
                         <Typography
@@ -1001,12 +1006,12 @@ function Register() {
                           name="computer_literacy"
                           type="radio"
                           id="Yes, I can operate the computer system"
-                          value="Yes, I can operate"
+                          value="Yes, I can operate the computer system"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
                             inputFields.course_information.computer_literacy ===
-                            "Yes, I can operate"
+                            "Yes, I can operate the computer system"
                           }
                         />
 
@@ -1015,12 +1020,12 @@ function Register() {
                           name="computer_literacy"
                           type="radio"
                           id="I have a personal computer and I use it effectively"
-                          value="I have a personal computer"
+                          value="I have a personal computer and I use it effectively"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
                             inputFields.course_information.computer_literacy ===
-                            "I have a personal computer"
+                            "I have a personal computer and I use it effectively"
                           }
                         />
 
@@ -1029,12 +1034,12 @@ function Register() {
                           name="computer_literacy"
                           type="radio"
                           id="I do not have a personal computer but I can operate a computer system well"
-                          value="I do not have a personal computer"
+                          value="I do not have a personal computer but I can operate a computer system well"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
                             inputFields.course_information.computer_literacy ===
-                            "I do not have a personal computer"
+                            "I do not have a personal computer but I can operate a computer system well"
                           }
                         />
 
@@ -1043,12 +1048,12 @@ function Register() {
                           name="computer_literacy"
                           type="radio"
                           id="No, I have never operated a computer system"
-                          value="No, I have never operated"
+                          value="No, I have never operated a computer system"
                           className="landing-form__radio-button"
                           onChange={handleChange}
                           checked={
                             inputFields.course_information.computer_literacy ===
-                            "No, I have never operated"
+                            "No, I have never operated a computer system"
                           }
                         />
                         <Typography

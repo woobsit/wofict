@@ -26,24 +26,26 @@ class UserAuthController extends Controller
 
         try {
             $validator = Validator::make($request->all(), [
-                'firstname' => 'required|min:3|max:255',
-                'surname' => 'required|min:3|max:255',
-                'other_names' => 'nullable|min:3|max:255',
+                'firstname' => 'required|min:3|max:50',
+                'surname' => 'required|min:3|max:50',
+                'other_names' => 'nullable|min:3|max:50',
                 'email' => 'required|email|unique:users',
                 'password' => 'min:6|required|confirmed',
-                'gender' => 'required',
-                'date_of_birth' => 'required|date',
-                'phone_number' => 'required',
+                'password_confirmation' => 'required',
+                'gender' => 'required|in:Male,Female',
+                'date_of_birth' => 'required',
+                'phone_number' => 'required|size:11',
                 'contact_address' => 'required|string|min:3|max:1000',
-                'state_of_origin' => 'required|string|min:3|max:255',
-                'qualification_level' => 'required|string|min:3|max:255',
-                'course' => 'required|string|min:3|max:255',
-                'session' => 'required|string|min:3|max:255',
-                'english_fluency' => 'required|integer',
-                'conversation_strength' => 'required|integer',
-                'computer_literacy' => 'required|integer',
-                'ict_referral' => 'required|integer',
+                'state_of_origin' => 'required|string|min:3|max:15',
+                'qualification_level' => 'required|string|min:3|max:50',
+                'course' => 'required|string|min:3|max:20',
+                'session' => 'required|string|min:3|max:15',
+                'english_fluency' => 'required|string',
+                'conversation_strength' => 'required|string',
+                'computer_literacy' => 'required|string',
+                'ict_referral' => 'required|string',
             ]);
+
 
             if ($validator->fails()) {
                 return response()->json([
@@ -54,6 +56,8 @@ class UserAuthController extends Controller
 
             $email_verification = Str::random(30);
             $expiryTimestamp = now()->addDay(2);
+
+            return response()->json(['status' => 100, 'result' => $request->all()]);
 
             User::create([
                 'firstname' => $request->input('firstname'),

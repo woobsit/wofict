@@ -26,6 +26,7 @@ const authService = {
     other_names,
     email,
     password,
+    password_confirmation,
     gender,
     date_of_birth,
     phone_number,
@@ -45,6 +46,7 @@ const authService = {
       other_names,
       email,
       password,
+      password_confirmation,
       gender,
       date_of_birth,
       phone_number,
@@ -61,10 +63,7 @@ const authService = {
   userLogin: (email, password, remember_token) =>
     handleRequest("/user-login", "post", { email, password, remember_token }),
 
-  verifyEmail: (verify) =>
-    handleRequest("/user-login", "post", { email, password, remember_token }),
-
-  /verify-email
+  verifyEmail: (verify) => handleRequest("/verify-email", "post", { verify }),
 
   userLogout: () => handleRequest("/user-logout", "post"),
 

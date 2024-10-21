@@ -90,9 +90,7 @@ function EnterNewPassword() {
 
       if (response.status === 200) {
         setEnterNewPasswordForm(true);
-        setLoading(false);
       } else if (response.status === 422) {
-        setLoading(false);
         Swal.fire({
           icon: "error",
           title: "Invalid link",
@@ -105,7 +103,6 @@ function EnterNewPassword() {
           }
         });
       } else if (response.status === 401) {
-        setLoading(false);
         Swal.fire({
           icon: "error",
           title: "Invalid",
@@ -118,19 +115,18 @@ function EnterNewPassword() {
           }
         });
       } else if (response.status === 500) {
-        setLoading(false);
         notify("error", "System Error", response.message);
       } else {
-        setLoading(false);
         notify("error", "Error", response.message);
       }
     } catch (error) {
-      setLoading(false);
       Swal.fire({
         icon: "error",
         title: "Error",
         text: "An unexpected error occurred. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,7 +143,6 @@ function EnterNewPassword() {
         id
       );
       if (response.status === 200) {
-        setLoading(false);
         Swal.fire({
           icon: "success",
           title: "Password Reset",
@@ -160,29 +155,26 @@ function EnterNewPassword() {
           }
         });
       } else if (response.status === 422) {
-        setLoading(false);
         notify(
           "error",
           "Please enter only valid characters.",
           response.message
         );
       } else if (response.status === 401) {
-        setLoading(false);
         notify("error", "Invalid details", response.message);
       } else if (response.status === 500) {
-        setLoading(false);
         notify("error", "System Error", response.message);
       } else {
-        setLoading(false);
         notify("error", "Error", response.message);
       }
     } catch (error) {
-      setLoading(false);
       notify(
         "error",
         "Error",
         "An unexpected error occurred. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 

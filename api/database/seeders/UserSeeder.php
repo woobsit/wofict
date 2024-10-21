@@ -36,8 +36,12 @@ class UserSeeder extends Seeder
                 'guarantors_2' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
                 'guarantors_status' => 1,
                 'admission_status' => 'Admitted',
-                'class_sessions' => 'Morning',
+                'session' => 'Morning',
                 'course' => 'Digital Marketing',
+                'english_fluency' => 'It happens naturally without me noticing',
+                'conversation_strength' => 'Yes - understanding English is as natural as my native language',
+                'computer_literacy' => 'Yes, I can operate the computer system',
+                'ict_referral' => 'Through a friend, relative or someone',
                 'forget_password' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -61,8 +65,12 @@ class UserSeeder extends Seeder
                 'guarantors_2' => 'assets/uploads/credentials/Ahmed_Olusesi_1725959266.pdf',
                 'guarantors_status' => 1,
                 'admission_status' => 'Admitted',
-                'class_sessions' => 'Evening',
+                'session' => 'Evening',
                 'course' => 'Digital Marketing',
+                'english_fluency' => 'It happens naturally without me noticing',
+                'conversation_strength' => 'Yes - understanding English is as natural as my native language',
+                'computer_literacy' => 'Yes, I can operate the computer system',
+                'ict_referral' => 'Through a friend, relative or someone',
                 'forget_password' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -71,6 +79,6 @@ class UserSeeder extends Seeder
 
         User::insert($users);
 
-        User::factory()->count(10)->create();
+        //User::factory()->count(10)->create();
     }
 }
