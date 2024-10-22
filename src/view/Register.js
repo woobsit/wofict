@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //React route dom
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 //images
 import LogoImage from "./../assets/images/logo.png";
@@ -44,7 +44,7 @@ import Form from "react-bootstrap/Form";
 //import ProgressBar from "react-bootstrap/ProgressBar";
 
 function Register() {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   //fetch states from api
   const [nigerianStates, setNigerianStates] = useState([]);
   const [nigerianStatesLoading, setNigerianStatesLoading] = useState(false);
@@ -151,17 +151,24 @@ function Register() {
     };
     switch (page) {
       case 1: {
-        if (inputValues.personal_info.firstname.length < 3) {
+        if (
+          inputValues.personal_info.firstname.length < 3 ||
+          inputValues.personal_info.firstname.length > 30
+        ) {
           errors.personal_info.firstname = "Enter a valid firstname";
         }
-        if (inputValues.personal_info.surname.length < 3) {
+        if (
+          inputValues.personal_info.surname.length < 3 ||
+          inputValues.personal_info.surname.length > 30
+        ) {
           errors.personal_info.surname = "Enter a valid surname";
         }
         if (
-          inputValues.personal_info.other_names.length < 3 &&
-          inputValues.personal_info.other_names
+          (inputValues.personal_info.other_names &&
+            inputValues.personal_info.other_names.length < 3) ||
+          inputValues.personal_info.other_names.length > 30
         ) {
-          errors.personal_info.other_names = "Enter valid names";
+          errors.personal_info.other_names = "Enter valid other names";
         }
         if (!validator.isEmail(inputValues.personal_info.email)) {
           errors.personal_info.email = "Enter a valid email address";
@@ -185,7 +192,10 @@ function Register() {
         if (!phonePregMatch.test(inputValues.personal_info.phone_number)) {
           errors.personal_info.phone_number = "Enter a valid phone number";
         }
-        if (inputValues.personal_info.contact_address.length < 3) {
+        if (
+          inputValues.personal_info.contact_address.length < 3 ||
+          inputValues.personal_info.contact_address.length > 1000
+        ) {
           errors.personal_info.contact_address =
             "Enter a valid contact address";
         }
@@ -365,9 +375,18 @@ function Register() {
       );
 
       if (response.status === 201) {
-        //Register was successfull
-        console.log(response.result);
-        //navigate("/");
+        //Register was successful
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful!",
+          text: "Thank you for registering! A verification email has been sent to your email address. Please check your inbox and follow the instructions to verify your account. If you don't see the email, be sure to check your spam folder.",
+          showConfirmButton: true, // Show the "OK" button
+          allowOutsideClick: false, // Prevent closing by clicking outside the dialog
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/");
+          }
+        });
       } else if (response.status === 422) {
         notify("error", "Input Validation", response.message);
       } else if (response.status === 500) {

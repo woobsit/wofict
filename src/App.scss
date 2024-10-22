@@ -4,7 +4,7 @@
 
 .landing-page-background {
   min-height: 100vh;
-  background-image: url("./assets/images/background-login.jpg");
+  background-image: url("./assets/images/background-login.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -112,14 +112,13 @@
   border-radius: 5px;
   height: 40px;
   padding-left: 7px;
-  transition: border-color 0.3s;
-  background-color: white;
+  transition: border-color 0.5s;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .landing-form__input-box:hover,
 .landing-form__input-box:focus-within {
-  border: 1px solid rgb(255, 158, 158);
+  border: 1px solid rgb(158, 173, 255);
 }
 
 .landing-form__input-icon {

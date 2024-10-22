@@ -34,8 +34,17 @@ class User extends Authenticatable
         'photo',
         'state_of_origin',
         'qualification_level',
-        'class_sessions',
+        'session',
         'course',
+        'credentials',
+        'guarantors_1',
+        'guarantors_2',
+        'english_fluency',
+        'conversation_strength',
+        'computer_literacy',
+        'ict_referral',
+        'email_verification',
+        'expiry_timestamp',
 
     ];
 

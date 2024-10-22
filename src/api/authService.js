@@ -63,7 +63,8 @@ const authService = {
   userLogin: (email, password, remember_token) =>
     handleRequest("/user-login", "post", { email, password, remember_token }),
 
-  verifyEmail: (verify) => handleRequest("/verify-email", "post", { verify }),
+  verifyEmail: (email_verification) =>
+    handleRequest("/verify-email", "post", { email_verification }),
 
   userLogout: () => handleRequest("/user-logout", "post"),
 

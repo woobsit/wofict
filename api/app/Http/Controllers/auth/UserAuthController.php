@@ -26,15 +26,15 @@ class UserAuthController extends Controller
 
         try {
             $validator = Validator::make($request->all(), [
-                'firstname' => 'required|min:3|max:50',
-                'surname' => 'required|min:3|max:50',
-                'other_names' => 'nullable|min:3|max:50',
+                'firstname' => 'required|min:3|max:30',
+                'surname' => 'required|min:3|max:30',
+                'other_names' => 'nullable|min:3|max:30',
                 'email' => 'required|email|unique:users',
                 'password' => 'min:6|required|confirmed',
                 'password_confirmation' => 'required',
                 'gender' => 'required|in:Male,Female',
-                'date_of_birth' => 'required',
-                'phone_number' => 'required|size:11',
+                'date_of_birth' => 'required', //This should be of type date and not a string
+                'phone_number' => ['required', 'regex:/^0[0-9]{10}$/'],
                 'contact_address' => 'required|string|min:3|max:1000',
                 'state_of_origin' => 'required|string|min:3|max:15',
                 'qualification_level' => 'required|string|min:3|max:50',
@@ -78,7 +78,6 @@ class UserAuthController extends Controller
                 'email_verification' => $email_verification,
                 'expiry_timestamp' => $expiryTimestamp,
             ]);
-
 
             $email_verification_code = ['verification_string' => $email_verification, 'surname' => $request->input('surname')];
             Mail::to($request->input('email'))->send(new SignupRegistration($email_verification_code));

@@ -14,19 +14,19 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->integer('active')->default(0);
-            $table->string('firstname', 50);
-            $table->string('surname', 50);
-            $table->string('other_names', 50)->nullable();
+            $table->string('firstname', 30);
+            $table->string('surname', 30);
+            $table->string('other_names', 30)->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('gender', ['Male', 'Female']);
             $table->string('date_of_birth', 15);
-            $table->text('contact_address');
+            $table->text('contact_address', 1000);
             $table->string('phone_number', 11);
             $table->string('state_of_origin', 15);
             $table->string('photo')->default('storage/assets/images/users/default.jpg');
             $table->string('session', 50);
-            $table->string('qualification_level', 50)->nullable();
+            $table->string('qualification_level', 50);
             $table->string('credentials')->nullable();
             $table->integer('credentials_status')->default(0);
             $table->string('guarantors_1')->nullable();

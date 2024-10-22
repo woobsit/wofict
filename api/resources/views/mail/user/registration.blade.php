@@ -7,7 +7,7 @@ Thank you for registering. We are excited to have you as part of us. Before you 
 
 Please click the button below to complete your registration and verify your account:
 
-<x-mail::button :url="config('app.url').'/verify-email/'.$signup_registration[verification_string]">
+<x-mail::button :url="config('app.url').'/verify-email/'.$signup_registration['verification_string']">
 Verify Email
 </x-mail::button>
 

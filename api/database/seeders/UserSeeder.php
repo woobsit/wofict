@@ -77,7 +77,7 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        User::insert($users);
+        //User::insert($users);
 
         //User::factory()->count(10)->create();
     }

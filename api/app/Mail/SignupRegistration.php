@@ -21,9 +21,10 @@ class SignupRegistration extends Mailable
 
     public function __construct($signupRegistration)
     {
-        $this->$signupRegistration = $signupRegistration;
+        $this->signupRegistration = $signupRegistration;
         //
     }
+    
 
     /**
      * Get the message envelope.
