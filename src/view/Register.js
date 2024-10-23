@@ -517,19 +517,19 @@ function Register() {
             <div className="steps__content-box">
               <Typography
                 variant="span"
-                className="steps__content-text steps__content-text--left"
+                className="steps__content-text--left steps__content-text--page1"
               >
                 Personal info
               </Typography>
               <Typography
                 variant="span"
-                className="steps__content-text steps__content-text--center"
+                className={`steps__content-text--center ${page >= 2 ? "steps__content-text--page2-green" : "steps__content-text--page2-gray"}`}
               >
                 Educational background
               </Typography>
               <Typography
                 variant="span"
-                className="steps__content-text steps__content-text--right"
+                className={`steps__content-text--right ${page >= 3 ? "steps__content-text--page3-green" : "steps__content-text--page3-gray"}`}
               >
                 Course of choice
               </Typography>
