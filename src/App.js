@@ -42,9 +42,14 @@ function App() {
 
   //pages background
   const getBackgroundClass = (pathname) => {
+    const background = "landing-page-background";
     switch (pathname) {
       case "/":
-        return "landing-page-background";
+        return background;
+      case "/forget-password":
+        return background;
+      case "/register":
+        return background;
       default:
         return "home-background";
     }

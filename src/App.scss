@@ -227,10 +227,9 @@
 /*progress bar*/
 .steps {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  margin-bottom: 20px;
 }
 
 .steps__content-container {
@@ -241,22 +240,88 @@
   flex: 1;
 }
 
+.steps__line{
+  height:5px;
+  width:100%;
+}
+
 .steps__content-number {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
+  font-weight: bold;
   border-radius: 50%;
-  color: white;
+  color: rgb(255, 255, 255);
+}
+
+.steps__content-number--page1 {
+  background: rgb(119 237 85);
+}
+
+.steps__content-number--page2-green {
+  background: rgb(119 237 85);
+}
+
+.steps__content-number--page2-gray {
   background: rgb(184, 184, 184);
 }
 
-.steps__content-container .steps__content-text {
-  font-size: 12px;
-  color: rgb(158, 158, 158);
+.steps__content-number--page3-green {
+  background: rgb(119 237 85);
+}
+
+.steps__content-number--page3-gray {
+  background: rgb(184, 184, 184);
+}
+
+
+.steps__line--page1-green{
+  background: rgb(119 237 85)
+}
+
+.steps__line--page1-gray{
+  background: rgb(184, 184, 184);
+}
+
+.steps__line--page2-green{
+  background: rgb(119 237 85)
+}
+
+.steps__line--page2-gray{
+  background: rgb(184, 184, 184);
+}
+
+.steps__line--page3-green{
+  background: rgb(119 237 85)
+}
+
+.steps__line--page3-gray{
+  background: rgb(184, 184, 184);
+}
+
+.steps__content-text--left{
+width:70px;
+}
+
+.steps__content-text--center{
   text-align: center;
-  margin-top: 10px;
+  }
+  
+
+.steps__content-text--right{
+width:70px;
+text-align: right;
+}
+
+.steps__content-box {
+  text-transform: capitalize;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: rgb(158, 158, 158);
+  margin-bottom: 20px;
 }
 
 .landing-form__progress-bar-container {
@@ -299,8 +364,18 @@
   margin-top: 15px;
 }
 
-.landing-form__progress-bar-buttons {
+.landing-form__progress-bar-button--next{
+  margin-right:10px;
 }
+
+.landing-form__progress-bar-back-button{
+ background-color: rgb(104 104 104);
+}
+
+.landing-form__progress-bar-back-button:hover{
+  background-color: rgb(61, 61, 61);
+ }
+ 
 
 .landing-form__progress-bar-button-group-text {
   cursor: pointer;

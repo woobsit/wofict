@@ -311,6 +311,7 @@ function Register() {
         setSubmitting(false);
         setSubmitting2(false);
         setSubmitting3(false);
+        setPage(1);
       }
     });
   };
@@ -487,24 +488,51 @@ function Register() {
 
             <div className="steps">
               <div className="steps__content-container">
-                <div className="steps__content-number">1</div>
-                <Typography variant="span" className="steps__content-text">
-                  Personal info
-                </Typography>
+                <div className="steps__content-number steps__content-number--page1">
+                  1
+                </div>
                 <span></span>
               </div>
+              <div
+                className={`steps__line ${page > 1 ? "steps__line--page1-green" : "steps__line--page1-gray"} `}
+              ></div>
               <div className="steps__content-container">
-                <div className="steps__content-number">2</div>
-                <Typography variant="span" className="steps__content-text">
-                  Educational background
-                </Typography>
+                <div
+                  className={`steps__content-number ${page >= 2 ? "steps__content-number--page2-green" : "steps__content-number--page2-gray"}`}
+                >
+                  2
+                </div>
               </div>
+              <div
+                className={`steps__line ${page > 2 ? "steps__line--page2-green" : "steps__line--page2-gray"} `}
+              ></div>
               <div className="steps__content-container">
-                <div className="steps__content-number">3</div>
-                <Typography variant="span" className="steps__content-text">
-                  Course of choice
-                </Typography>
+                <div
+                  className={`steps__content-number ${page >= 3 ? "steps__content-number--page3-green" : "steps__content-number--page3-gray"}`}
+                >
+                  3
+                </div>
               </div>
+            </div>
+            <div className="steps__content-box">
+              <Typography
+                variant="span"
+                className="steps__content-text steps__content-text--left"
+              >
+                Personal info
+              </Typography>
+              <Typography
+                variant="span"
+                className="steps__content-text steps__content-text--center"
+              >
+                Educational background
+              </Typography>
+              <Typography
+                variant="span"
+                className="steps__content-text steps__content-text--right"
+              >
+                Course of choice
+              </Typography>
             </div>
             <div className="landing-form__inputs-box">
               {page === 1 && (
@@ -1214,7 +1242,7 @@ function Register() {
                   <div className="landing-form__progress-bar-buttons">
                     {page === 1 ? (
                       <Button
-                        className="landing-form__progress-bar-button--back"
+                        className="landing-form__progress-bar-button--back landing-form__button"
                         disabled={loading}
                       >
                         Next
@@ -1225,17 +1253,17 @@ function Register() {
                     {page === 2 ? (
                       <>
                         <Button
-                          className="landing-form__progress-bar-button--back"
+                          className="landing-form__progress-bar-button--next landing-form__button"
+                          disabled={loading}
+                        >
+                          Next
+                        </Button>
+                        <Button
+                          className="landing-form__progress-bar-button--back landing-form__progress-bar-back-button"
                           disabled={loading}
                           onClick={backToPageOne}
                         >
                           Back
-                        </Button>
-                        <Button
-                          className="landing-form__progress-bar-button--next"
-                          disabled={loading}
-                        >
-                          Next
                         </Button>
                       </>
                     ) : (
@@ -1244,17 +1272,17 @@ function Register() {
                     {page === 3 ? (
                       <>
                         <Button
-                          className="landing-form__progress-bar-button--back"
+                          className="landing-form__progress-bar-button--next landing-form__button"
+                          disabled={loading}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          className="landing-form__progress-bar-button--back landing-form__progress-bar-back-button"
                           disabled={loading}
                           onClick={backToPageTwo}
                         >
                           Back
-                        </Button>
-                        <Button
-                          className="landing-form__progress-bar-button--submit"
-                          disabled={loading}
-                        >
-                          Submit
                         </Button>
                       </>
                     ) : (
