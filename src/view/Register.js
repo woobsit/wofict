@@ -51,7 +51,10 @@ function Register() {
   //fetch courses
   const [courses, setCourses] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(false);
-
+  //character counter
+  const [countletter, setCountletter] = useState(0);
+  const [moreThan1000, setMoreThan1000] = useState(false);
+  //set inputs
   const [inputFields, setInputFields] = useState({
     personal_info: {
       firstname: "",
@@ -98,6 +101,17 @@ function Register() {
   };
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  //character counter
+  const countCharacter = (e) => {
+    const str = e.target.value;
+    setCountletter(str.length);
+    if (str.length > 1000) {
+      setMoreThan1000(true);
+    } else if (str.length < 1000) {
+      setMoreThan1000(false);
+    }
   };
 
   //Set value of inputs
@@ -728,6 +742,7 @@ function Register() {
                         }));
                       }}
                       placeholderText="Enter date of birth*"
+                      className="landing-form__calender-component"
                     />
 
                     <Typography className="landing-form__span" variant="span">
@@ -765,8 +780,29 @@ function Register() {
                         name="contact_address"
                         value={inputFields.personal_info.contact_address}
                         onChange={handleChange}
+                        onKeyUp={countCharacter}
                       />
                     </Form.Group>
+                    <Typography
+                      variant="span"
+                      className="landing-form__textarea-info"
+                    >
+                      Maximum character: 1000
+                    </Typography>
+
+                    <Typography
+                      variant="span"
+                      className={`landing-form__textarea-general-style 
+                        ${
+                          moreThan1000
+                            ? "landing-form__textarea-counter-info--danger"
+                            : "landing-form__textarea-counter-info--primary"
+                        }
+                      `}
+                    >
+                      {`${countletter} number of characters `}
+                    </Typography>
+
                     <Typography className="landing-form__span" variant="span">
                       {errors.personal_info.contact_address}
                     </Typography>

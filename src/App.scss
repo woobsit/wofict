@@ -34,6 +34,15 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
+.landing-form__textarea-info{
+  display:block;
+  margin-top:5px;
+}
+
+.landing-form__textarea-general-style{
+  display:block;
+}
+
 .landing-form {
   background-color: rgb(255, 255, 255);
   padding: 20px 12px 40px 12px;
@@ -75,8 +84,17 @@
 }
 
 .landing-form__textarea-box-container{
-  height:60px;
+  height:95px;
   margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.landing-form__textarea-counter-info--primary{
+  color:rgb(8, 123, 255);
+}
+
+.landing-form__textarea-counter-info--danger{
+  color:red;
 }
 
 .landing-form__select-box-container{
@@ -193,11 +211,6 @@
   margin-bottom:5px;
 }
 
-.landing-form__radio-container:hover,
-.landing-form__radio-container:focus-within {
- 
-}
-
 .landing-form__radio-button {
   margin-right: 15px;
   cursor:pointer;
@@ -223,6 +236,26 @@
   align-items: center !important;
 }
 
+.landing-form__calender-component{
+  border:none;
+  outline:none;
+  width:100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  transition: border-color 0.5s;
+}
+
+.landing-form__calender-component:hover,
+.landing-form__calender-component:focus-within {
+  border: 1px solid rgb(158, 173, 255);
+}
+
+.react-datepicker__header:not(.react-datepicker__header--has-time-select) {
+  background: #94a6ff;
+}
+
+h2.react-datepicker__current-month {
+  color: white; 
+}
 /******************************/
 /*        Register page       */
 /*****************************/
@@ -340,12 +373,10 @@
   color: rgb(158, 158, 158);
 }
 
-
 .steps__content-text--center{
   text-align: center;
   }
     
-  
 .steps__content-text--right{
   width:75px;
   text-align: right;
@@ -374,7 +405,7 @@
   height: 100%;
   border-radius: 5px;
   background-color: rgb(98, 224, 110);
-  /*transition: width 2s;*/
+  transition: width 2s ease;
 }
 
 .landing-form__progress-bar .landing-form__progress-bar-text {
