@@ -89,6 +89,19 @@
   line-height: 1.2;
 }
 
+.landing-form__textarea{
+  outline:none;
+  box-shadow:none !important;
+  transition: border-color 0.5s;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+  border: 1px solid rgb(214, 214, 214);
+}
+
+.landing-form__textarea:focus,
+.landing-form__textarea:hover {
+  border: 1px solid rgb(158, 173, 255);
+}
+
 .landing-form__textarea-counter-info--primary{
   color:rgb(8, 123, 255);
 }
@@ -102,6 +115,45 @@
   padding-bottom: 20px;
   margin-bottom: 8px;
   margin-top:50px;
+}
+
+.landing-form__select{
+  outline:none;
+  box-shadow:none !important;
+  transition: border-color 0.5s;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+  border: 1px solid rgb(214, 214, 214);
+}
+
+.landing-form__select:focus,
+.landing-form__select:hover {
+  border: 1px solid rgb(158, 173, 255);
+}
+
+.landing-form__select--qualification{
+  outline:none;
+  box-shadow:none !important;
+  transition: border-color 0.5s;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+  border: 1px solid rgb(214, 214, 214);
+}
+
+.landing-form__select--qualification:focus,
+.landing-form__select--qualification:hover {
+  border: 1px solid rgb(158, 173, 255);
+}
+
+.landing-form__select--course{
+  outline:none;
+  box-shadow:none !important;
+  transition: border-color 0.5s;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+  border: 1px solid rgb(214, 214, 214);
+}
+
+.landing-form__select--course:focus,
+.landing-form__select--course:hover {
+  border: 1px solid rgb(158, 173, 255);
 }
 
 .landing-form__inputs-box {
@@ -122,7 +174,6 @@
 .landing-form__input:focus,
 .landing-form__input:hover {
   border: none;
-  outline: none;
 }
 
 .landing-form__input-box {
@@ -150,7 +201,15 @@
 .landing-form__inputs-box .landing-form__span {
   font-size: 12px;
   color: rgb(255, 80, 80);
-  /* margin-bottom:15px; */
+  margin-top: -5px;
+}
+
+.landing-form__inputs-box .landing-form__span--radio {
+  margin-top:3px !important;
+  display:block;
+  height:20px;
+  font-size: 12px;
+  color: rgb(255, 80, 80);
   margin-top: -5px;
 }
 
@@ -472,7 +531,7 @@ h2.react-datepicker__current-month {
 
 @media only screen and (min-width: 1024px) {
   .landing-form__container {
-    width: 55%;
+    width: 85%;
   }
 }
 
@@ -483,7 +542,7 @@ h2.react-datepicker__current-month {
 }
 
 /******************************/
-/*        User dashboard       */
+/*        User dashboard      */
 /*****************************/
 
 .main-container {
@@ -1446,3 +1505,8 @@ h2.react-datepicker__current-month {
   min-height: 520px;
 }
 }
+
+/*******************************/
+/*        sweetalert style     */
+/*******************************/
+

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('gender', ['Male', 'Female']);
-            $table->string('date_of_birth', 15);
+            $table->date('date_of_birth');
             $table->text('contact_address', 1000);
             $table->string('phone_number', 11);
             $table->string('state_of_origin', 15);

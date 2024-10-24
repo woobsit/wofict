@@ -33,7 +33,7 @@ class UserAuthController extends Controller
                 'password' => 'min:6|required|confirmed',
                 'password_confirmation' => 'required',
                 'gender' => 'required|in:Male,Female',
-                'date_of_birth' => 'required', //This should be of type date and not a string
+                'date_of_birth' => 'required|date|before:18 years ago', //This should be of type date and not a string
                 'phone_number' => ['required', 'regex:/^0[0-9]{10}$/'],
                 'contact_address' => 'required|string|min:3|max:1000',
                 'state_of_origin' => 'required|string|min:3|max:15',

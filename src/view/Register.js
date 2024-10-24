@@ -326,6 +326,7 @@ function Register() {
         setSubmitting2(false);
         setSubmitting3(false);
         setPage(1);
+        setCountletter(0);
       }
     });
   };
@@ -781,6 +782,7 @@ function Register() {
                         value={inputFields.personal_info.contact_address}
                         onChange={handleChange}
                         onKeyUp={countCharacter}
+                        className="landing-form__textarea"
                       />
                     </Form.Group>
                     <Typography
@@ -800,7 +802,7 @@ function Register() {
                         }
                       `}
                     >
-                      {`${countletter} number of characters `}
+                      {`${countletter} characters `}
                     </Typography>
 
                     <Typography className="landing-form__span" variant="span">
@@ -814,6 +816,7 @@ function Register() {
                       name="state_of_origin" // Ensure this matches the state in inputFields
                       value={inputFields.personal_info.state_of_origin} // Bind the select value to state
                       onChange={handleChange} // Call handleChange on selection
+                      className="landing-form__select"
                     >
                       <option value="Select state">Select state</option>
                       {nigerianStatesLoading ? (
@@ -842,6 +845,7 @@ function Register() {
                         inputFields.educational_background.qualification_level
                       } // Bind the select value to state
                       onChange={handleChange} // Call handleChange on selection
+                      className="landing-form__select--qualification"
                     >
                       <option>Select qualification level</option>
                       <option>O&apos;Level/SSCE</option>
@@ -919,7 +923,10 @@ function Register() {
                           "I find it hard to string sentences together and use grammar rules correctly"
                         }
                       />
-                      <Typography className="landing-form__span" variant="span">
+                      <Typography
+                        className="landing-form__span--radio"
+                        variant="span"
+                      >
                         {errors.educational_background.english_fluency}
                       </Typography>
                     </div>
@@ -988,7 +995,10 @@ function Register() {
                           "I get lost easily and usually only understand a few words in conversation"
                         }
                       />
-                      <Typography className="landing-form__span" variant="span">
+                      <Typography
+                        className="landing-form__span--radio"
+                        variant="span"
+                      >
                         {errors.educational_background.conversation_strength}
                       </Typography>
                     </div>
@@ -1004,6 +1014,7 @@ function Register() {
                         name="course" // Ensure this matches the state in inputFields
                         value={inputFields.course_information.course} // Bind the select value to state
                         onChange={handleChange} // Call handleChange on selection
+                        className="landing-form__select--course"
                       >
                         <option value="Select course">Select course</option>
                         {coursesLoading ? (
@@ -1069,7 +1080,7 @@ function Register() {
                           }
                         />
                         <Typography
-                          className="landing-form__span"
+                          className="landing-form__span--radio"
                           variant="span"
                         >
                           {errors.course_information.session}
@@ -1140,7 +1151,7 @@ function Register() {
                           }
                         />
                         <Typography
-                          className="landing-form__span"
+                          className="landing-form__span--radio"
                           variant="span"
                         >
                           {errors.course_information.computer_literacy}
@@ -1248,7 +1259,7 @@ function Register() {
                           }
                         />
                         <Typography
-                          className="landing-form__span"
+                          className="landing-form__span--radio"
                           variant="span"
                         >
                           {errors.course_information.ict_referral}
